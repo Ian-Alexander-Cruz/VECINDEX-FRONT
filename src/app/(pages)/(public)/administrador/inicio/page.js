@@ -121,12 +121,14 @@ export default function Inicio() {
                     </article>
                 </section>
 
+
+
                 <section className={styles.seccionSolicitudes}>
                     <div className={styles.tituloSeccion}>
                         <div>
-                            <h2>Solicitudes pendientes</h2>
+                            <h2>Solicitudes de representantes</h2>
                             <p>
-                                Revisa la información antes de tomar una decisión.
+                                Revisa las solicitudes de registro de nuevos representantes.
                             </p>
                         </div>
                     </div>
@@ -147,7 +149,9 @@ export default function Inicio() {
                             representantes.length === 0 && (
                                 <article className={styles.tarjetaSolicitud}>
                                     <h3>Sin solicitudes de representantes</h3>
-                                    <p>No hay representantes pendientes de aprobación.</p>
+                                    <p>
+                                        No hay representantes pendientes de aprobación.
+                                    </p>
                                 </article>
                             )}
 
@@ -157,12 +161,13 @@ export default function Inicio() {
                                 key={representante.id_representante}
                             >
                                 <div className={styles.cabeceraTarjeta}>
-                                    <span className={styles.etiquetaSolicitud}>
-                                        Representante
-                                    </span>
+                    <span className={styles.etiquetaSolicitud}>
+                        Representante
+                    </span>
+
                                     <span className={styles.estadoPendiente}>
-                                        Pendiente
-                                    </span>
+                        Pendiente
+                    </span>
                                 </div>
 
                                 <h3>{representante.nombre}</h3>
@@ -172,15 +177,31 @@ export default function Inicio() {
                                 </p>
 
                                 <div className={styles.datosSolicitud}>
-                                    <span>Correo: {representante.correo}</span>
+                    <span>
+                        Correo: {representante.correo}
+                    </span>
                                 </div>
 
-                                <Link
-                                    href={`/administrador/solicitudes/representantes/${representante.id_representante}`} className={styles.botonRevision}>
+                                <Link href={`/administrador/solicitudes/representantes/${representante.id_representante}`} className={styles.botonRevision}>
                                     Revisar solicitud
                                 </Link>
                             </article>
                         ))}
+                    </div>
+
+                    <div className={styles.tituloSeccion}>
+                        <div>
+                            <h2>Solicitudes de comunidades</h2>
+                            <p>
+                                Revisa las solicitudes de registro de nuevas comunidades.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className={styles.gridSolicitudes}>
+                        {cargando && (
+                            <p>Cargando solicitudes...</p>
+                        )}
 
                         {!cargando && errores.comunidades && (
                             <article className={styles.tarjetaSolicitud}>
@@ -193,19 +214,22 @@ export default function Inicio() {
                             comunidades.length === 0 && (
                                 <article className={styles.tarjetaSolicitud}>
                                     <h3>Sin solicitudes de comunidades</h3>
-                                    <p>No hay comunidades pendientes de aprobación.</p>
+                                    <p>
+                                        No hay comunidades pendientes de aprobación.
+                                    </p>
                                 </article>
                             )}
 
                         {!cargando && comunidades.map((comunidad) => (
                             <article className={styles.tarjetaSolicitud} key={comunidad.id_comunidad}>
                                 <div className={styles.cabeceraTarjeta}>
-                                    <span className={styles.etiquetaSolicitud}>
-                                        Comunidad
-                                    </span>
+                    <span className={styles.etiquetaSolicitud}>
+                        Comunidad
+                    </span>
+
                                     <span className={styles.estadoPendiente}>
-                                        Pendiente
-                                    </span>
+                        Pendiente
+                    </span>
                                 </div>
 
                                 <h3>{comunidad.nombre}</h3>
@@ -215,7 +239,9 @@ export default function Inicio() {
                                 </p>
 
                                 <div className={styles.datosSolicitud}>
-                                    <span>Ubicación: {comunidad.ubicacion}</span>
+                    <span>
+                        Ubicación: {comunidad.ubicacion}
+                    </span>
                                 </div>
 
                                 <Link href={`/administrador/solicitudes/comunidades/${comunidad.id_comunidad}`} className={styles.botonRevision}>

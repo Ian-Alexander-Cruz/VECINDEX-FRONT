@@ -3,21 +3,23 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "vecindex/node_modules/.bin/next dev",
-    "build": "vecindex/node_modules/.bin/next build",
-    "start": "vecindex/node_modules/.bin/next start",
-    "lint": "vecindex/node_modules/.bin/eslint"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "cloudflare-build": "opennextjs-cloudflare build"
   },
   "dependencies": {
-    "next": "16.4.6",
+    "next": "16.4.5",
     "react": "19.3.0",
-    "react-dom": "19.3.0"
+    "react-dom": "19.3.0",
+    "@opennextjs/cloudflare": "latest"
   },
   "devDependencies": {
-    "@tailwindcss/turbopack": "4.3.3",
-    "babel-plugin-react-compiler": "1.0.0",
+    "@tailwindcss/turbopack": "^4",
     "eslint": "^9",
-    "eslint-config-next": "16.4.6",
-    "tailwindcss": "4.3.3"
+    "eslint-config-next": "16.4.5",
+    "tailwindcss": "^4",
+    "@opennextjs/cloudflare": "latest"
   }
 }

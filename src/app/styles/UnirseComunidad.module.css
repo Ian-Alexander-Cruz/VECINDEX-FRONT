@@ -1,0 +1,346 @@
+.paginaUnirse {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    margin-left: 88px;
+    padding: 55px 45px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 35px;
+}
+
+.encabezado {
+    width: 100%;
+    max-width: 1100px;
+    text-align: center;
+}
+
+.encabezado h1 {
+    margin: 0;
+    color: #FFFFFF;
+    font-size: 32px;
+    font-weight: 800;
+}
+
+.encabezado p {
+    margin: 12px 0 0;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+.tarjetas {
+    width: 100%;
+    max-width: 1100px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 25px;
+}
+
+.tarjeta {
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    border: 1px solid rgba(51, 206, 191, 0.25);
+    border-radius: 20px;
+    background: rgba(23, 25, 67, 0.75);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 12px 35px rgba(10, 12, 45, 0.18);
+    transition: transform 0.3s ease, background 0.3s ease,
+    border-color 0.3s ease;
+}
+
+.tarjeta:hover {
+    transform: translateY(-5px);
+    background: rgba(23, 25, 67, 0.9);
+    border-color: rgba(51, 206, 191, 0.55);
+}
+
+.encabezadoTarjeta {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.icono {
+    width: 52px;
+    height: 52px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 15px;
+    background: rgba(51, 206, 191, 0.12);
+    color: #33CEBF;
+}
+
+.icono svg {
+    width: 27px;
+    height: 27px;
+}
+
+.encabezadoTarjeta h2 {
+    margin: 0;
+    color: #FFFFFF;
+    font-size: 21px;
+    font-weight: 750;
+}
+
+.encabezadoTarjeta p {
+    margin: 6px 0 0;
+    color: rgba(255, 255, 255, 0.68);
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.descripcion {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.78);
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+.formulario {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.formulario label {
+    color: #FFFFFF;
+    font-size: 14px;
+    font-weight: 650;
+}
+
+.formulario input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 14px 16px;
+    border: 1px solid rgba(51, 206, 191, 0.28);
+    border-radius: 10px;
+    outline: none;
+    background: rgba(255, 255, 255, 0.06);
+    color: #FFFFFF;
+    font-size: 15px;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease,
+    background 0.25s ease;
+}
+
+.formulario input::placeholder {
+    color: rgba(255, 255, 255, 0.42);
+}
+
+.formulario input:focus {
+    border-color: #33CEBF;
+    background: rgba(51, 206, 191, 0.07);
+    box-shadow: 0 0 0 3px rgba(51, 206, 191, 0.12);
+}
+
+.boton {
+    width: 100%;
+    padding: 14px 20px;
+    border: none;
+    border-radius: 10px;
+    background: #33CEBF;
+    color: #171943;
+    font-size: 15px;
+    font-weight: 750;
+    cursor: pointer;
+    transition: background 0.25s ease, transform 0.25s ease;
+}
+
+.boton:hover {
+    background: #28B5A8;
+    transform: translateY(-2px);
+}
+
+.boton:focus-visible {
+    outline: 3px solid rgba(51, 206, 191, 0.45);
+    outline-offset: 3px;
+}
+
+.boton:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.separador {
+    width: 100%;
+    height: 1px;
+    border: none;
+    background: rgba(51, 206, 191, 0.2);
+}
+
+@media (max-width: 950px) {
+    .paginaUnirse {
+        padding: 45px 25px;
+    }
+
+    .tarjetas {
+        grid-template-columns: 1fr;
+        max-width: 650px;
+    }
+}
+
+@media (max-width: 600px) {
+    .paginaUnirse {
+        margin-left: 76px;
+        padding: 35px 16px;
+        gap: 25px;
+    }
+
+    .encabezado h1 {
+        font-size: 26px;
+    }
+
+    .encabezado p {
+        font-size: 13px;
+    }
+
+    .tarjeta {
+        padding: 23px;
+    }
+
+    .encabezadoTarjeta h2 {
+        font-size: 19px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .tarjeta,.formulario input,.boton {
+        transition: none;
+    }
+
+    .tarjeta:hover, .boton:hover {
+        transform: none;
+    }
+}
+
+
+.resultados {
+    margin-top: 28px;
+}
+
+.resultados h3 {
+    color: #fff;
+    font-size: 18px;
+    margin-bottom: 18px;
+}
+
+.resultado {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 16px;
+    margin-bottom: 14px;
+    border: 1px solid rgba(51, 206, 191, 0.2);
+    border-radius: 15px;
+    background: rgba(15, 17, 52, 0.55);
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.resultado:hover {
+    background: rgba(15, 17, 52, 0.85);
+    transform: translateY(-2px);
+}
+
+.fotoResultado {
+    width: 105px;
+    height: 95px;
+    flex-shrink: 0;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+.datosResultado {
+    flex: 1;
+    min-width: 0;
+}
+
+.datosResultado h4 {
+    margin: 0 0 7px;
+    color: #fff;
+    font-size: 16px;
+}
+
+.datosResultado p {
+    margin: 0 0 13px;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.botonVisualizar {
+    display: inline-block;
+    padding: 9px 18px;
+    border-radius: 9px;
+    background: #33CEBF;
+    color: #171943;
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.botonVisualizar:hover {
+    background: #28B5A8;
+    transform: translateY(-1px);
+}
+
+.errorBusqueda,
+.estadoBusqueda {
+    margin-top: 18px;
+    padding: 13px 15px;
+    border-radius: 10px;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.errorBusqueda {
+    color: #ffb8be;
+    background: rgba(200, 62, 77, 0.15);
+    border: 1px solid rgba(200, 62, 77, 0.35);
+}
+
+.estadoBusqueda {
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(51, 206, 191, 0.08);
+}
+
+.boton:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+@media (max-width: 600px) {
+    .resultado {
+        align-items: flex-start;
+        gap: 12px;
+        padding: 12px;
+    }
+
+    .fotoResultado {
+        width: 80px;
+        height: 80px;
+    }
+
+    .datosResultado h4 {
+        font-size: 14px;
+    }
+
+    .datosResultado p {
+        font-size: 12px;
+    }
+}
+
+.ayudaCodigo {
+    display: block;
+    margin-top: -8px;
+    color: rgba(255, 255, 255, 0.65);
+    font-size: 12px;
+    line-height: 1.5;
+}

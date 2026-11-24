@@ -293,7 +293,7 @@ export default function Inicio() {
                                 </p>
                             </div>
 
-                            <button className={styles.botonRevision} disabled title="La vista de detalle se conectará posteriormente">
+                            <button href={`/administrador/solicitudes/mapas/${mapa.id_solicitud_mapa}`} className={styles.botonRevision}>
                                 Revisar solicitud
                             </button>
                         </article>

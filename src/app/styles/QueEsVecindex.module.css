@@ -1,0 +1,132 @@
+.container {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.content {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 55px 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 45px;
+}
+
+
+.introduction {
+
+    max-width: 800px;
+    text-align: center;
+}
+
+.introduction h1 {
+    color: #FFFFFF;
+    font-size: 38px;
+    margin-bottom: 15px;
+}
+
+.introduction p {
+    font-size: 17px;
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+
+.cards {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 25px;
+}
+
+.card {
+    padding: 30px 25px;
+    background-color: rgba(23, 25, 67, 0.75);
+    border: 1px solid rgba(51, 206, 191, 0.25);
+    border-radius: 15px;
+    backdrop-filter: blur(8px);
+    transition: transform 0.3s ease,
+    background-color 0.3s ease,
+    border-color 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-6px);
+    background-color: rgba(23, 25, 67, 0.9);
+    border-color: #33CEBF;
+}
+
+.card h2 {
+    color: #33CEBF;
+    font-size: 21px;
+    margin-bottom: 15px;
+}
+
+.card p {
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 15px;
+    line-height: 1.7;
+}
+
+
+.closing {
+    text-align: center;
+}
+
+.closing h2 {
+    font-size: 27px;
+    margin-bottom: 12px;
+    color: #FFFFFF;
+}
+
+.closing p {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 15px;
+}
+
+
+.downloadButton {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 13px 25px;
+
+    background-color: #33CEBF;
+    color: #171943;
+
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+
+    transition: background-color 0.3s ease;
+}
+
+.downloadButton:hover {
+    background-color: #28B5A8;
+}
+
+
+@media (max-width: 750px) {
+    .content {
+        padding: 40px 20px;
+        gap: 35px;
+    }
+
+    .cards {
+        grid-template-columns: 1fr;
+    }
+
+    .introduction h1 {
+        font-size: 32px;
+    }
+
+    .introduction p {
+        font-size: 15px;
+    }
+}

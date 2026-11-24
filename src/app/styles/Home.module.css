@@ -1,0 +1,466 @@
+.container {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+
+.Principal {
+    position: relative;
+    z-index: 1;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 40px 20px;
+    min-height: calc(100vh - 85px);
+    gap: 14px;
+}
+
+.verMas {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    color: #33CEBF;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.verMas:hover {
+    color: #FFFFFF;
+}
+
+.flecha {
+    font-size: 22px;
+    animation: rebote 1.8s ease-in-out infinite;
+}
+
+@keyframes rebote {
+    0%, 100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(8px);
+    }
+}
+
+
+@supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+        .reveal {
+            animation: aparecer linear both;
+            animation-timeline: view();
+            animation-range: entry 0% cover 30%;
+        }
+    }
+}
+
+@keyframes aparecer {
+    from {
+        opacity: 0;
+        translate: 0 60px;
+        scale: 0.96;
+    }
+
+    to {
+        opacity: 1;
+        translate: 0 0;
+        scale: 1;
+    }
+}
+
+
+.panelAdministrador {
+    position: relative;
+    z-index: 1;
+    width: min(1200px, calc(100% - 130px));
+    margin-left: max(110px, calc((100% - 1200px + 88px) / 2));
+    padding: 55px 30px 70px;
+    display: flex;
+    flex-direction: column;
+    gap: 38px;
+    color: #FFFFFF;
+}
+
+
+.encabezadoAdmin {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 30px 35px;
+    border-radius: 22px;
+    background: rgba(23, 25, 67, 0.82);
+    border: 1px solid rgba(51, 206, 191, 0.25);
+    box-shadow: 0 12px 35px rgba(15, 17, 48, 0.18);
+    backdrop-filter: blur(10px);
+}
+
+.etiquetaAdmin {
+    display: inline-block;
+    margin-bottom: 12px;
+    color: #33CEBF;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2px;
+}
+
+.encabezadoAdmin h1 {
+    margin: 0;
+    font-size: clamp(25px, 3vw, 36px);
+    font-weight: 800;
+    letter-spacing: -0.8px;
+}
+
+.encabezadoAdmin p {
+    margin: 12px 0 0;
+    color: #C4C9E5;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+
+.resumenSolicitudes {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.indicador {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    min-height: 125px;
+    padding: 22px;
+    border-radius: 18px;
+    background: rgba(23, 25, 67, 0.78);
+    border: 1px solid rgba(51, 206, 191, 0.2);
+    backdrop-filter: blur(8px);
+    transition:
+            transform 0.3s ease,
+            border-color 0.3s ease,
+            background-color 0.3s ease;
+}
+
+.indicador:hover {
+    transform: translateY(-5px);
+    border-color: rgba(51, 206, 191, 0.55);
+    background: rgba(23, 25, 67, 0.92);
+}
+
+.iconoIndicador {
+    flex-shrink: 0;
+    width: 52px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 15px;
+    background: rgba(51, 206, 191, 0.12);
+    color: #33CEBF;
+    font-size: 29px;
+}
+
+.indicador div {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.indicador p {
+    margin: 0;
+    color: #D5D9F0;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.indicador strong {
+    color: #FFFFFF;
+    font-size: 30px;
+    line-height: 1.1;
+    font-weight: 800;
+}
+
+.indicador div span {
+    color: #AEB5D5;
+    font-size: 11px;
+}
+
+
+.seccionSolicitudes, .seccionMapas {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.tituloSeccion {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.tituloSeccion h2 {
+    margin: 0;
+    color: #FFFFFF;
+    font-size: 21px;
+    font-weight: 800;
+}
+
+.tituloSeccion p {
+    margin: 7px 0 0;
+    color: #D5D9F0;
+    font-size: 13px;
+}
+
+
+.gridSolicitudes {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px;
+}
+
+.tarjetaSolicitud {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 17px;
+    padding: 25px;
+    border-radius: 19px;
+    background: rgba(23, 25, 67, 0.82);
+    border: 1px solid rgba(51, 206, 191, 0.2);
+    backdrop-filter: blur(8px);
+    transition:
+            transform 0.3s ease,
+            border-color 0.3s ease,
+            box-shadow 0.3s ease;
+}
+
+.tarjetaSolicitud:hover {
+    transform: translateY(-5px);
+    border-color: rgba(51, 206, 191, 0.55);
+    box-shadow: 0 14px 30px rgba(15, 17, 48, 0.2);
+}
+
+.cabeceraTarjeta {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.etiquetaSolicitud {
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+    padding: 7px 12px;
+    border-radius: 20px;
+    background: rgba(51, 206, 191, 0.12);
+    color: #33CEBF;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.estadoPendiente {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    border-radius: 20px;
+    background: rgba(255, 190, 92, 0.12);
+    color: #FFC66E;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.estadoPendiente::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #FFC66E;
+}
+
+.tarjetaSolicitud h3, .tarjetaMapa h3 {
+    margin: 0;
+    color: #FFFFFF;
+    font-size: 17px;
+    font-weight: 700;
+}
+
+.tarjetaSolicitud > p, .tarjetaMapa p {
+    margin: -7px 0 0;
+    color: #C4C9E5;
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+.datosSolicitud {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.datosSolicitud span {
+    color: #AEB5D5;
+    font-size: 11px;
+}
+
+
+.botonRevision {
+    width: 100%;
+    min-height: 42px;
+    margin-top: auto;
+    padding: 10px 16px;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    background: #33CEBF;
+    color: #171943;
+    font-size: 12px;
+    font-weight: 800;
+    cursor: pointer;
+    transition:
+            background-color 0.3s ease,
+            transform 0.3s ease,
+            box-shadow 0.3s ease;
+}
+
+.botonRevision:hover {
+    background: #28B5A8;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(51, 206, 191, 0.2);
+}
+
+.botonRevision:focus-visible {
+    outline: 3px solid #FFFFFF;
+    outline-offset: 3px;
+}
+
+
+.tarjetaMapa {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 25px;
+    padding: 25px 28px;
+    border-radius: 19px;
+    background: rgba(23, 25, 67, 0.82);
+    border: 1px solid rgba(51, 206, 191, 0.2);
+    backdrop-filter: blur(8px);
+    transition:
+            border-color 0.3s ease,
+            background-color 0.3s ease;
+}
+
+.tarjetaMapa:hover {
+    border-color: rgba(51, 206, 191, 0.55);
+    background: rgba(23, 25, 67, 0.92);
+}
+
+.tarjetaMapa > div {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 13px;
+}
+
+.tarjetaMapa .botonRevision {
+    width: auto;
+    min-width: 175px;
+    margin-top: 0;
+}
+
+
+@media (max-width: 1000px) {
+    .panelAdministrador {
+        width: calc(100% - 110px);
+        margin-left: 95px;
+        padding: 40px 20px 60px;
+    }
+
+    .resumenSolicitudes {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 700px) {
+    .panelAdministrador {
+        width: calc(100% - 90px);
+        margin-left: 80px;
+        padding: 30px 12px 45px;
+        gap: 28px;
+    }
+
+    .encabezadoAdmin {
+        padding: 23px 20px;
+    }
+
+    .resumenSolicitudes {
+        grid-template-columns: 1fr;
+        gap: 13px;
+    }
+
+    .indicador {
+        min-height: 105px;
+    }
+
+    .gridSolicitudes {
+        grid-template-columns: 1fr;
+    }
+
+    .tarjetaMapa {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .tarjetaMapa .botonRevision {
+        width: 100%;
+    }
+}
+
+@media (max-width: 420px) {
+    .panelAdministrador {
+        width: calc(100% - 82px);
+        margin-left: 76px;
+        padding-right: 8px;
+        padding-left: 8px;
+    }
+
+    .encabezadoAdmin {
+        padding: 20px 16px;
+    }
+
+    .encabezadoAdmin p {
+        font-size: 12px;
+    }
+
+    .tarjetaSolicitud {
+        padding: 19px;
+    }
+
+    .cabeceraTarjeta {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+    .flecha {
+        animation: none;
+    }
+
+    .indicador, .tarjetaSolicitud, .tarjetaMapa, .botonRevision {
+        transition: none;
+    }
+}

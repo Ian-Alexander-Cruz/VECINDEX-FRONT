@@ -1,0 +1,53 @@
+.fondo-cascada {
+    position: absolute;
+    isolation: isolate;
+    overflow: hidden;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    --fc-pin-gris: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='520' height='640'><g transform='translate(90 110)'><ellipse cx='20' cy='46' rx='17' ry='6' fill='none' stroke='%23ffffff' stroke-opacity='.3' stroke-width='2'/><path fill-rule='evenodd' d='M20 2C11 2 4 9 4 18c0 11 16 26 16 26s16-15 16-26C36 9 29 2 20 2zM20 12a6 6 0 1 0 0 12a6 6 0 1 0 0-12z' fill='%23c9d6df' fill-opacity='.55'/></g></svg>");
+    --fc-pin-rosa: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='460' height='560'><g transform='translate(330 300) scale(.65)'><ellipse cx='20' cy='46' rx='17' ry='6' fill='none' stroke='%23ffffff' stroke-opacity='.3' stroke-width='2'/><path fill-rule='evenodd' d='M20 2C11 2 4 9 4 18c0 11 16 26 16 26s16-15 16-26C36 9 29 2 20 2zM20 12a6 6 0 1 0 0 12a6 6 0 1 0 0-12z' fill='%23f07aa8' fill-opacity='.8'/></g></svg>");
+    --fc-pin-turquesa: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='470' height='600'><g transform='translate(300 420) scale(.9)'><ellipse cx='20' cy='46' rx='17' ry='6' fill='none' stroke='%23ffffff' stroke-opacity='.35' stroke-width='2'/><path fill-rule='evenodd' d='M20 2C11 2 4 9 4 18c0 11 16 26 16 26s16-15 16-26C36 9 29 2 20 2zM20 12a6 6 0 1 0 0 12a6 6 0 1 0 0-12z' fill='%2335cfc0'/></g></svg>");
+    --fc-pin-lila: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='610' height='500'><g transform='translate(470 200) scale(.8)'><ellipse cx='20' cy='46' rx='17' ry='6' fill='none' stroke='%23ffffff' stroke-opacity='.3' stroke-width='2'/><path fill-rule='evenodd' d='M20 2C11 2 4 9 4 18c0 11 16 26 16 26s16-15 16-26C36 9 29 2 20 2zM20 12a6 6 0 1 0 0 12a6 6 0 1 0 0-12z' fill='%23a59ee6' fill-opacity='.8'/></g></svg>");
+    --fc-cruz: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='330' height='380'><path d='M230 60v20M220 70h20' stroke='%23ffffff' stroke-opacity='.35' stroke-width='2'/></svg>");
+    background-color: #2a2766;
+    background-image: linear-gradient(160deg, #2a2766 0%, #4c4bbd 50%, #e04a87 100%);
+}
+
+.fondo-cascada::before,
+.fondo-cascada::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-repeat: repeat;
+}
+
+.fondo-cascada::before {
+    background-image: var(--fc-pin-gris), var(--fc-cruz), var(--fc-pin-rosa);
+    animation: fc-caida-lenta 24s linear infinite;
+}
+
+.fondo-cascada::after {
+    background-image: var(--fc-pin-turquesa), var(--fc-pin-lila), var(--fc-cruz);
+    background-position: 0 0, 0 0, 150px 190px;
+    animation: fc-caida-rapida 13s linear infinite;
+}
+
+@keyframes fc-caida-lenta {
+    from { background-position: 0 0,     0 0,     0 0; }
+    to   { background-position: 0 640px, 0 380px, 0 560px; }
+}
+
+@keyframes fc-caida-rapida {
+    from { background-position: 0 0,     0 0,     150px 190px; }
+    to   { background-position: 0 600px, 0 500px, 150px 570px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .fondo-cascada::before,
+    .fondo-cascada::after {
+        animation: none;
+    }
+}

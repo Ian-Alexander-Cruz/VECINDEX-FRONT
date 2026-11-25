@@ -94,6 +94,20 @@ export default function CrearComunidad() {
                         <small>Formatos permitidos: JPG o PNG. Máximo 5 MB.</small>
                     </div>
 
+                    <div className={cuentaStyles.campoEdicion}>
+                        <label htmlFor="maximoHabitantes">Máximo de habitantes</label>
+                        <input
+                            type="number"
+                            id="maximoHabitantes"
+                            name="maximoHabitantes"
+                            min={1}
+                            max={200}
+                            step={1}
+                            placeholder="Entre 1 y 200"
+                            required
+                        />
+                    </div>
+
                 </form>
 
             </section>

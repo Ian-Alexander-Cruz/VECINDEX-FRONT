@@ -55,6 +55,22 @@ export default function CrearComunidad() {
                         </p>
                     </div>
                 </div>
+
+                <form className={cuentaStyles.formularioEdicion} onSubmit={solicitarCreacion}>
+                    <div className={cuentaStyles.campoEdicion}>
+                        <label htmlFor="nombre">Nombre de la unidad habitacional</label>
+                        <input
+                            type="text"
+                            id="nombre"
+                            name="nombre"
+                            placeholder="Ej. Unidad Habitacional El Rosario"
+                            maxLength={50}
+                            autoComplete="organization"
+                            required
+                        />
+                    </div>
+                </form>
+
             </section>
 
         </main>

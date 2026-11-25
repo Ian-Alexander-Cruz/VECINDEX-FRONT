@@ -98,7 +98,6 @@
     resize: vertical;
 }
 
-/* Sin esto el icono del calendario sale casi invisible sobre el fondo oscuro */
 .campoEvento input[type="date"] {
     color-scheme: dark;
 }
@@ -156,4 +155,129 @@
     border: 1px solid rgba(228, 91, 104, 0.4);
     background: rgba(228, 91, 104, 0.12);
     color: #FF9BA4;
+}
+
+
+
+.tituloLista {
+    margin: 0 0 20px;
+    color: #33CEBF;
+    font-size: 19px;
+    font-weight: 750;
+}
+
+.sinEventos {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 15px;
+}
+
+.listaEventos {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.tarjetaEvento {
+    padding: 18px 22px;
+    border: 1px solid rgba(51, 206, 191, 0.20);
+    border-left: 4px solid #33CEBF;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.tarjetaEvento:hover {
+    background: rgba(51, 206, 191, 0.08);
+    border-color: #33CEBF;
+}
+
+.tipoEvento {
+    display: inline-block;
+    margin-bottom: 8px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: rgba(51, 206, 191, 0.15);
+    color: #33CEBF;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.tarjetaEvento h3 {
+    margin: 0 0 6px;
+    color: #FFFFFF;
+    font-size: 17px;
+    font-weight: 750;
+    overflow-wrap: anywhere;
+}
+
+.fechaEvento {
+    margin: 0;
+    color: #33CEBF;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.descripcionEvento {
+    margin: 8px 0 0;
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 14px;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+}
+
+
+@media (max-width: 900px) {
+    .paginaEventos {
+        padding: 35px 25px;
+    }
+
+    .seccionEventos, .seccionLista {
+        padding: 27px;
+    }
+}
+
+@media (max-width: 600px) {
+    .paginaEventos {
+        margin-left: 76px;
+        padding: 25px 14px;
+        gap: 22px;
+    }
+
+    .seccionEventos, .seccionLista {
+        padding: 20px 16px;
+        border-radius: 15px;
+    }
+
+    .encabezadoEventos {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+
+    .encabezadoEventos h1 {
+        font-size: 23px;
+    }
+
+    .tituloLista {
+        font-size: 17px;
+    }
+
+    .tarjetaEvento {
+        padding: 15px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .campoEvento input,
+    .campoEvento textarea,
+    .botonCrear,
+    .tarjetaEvento {
+        transition: none;
+    }
 }

@@ -156,6 +156,27 @@ export default function Inicio() {
         };
     }, []);
 
+    const visibles = useMemo(() => {
+        const texto = busqueda.trim().toLowerCase();
+
+        const filtrados = items.filter((item) => {
+            const coincideTipo = filtro === "todos" || item.tipo === filtro;
+
+            const coincideTexto =
+                !texto ||
+                item.titulo?.toLowerCase().includes(texto) ||
+                item.descripcion?.toLowerCase().includes(texto);
+
+            return coincideTipo && coincideTexto;
+        });
+
+        if (filtro === "peticion") {
+            return [...filtrados].sort((a, b) => b.apoyos - a.apoyos || b.tiempo - a.tiempo);
+        }
+
+        return [...filtrados].sort((a, b) => b.tiempo - a.tiempo);
+    }, [items, filtro, busqueda]);
+
     return (
         <main className={styles.container}>
             <FondoCuenta />

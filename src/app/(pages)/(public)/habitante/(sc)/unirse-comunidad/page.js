@@ -1,49 +1,97 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
 
-import FondoCuenta from "../../../../components/FondoCuenta";
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+
+import FondoCuenta from "@/app/components/FondoCuenta";
+import { useAuth } from "@/app/components/AuthProvider";
 import styles from "@/app/styles/Home.module.css";
 import comunidadStyles from "@/app/styles/UnirseComunidad.module.css";
-import { solicitarAPI } from "../../../../services/api";
+import { solicitarAPI } from "@/app/services/api";
+
+const ERRORES_SESION = ["Token requerido", "Token inválido o expirado"];
+
+const normalizar = (texto) => String(texto ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+
+const PATRON_CODIGO = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i;
 
 export default function UnirseComunidad() {
+    const { setUsuario } = useAuth();
+    const router = useRouter();
+    const [errorCodigo, setErrorCodigo] = useState("");
     const [nombreBusqueda, setNombreBusqueda] = useState("");
-    const [resultados, setResultados] = useState([]);
+    const [comunidades, setComunidades] = useState([]);
     const [codigoComunidad, setCodigoComunidad] = useState("");
-    const [cargando, setCargando] = useState(false);
-    const [busquedaRealizada, setBusquedaRealizada] = useState(false);
+    const [cargando, setCargando] = useState(true);
     const [error, setError] = useState("");
+    const [recargas, setRecargas] = useState(0);
+    const [idsOcupados, setIdsOcupados] = useState([]);
 
-    async function buscarComunidad(evento) {
+    useEffect(() => {
+        async function cargarComunidades() {
+            try {
+                const [respuesta, perfil] = await Promise.all([
+                    solicitarAPI("/api/comunidad"),
+                    solicitarAPI("/api/habitante/perfil")
+                ])
+
+                const ocupadas = [
+                    ...(Array.isArray(perfil.membresias) ? perfil.membresias : []),
+                    ...(Array.isArray(perfil.solicitudes) ? perfil.solicitudes.filter((solicitud) => solicitud.id_estado === 3) : [])
+                ].map((fila) => fila.id_comunidad)
+
+                setComunidades(Array.isArray(respuesta) ? respuesta : [])
+                setIdsOcupados(ocupadas)
+            }catch(error) {
+                if(ERRORES_SESION.includes(error.message)) {
+                    setUsuario(null)
+                    return
+                }
+                setError(error.message || "No fue posible cargar las comunidades")
+            }finally {
+                setCargando(false);
+            }
+        }
+        cargarComunidades()
+    }, [recargas, setUsuario])
+
+    function recargar() {
+        setCargando(true)
+        setError("")
+        setNombreBusqueda("")
+        setRecargas((n) => n + 1)
+    }
+
+    function continuarConCodigo(evento) {
         evento.preventDefault();
 
-        const nombre = nombreBusqueda.trim();
+        const codigo = codigoComunidad.match(PATRON_CODIGO)?.[0].toLowerCase();
 
-        if (!nombre) {
-            setError("Escribe el nombre de la comunidad que deseas encontrar.");
-            setResultados([]);
-            setBusquedaRealizada(false);
+        if (!codigo) {
+            setErrorCodigo("El código no es válido.");
             return;
         }
 
-        try {
-            setCargando(true);
-            setError("");
-            setResultados([]);
-            setBusquedaRealizada(false);
+        const comunidad = comunidades.find((comunidad) => comunidad.codigo?.toLowerCase() === codigo);
 
-            const respuesta = await solicitarAPI(`/api/comunidad/buscar?nombre=${encodeURIComponent(nombre)}`);
-
-            setResultados(Array.isArray(respuesta) ? respuesta : []);
-            setBusquedaRealizada(true);
-        } catch (error) {
-            setError(error.message || "No fue posible buscar comunidades.");
-        } finally {
-            setCargando(false);
+        if (!comunidad) {
+            setErrorCodigo("No encontramos una comunidad con ese código.");
+            return;
         }
+
+        if (idsOcupados.includes(comunidad.id_comunidad)) {
+            setErrorCodigo("Ya perteneces a esta comunidad o tienes una solicitud pendiente.");
+            return;
+        }
+
+        router.push(`/habitante/comunidad/${comunidad.id_comunidad}`);
     }
+
+    const busqueda = normalizar(nombreBusqueda);
+    const disponibles = comunidades.filter((comunidad) => !idsOcupados.includes(comunidad.id_comunidad));
+    const resultados = busqueda ? disponibles.filter((comunidad) => normalizar(comunidad.nombre).includes(busqueda)) : disponibles;
 
     return (
         <main className={`${styles.container} ${comunidadStyles.paginaUnirse}`}>
@@ -80,23 +128,28 @@ export default function UnirseComunidad() {
                         QR proporcionado por tu representante.
                     </p>
 
-                    <form className={comunidadStyles.formulario}>
+                    <form className={comunidadStyles.formulario} onSubmit={continuarConCodigo}>
                         <label htmlFor="codigoComunidad">
                             Código de comunidad
                         </label>
-                        <input type="text" id="codigoComunidad" name="codigoComunidad" placeholder="Introduce tu código de invitación" autoComplete="off" inputMode="numeric" pattern="[0-9]*" required value={codigoComunidad} onChange={(evento) => {
-                            setCodigoComunidad(
-                                evento.target.value.replace(/\D/g, "")
-                            );
+                        <input type="text" id="codigoComunidad" name="codigoComunidad" placeholder="Introduce tu código de invitación" autoComplete="off" maxLength={300} value={codigoComunidad} onChange={(evento) => {
+                            setCodigoComunidad(evento.target.value);
+                            setErrorCodigo("");
                         }}/>
                         <small className={comunidadStyles.ayudaCodigo}>
-                            Introduce el código que obtuviste al escanear el QR de tu comunidad.
+                            Introduce o pega el código que obtuviste al escanear el QR de tu comunidad.
                         </small>
 
-                        <button type="button" className={comunidadStyles.boton}>
+                        <button type="submit" className={comunidadStyles.boton} disabled={cargando || !codigoComunidad.trim()}>
                             Continuar
                         </button>
                     </form>
+
+                    {errorCodigo && (
+                        <p className={comunidadStyles.errorBusqueda}>
+                            {errorCodigo}
+                        </p>
+                    )}
                 </section>
 
                 <section className={comunidadStyles.tarjeta}>
@@ -115,23 +168,18 @@ export default function UnirseComunidad() {
                     </div>
 
                     <p className={comunidadStyles.descripcion}>
-                        Escribe el nombre de la comunidad que deseas encontrar
-                        y consulta los resultados disponibles.
+                        Escribe el nombre de la comunidad y la lista se
+                        actualizará mientras escribes.
                     </p>
 
-                    <form className={comunidadStyles.formulario} onSubmit={buscarComunidad}>
+                    <form className={comunidadStyles.formulario} onSubmit={(evento) => evento.preventDefault()}>
                         <label htmlFor="buscarComunidad">
                             Nombre de la comunidad
                         </label>
-                        <input type="search" id="buscarComunidad" name="buscarComunidad" placeholder="Nombre de la comunidad" autoComplete="off" maxLength={150} value={nombreBusqueda} onChange={(evento) => {
-                            setNombreBusqueda(evento.target.value);
-                            setResultados([]);
-                            setBusquedaRealizada(false);
-                            setError("");
-                        }}/>
+                        <input type="search" id="buscarComunidad" name="buscarComunidad" placeholder="Nombre de la comunidad" autoComplete="off" maxLength={150} value={nombreBusqueda} disabled={cargando} onChange={(evento) => setNombreBusqueda(evento.target.value)}/>
 
-                        <button type="submit" className={comunidadStyles.boton} disabled={cargando}>
-                            {cargando ? "Buscando..." : "Buscar comunidad"}
+                        <button type="button" className={comunidadStyles.boton} disabled={cargando} onClick={recargar}>
+                            {cargando ? "Cargando..." : "Recargar"}
                         </button>
                     </form>
 
@@ -143,20 +191,21 @@ export default function UnirseComunidad() {
 
                     {cargando && (
                         <p className={comunidadStyles.estadoBusqueda}>
-                            Buscando comunidades...
+                            Cargando comunidades...
                         </p>
                     )}
 
-                    {busquedaRealizada && resultados.length === 0 && (
+                    {!cargando && !error && resultados.length === 0 && (
                         <p className={comunidadStyles.estadoBusqueda}>
-                            No encontramos comunidades con ese nombre.
-                            Intenta con otra búsqueda.
+                            {busqueda
+                                ? "No encontramos comunidades con ese nombre. Intenta con otra búsqueda."
+                                : "Todavía no hay comunidades disponibles."}
                         </p>
                     )}
 
-                    {resultados.length > 0 && (
+                    {!cargando && resultados.length > 0 && (
                         <div className={comunidadStyles.resultados}>
-                            <h3>Resultados de búsqueda</h3>
+                            <h3>{busqueda ? "Resultados de búsqueda" : "Todas las comunidades"}</h3>
 
                             {resultados.map((comunidad) => (
                                 <article key={comunidad.id_comunidad} className={comunidadStyles.resultado}>

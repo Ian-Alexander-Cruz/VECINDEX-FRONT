@@ -1,0 +1,376 @@
+.paginaInicio {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    margin-left: 88px;
+    padding: 55px 45px;
+    display: flex;
+    justify-content: center;
+}
+
+.contenido {
+    width: 100%;
+    max-width: 950px;
+    display: flex;
+    flex-direction: column;
+    gap: 34px;
+}
+
+.saludo h1 {
+    margin: 0;
+    color: #fff;
+    font-size: 34px;
+    font-weight: 800;
+    line-height: 1.15;
+    overflow-wrap: anywhere;
+}
+
+.saludo p {
+    margin: 10px 0 0;
+    max-width: 60ch;
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+.seccion h2 {
+    margin: 0 0 16px;
+    color: #fff;
+    font-size: 19px;
+    font-weight: 700;
+}
+
+.listaComunidades {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.tarjetaComunidad {
+    height: 100%;
+    padding: 22px 22px 22px 20px;
+    display: flex;
+    gap: 16px;
+    border-radius: 18px;
+    border: 1px solid rgba(51, 206, 191, 0.25);
+    background: rgba(23, 25, 67, 0.8);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 12px 35px rgba(10, 12, 45, 0.18);
+}
+
+.marcador {
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background: rgba(51, 206, 191, 0.12);
+}
+
+.marcador svg {
+    width: 18px;
+    height: 21px;
+    fill: #33CEBF;
+}
+
+.datosComunidad {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.datosComunidad h3 {
+    margin: 0;
+    color: #fff;
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 1.3;
+    overflow-wrap: anywhere;
+}
+
+.datosComunidad p {
+    margin: 5px 0 16px;
+    color: rgba(255, 255, 255, 0.62);
+    font-size: 13px;
+}
+
+.boton {
+    display: inline-block;
+    padding: 9px 18px;
+    border-radius: 9px;
+    background: #33CEBF;
+    color: #171943;
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: background 0.2s ease;
+}
+
+.boton:hover {
+    background: #28B5A8;
+}
+
+.boton:focus-visible,
+.botonMenu:focus-visible,
+.opcionMenu:focus-visible {
+    outline: 2px solid #75F0DF;
+    outline-offset: 3px;
+}
+
+.vacio {
+    padding: 42px 38px;
+    display: flex;
+    align-items: center;
+    gap: 34px;
+    border-radius: 22px;
+    border: 1px solid rgba(51, 206, 191, 0.25);
+    background: rgba(23, 25, 67, 0.82);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+}
+
+.pinVacio {
+    position: relative;
+    width: 96px;
+    height: 110px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+.pinVacio svg {
+    position: relative;
+    z-index: 1;
+    width: 64px;
+    height: 74px;
+    margin-bottom: 18px;
+    fill: #33CEBF;
+}
+
+.onda {
+    position: absolute;
+    bottom: 6px;
+    left: 50%;
+    width: 70px;
+    height: 22px;
+    border-radius: 50%;
+    border: 2px solid rgba(51, 206, 191, 0.6);
+    transform: translateX(-50%);
+    animation: onda 2.4s ease-out infinite;
+}
+
+@keyframes onda {
+    from {
+        opacity: 0.9;
+        transform: translateX(-50%) scale(0.5);
+    }
+    to {
+        opacity: 0;
+        transform: translateX(-50%) scale(1.4);
+    }
+}
+
+.textoVacio h2 {
+    margin: 0;
+    color: #fff;
+    font-size: 21px;
+    font-weight: 700;
+}
+
+.textoVacio p {
+    margin: 8px 0 20px;
+    max-width: 52ch;
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+.listaSolicitudes {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-radius: 16px;
+    border: 1px solid rgba(51, 206, 191, 0.18);
+    background: rgba(15, 17, 52, 0.6);
+}
+
+.filaSolicitud {
+    padding: 14px 14px 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.filaSolicitud + .filaSolicitud {
+    border-top: 1px solid rgba(51, 206, 191, 0.12);
+}
+
+.datosSolicitud {
+    flex: 1;
+    min-width: 0;
+}
+
+.encabezadoSolicitud {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.encabezadoSolicitud h3 {
+    margin: 0;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+}
+
+.datosSolicitud p {
+    margin: 4px 0 0;
+    color: rgba(255, 255, 255, 0.58);
+    font-size: 13px;
+}
+
+.etiqueta {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: capitalize;
+}
+
+.etiquetaPendiente {
+    background: rgba(245, 197, 66, 0.18);
+    color: #F5C542;
+}
+
+.etiquetaRechazado {
+    background: rgba(255, 99, 99, 0.18);
+    color: #FF7B7B;
+}
+
+.etiquetaOtro {
+    background: rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.menu {
+    position: relative;
+}
+
+.botonMenu {
+    width: 34px;
+    height: 34px;
+    border: none;
+    border-radius: 9px;
+    background: transparent;
+    color: #fff;
+    font-size: 20px;
+    line-height: 1;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.botonMenu:hover {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.opcionesMenu {
+    position: absolute;
+    top: 38px;
+    right: 0;
+    z-index: 10;
+    min-width: 170px;
+    padding: 6px;
+    border: 1px solid rgba(51, 206, 191, 0.2);
+    border-radius: 10px;
+    background: #171943;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+}
+
+.opcionMenu {
+    width: 100%;
+    padding: 9px 12px;
+    border: none;
+    border-radius: 7px;
+    background: transparent;
+    color: #FF7B7B;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+}
+
+.opcionMenu:hover:not(:disabled) {
+    background: rgba(255, 99, 99, 0.12);
+}
+
+.opcionMenu:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.mensaje,
+.mensajeError {
+    margin: 0;
+    padding: 16px 18px;
+    border-radius: 12px;
+    font-size: 14px;
+    line-height: 1.5;
+    background: rgba(23, 25, 67, 0.82);
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.mensajeError {
+    border: 1px solid rgba(255, 100, 110, 0.5);
+    color: #ffb8be;
+}
+
+.errorMenu {
+    margin: 0 0 12px;
+}
+
+@media (max-width: 760px) {
+    .listaComunidades {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .vacio {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 18px;
+        padding: 28px 22px;
+    }
+}
+
+@media (max-width: 600px) {
+    .paginaInicio {
+        margin-left: 76px;
+        padding: 30px 16px;
+    }
+
+    .saludo h1 {
+        font-size: 26px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .onda {
+        animation: none;
+        opacity: 0.5;
+    }
+
+    .boton,
+    .botonMenu {
+        transition: none;
+    }
+}

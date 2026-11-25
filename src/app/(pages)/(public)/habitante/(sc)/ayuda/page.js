@@ -1,4 +1,4 @@
-import FondoCuenta from "../../../../components/FondoCuenta";
+import FondoCuenta from "@/app/components/FondoCuenta";
 import styles from "@/app/styles/Home.module.css";
 import ayudaStyles from "@/app/styles/Ayuda.module.css";
 

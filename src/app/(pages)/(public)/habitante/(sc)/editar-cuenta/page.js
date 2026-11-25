@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import FondoCuenta from "../../../../components/FondoCuenta";
+import FondoCuenta from "@/app/components/FondoCuenta";
 import styles from "@/app/styles/Home.module.css";
 import cuentaStyles from "@/app/styles/Cuenta.module.css";
 import { solicitarAPI } from "@/app/services/api";

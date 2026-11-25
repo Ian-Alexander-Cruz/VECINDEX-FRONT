@@ -23,7 +23,7 @@
     box-shadow: 0 10px 30px rgba(23, 25, 67, 0.2);
     box-sizing: border-box;
 }
-/* Encabezado de la pantalla */
+
 
 .encabezadoEventos {
     display: flex;
@@ -56,4 +56,104 @@
     margin: 6px 0 0;
     color: rgba(255, 255, 255, 0.75);
     font-size: 14px;
+}
+
+/* Formulario para crear el evento */
+
+.formularioEvento {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.campoEvento {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+}
+
+.campoEvento label {
+    color: #FFFFFF;
+    font-size: 14px;
+    font-weight: 650;
+}
+
+.campoEvento input,
+.campoEvento textarea {
+    width: 100%;
+    padding: 14px 16px;
+    box-sizing: border-box;
+    border: 1px solid rgba(51, 206, 191, 0.28);
+    border-radius: 10px;
+    outline: none;
+    background: rgba(255, 255, 255, 0.06);
+    color: #FFFFFF;
+    font-size: 15px;
+    font-family: inherit;
+    transition: border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+}
+
+.campoEvento textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+/* Sin esto el icono del calendario sale casi invisible sobre el fondo oscuro */
+.campoEvento input[type="date"] {
+    color-scheme: dark;
+}
+
+.campoEvento input::placeholder,
+.campoEvento textarea::placeholder {
+    color: rgba(255, 255, 255, 0.42);
+}
+
+.campoEvento input:focus,
+.campoEvento textarea:focus {
+    border-color: #33CEBF;
+    background: rgba(51, 206, 191, 0.07);
+    box-shadow: 0 0 0 3px rgba(51, 206, 191, 0.12);
+}
+
+.botonCrear {
+    width: 100%;
+    padding: 15px 22px;
+    border: none;
+    border-radius: 10px;
+    background: #33CEBF;
+    color: #171943;
+    font-size: 15px;
+    font-weight: 750;
+    cursor: pointer;
+    transition: background 0.25s ease, transform 0.25s ease;
+}
+
+.botonCrear:hover:not(:disabled) {
+    background: #28B5A8;
+    transform: translateY(-2px);
+}
+
+.botonCrear:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+.mensaje {
+    margin: 0 0 20px;
+    padding: 13px 16px;
+    border-radius: 10px;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.mensaje[data-tipo="exito"] {
+    border: 1px solid rgba(51, 206, 191, 0.4);
+    background: rgba(51, 206, 191, 0.12);
+    color: #75E8D9;
+}
+
+.mensaje[data-tipo="error"] {
+    border: 1px solid rgba(228, 91, 104, 0.4);
+    background: rgba(228, 91, 104, 0.12);
+    color: #FF9BA4;
 }

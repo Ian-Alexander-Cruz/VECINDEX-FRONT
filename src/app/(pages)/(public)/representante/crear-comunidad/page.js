@@ -108,6 +108,16 @@ export default function CrearComunidad() {
                         />
                     </div>
 
+                    {mensaje && (
+                        <p className={cuentaStyles.mensaje} data-tipo={tipoMensaje} role="alert">
+                            {mensaje}
+                        </p>
+                    )}
+
+                    <button type="submit" className={cuentaStyles.botonGuardar} disabled={cargando}>
+                        {cargando ? "Enviando solicitud..." : "Solicitar creación de comunidad"}
+                    </button>
+
                 </form>
 
             </section>

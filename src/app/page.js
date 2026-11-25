@@ -6,7 +6,7 @@ import info from "./styles/QueEsVecindex.module.css";
 
 export default function Home() {
   return (
-      <main className={styles.Home}>
+      <main className={styles.container}>
         <BackgroundMap />
 
         <Navbar />

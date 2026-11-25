@@ -59,6 +59,71 @@ export default function Inicio() {
         return Number.isNaN(valor) ? 0 : valor;
     }
 
+
+    function construirItems([publicaciones, encuestas, peticiones]) {
+        const lista = [];
+
+        if (publicaciones.status === "fulfilled" && Array.isArray(publicaciones.value)) {
+            publicaciones.value.forEach((publicacion) => {
+                lista.push({
+                    clave: `publicacion-${publicacion.id_publicacion}`,
+                    tipo: "publicacion",
+                    titulo: publicacion.titulo,
+                    descripcion: publicacion.descripcion,
+                    imagen: publicacion.imagen,
+                    fecha: publicacion.fecha_publicacion,
+                    tiempo: aTiempo(publicacion.fecha_publicacion),
+                    meta: [publicacion.estatus].filter(Boolean)
+                });
+            });
+        }
+
+        if (encuestas.status === "fulfilled" && Array.isArray(encuestas.value)) {
+            encuestas.value.forEach((encuesta) => {
+                const opciones = encuesta.opciones?.length ?? 0;
+
+                lista.push({
+                    clave: `encuesta-${encuesta.id_encuesta}`,
+                    tipo: "encuesta",
+                    titulo: encuesta.titulo,
+                    descripcion: `Encuesta con ${opciones} ${opciones === 1 ? "opción" : "opciones"} para votar.`,
+                    imagen: null,
+                    fecha: encuesta.fecha_creacion,
+                    tiempo: aTiempo(encuesta.fecha_creacion),
+                    meta: [
+                        encuesta.abierta ? "Abierta" : "Cerrada",
+                        `${encuesta.total_votos ?? 0} ${encuesta.total_votos === 1 ? "voto" : "votos"}`
+                    ]
+                });
+            });
+        }
+
+        if (peticiones.status === "fulfilled" && Array.isArray(peticiones.value)) {
+            peticiones.value.forEach((peticion) => {
+                const apoyos = peticion.total_apoyos ?? 0;
+
+                lista.push({
+                    clave: `peticion-${peticion.id_peticion}`,
+                    tipo: "peticion",
+                    titulo: peticion.titulo,
+                    descripcion: peticion.descripcion,
+                    imagen: peticion.evidencias?.[0]?.foto ?? null,
+                    fecha: peticion.fecha_creacion,
+                    tiempo: aTiempo(peticion.fecha_creacion),
+                    apoyos,
+                    meta: [
+                        peticion.tipo_problema,
+                        peticion.autor ? `Por ${peticion.autor}` : null,
+                        `${apoyos} ${apoyos === 1 ? "apoyo" : "apoyos"}`,
+                        peticion.estatus
+                    ].filter(Boolean)
+                });
+            });
+        }
+
+        return lista;
+    }
+
     return (
         <main className={styles.container}>
             <FondoCuenta />

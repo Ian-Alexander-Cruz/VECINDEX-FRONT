@@ -5,7 +5,6 @@ import Link from "next/link"
 import FondoCuenta from "@/app/components/FondoCuenta";
 import {useAuth} from "@/app/components/AuthProvider";
 import styles from "@/app/styles/Home.module.css"
-import comunidadStyles from "@/app/styles/UnirseComunidad.module.css"
 import inicioStyles from "@/app/styles/InicioSC.module.css"
 import {solicitarAPI} from "@/app/services/api";
 
@@ -20,7 +19,7 @@ function claseEtiqueta(idEstado) {
 }
 
 export default function InicioSC() {
-    const {setUsuario} = useAuth()
+    const {usuario, setUsuario} = useAuth()
     const [membresias, setMembresias] = useState([])
     const [solicitudes, setSolicitudes] = useState([])
     const [cargando, setCargando] = useState(true)
@@ -83,100 +82,127 @@ export default function InicioSC() {
         }
     }
 
+    const nombre = usuario?.nombre?.trim().split(/\s+/)[0] || "vecino"
+
     return (
         <main className={styles.container}>
             <FondoCuenta/>
 
-            <section className={styles.Principal}>
-                <h1>Hola, vecino</h1>
+            <div className={inicioStyles.paginaInicio}>
+                <div className={inicioStyles.contenido}>
+                    <header className={inicioStyles.saludo}>
+                        <h1>Hola, {nombre}</h1>
+                        <p>
+                            {membresias.length > 0
+                                ? "Entra a una de tus comunidades o revisa cómo van tus solicitudes."
+                                : "Únete a la comunidad donde vives para usar todas las funciones de tu cuenta."}
+                        </p>
+                    </header>
 
-                {cargando ? (
-                    <p className={comunidadStyles.estadoBusqueda}>Cargando tus comunidades...</p>
-                ) : error ? (
-                    <p className={comunidadStyles.errorBusqueda}>{error}</p>
-                ) : (
-                    <>
-                        {membresias.length === 0 ? (
-                            <>
-                                <p>Unete a una comunidad para poder usar todas las funciones de tu cuenta de
-                                    habitante.</p>
-                                <Link href="/habitante/unirse-comunidad" className={comunidadStyles.botonVisualizar}>
-                                    Unirse a una comunidad
-                                </Link>
-                            </>
-                        ) : (
-                            <div className={comunidadStyles.resultados}>
-                                <h3>Tus comunidades</h3>
+                    {cargando ? (
+                        <p className={inicioStyles.mensaje} role="status">Cargando tus comunidades...</p>
+                    ) : error ? (
+                        <p className={inicioStyles.mensajeError} role="alert">{error}</p>
+                    ) : (
+                        <>
+                            {membresias.length === 0 ? (
+                                <section className={inicioStyles.vacio} aria-labelledby="sin-comunidad">
+                                    <div className={inicioStyles.pinVacio} aria-hidden="true">
+                                        <span className={inicioStyles.onda}/>
+                                        <svg viewBox="0 0 40 46">
+                                            <path fillRule="evenodd" d="M20 2C11 2 4 9 4 18c0 11 16 26 16 26s16-15 16-26C36 9 29 2 20 2zM20 12a6 6 0 1 0 0 12a6 6 0 1 0 0-12z"/>
+                                        </svg>
+                                    </div>
 
-                                {membresias.map((membresia) => (
-                                    <article key={membresia.id_integrante} className={comunidadStyles.resultado}>
-                                        <div className={comunidadStyles.datosResultado}>
-                                            <h4>{membresia.comunidad}</h4>
-                                            <p>Miembro
-                                                desde {new Date(membresia.fecha_solicitud).toLocaleDateString("es-MX")}</p>
+                                    <div className={inicioStyles.textoVacio}>
+                                        <h2 id="sin-comunidad">Todavía no estás en ninguna comunidad</h2>
+                                        <p>Busca tu comunidad por nombre o usa el código del QR que te dio tu representante.</p>
+                                        <Link href="/habitante/unirse-comunidad" className={inicioStyles.boton}>
+                                            Unirse a una comunidad
+                                        </Link>
+                                    </div>
+                                </section>
+                            ) : (
+                                <section className={inicioStyles.seccion} aria-labelledby="tus-comunidades">
+                                    <h2 id="tus-comunidades">Tus comunidades</h2>
 
-                                            <Link href={`/habitante/comunidad/${membresia.id_comunidad}`}
-                                                  className={comunidadStyles.botonVisualizar}>
-                                                Visualizar
-                                            </Link>
-                                        </div>
-                                    </article>
-                                ))}
-                            </div>
-                        )}
+                                    <ul className={inicioStyles.listaComunidades}>
+                                        {membresias.map((membresia) => (
+                                            <li key={membresia.id_integrante}>
+                                                <article className={inicioStyles.tarjetaComunidad}>
+                                                    <div className={inicioStyles.marcador} aria-hidden="true">
+                                                        <svg viewBox="0 0 40 46">
+                                                            <path fillRule="evenodd" d="M20 2C11 2 4 9 4 18c0 11 16 26 16 26s16-15 16-26C36 9 29 2 20 2zM20 12a6 6 0 1 0 0 12a6 6 0 1 0 0-12z"/>
+                                                        </svg>
+                                                    </div>
 
-                        {solicitudes.length > 0 && (
-                            <div className={`${comunidadStyles.resultados} ${inicioStyles.seccionSolicitudes}`}>
-                                <h3>Tus solicitudes</h3>
+                                                    <div className={inicioStyles.datosComunidad}>
+                                                        <h3>{membresia.comunidad}</h3>
+                                                        <p>Miembro desde {new Date(membresia.fecha_solicitud).toLocaleDateString("es-MX")}</p>
 
-                                {errorBorrar && (
-                                    <p className={comunidadStyles.errorBusqueda}>{errorBorrar}</p>
-                                )}
+                                                        <Link href={`/habitante/comunidad/${membresia.id_comunidad}`} className={inicioStyles.boton}>
+                                                            Visualizar
+                                                        </Link>
+                                                    </div>
+                                                </article>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </section>
+                            )}
 
-                                {solicitudes.map((solicitud) => (
-                                    <article key={solicitud.id_integrante} className={comunidadStyles.resultado}>
-                                        <div className={comunidadStyles.datosResultado}>
-                                            <div className={inicioStyles.encabezadoSolicitud}>
-                                                <h4>{solicitud.comunidad}</h4>
-                                                <span
-                                                    className={`${inicioStyles.etiqueta} ${claseEtiqueta(solicitud.id_estado)}`}>
-                                                    {String(solicitud.estado).toLowerCase()}
-                                                </span>
-                                            </div>
-                                            <p>Solicitada
-                                                el {new Date(solicitud.fecha_solicitud).toLocaleDateString("es-MX")}</p>
-                                        </div>
+                            {solicitudes.length > 0 && (
+                                <section className={inicioStyles.seccion} aria-labelledby="tus-solicitudes">
+                                    <h2 id="tus-solicitudes">Tus solicitudes</h2>
 
-                                        {solicitud.id_estado === ID_ESTADO_PENDIENTE && (
-                                            <div className={inicioStyles.menu}
-                                                 onClick={(evento) => evento.stopPropagation()}>
-                                                <button type="button" className={inicioStyles.botonMenu}
-                                                        aria-label={`Opciones de la solicitud a ${solicitud.comunidad}`}
-                                                        aria-haspopup="menu"
-                                                        aria-expanded={menuAbierto === solicitud.id_integrante}
-                                                        onClick={() => setMenuAbierto(menuAbierto === solicitud.id_integrante ? null : solicitud.id_integrante)}>
-                                                    ⋮
-                                                </button>
+                                    {errorBorrar && (
+                                        <p className={`${inicioStyles.mensajeError} ${inicioStyles.errorMenu}`} role="alert">{errorBorrar}</p>
+                                    )}
 
-                                                {menuAbierto === solicitud.id_integrante && (
-                                                    <div className={inicioStyles.opcionesMenu} role="menu">
-                                                        <button type="button" role="menuitem"
-                                                                className={inicioStyles.opcionMenu}
-                                                                disabled={borrando === solicitud.id_integrante}
-                                                                onClick={() => borrarSolicitud(solicitud)}>
-                                                            {borrando === solicitud.id_integrante ? "Borrando..." : "Borrar solicitud"}
+                                    <ul className={inicioStyles.listaSolicitudes}>
+                                        {solicitudes.map((solicitud) => (
+                                            <li key={solicitud.id_integrante} className={inicioStyles.filaSolicitud}>
+                                                <div className={inicioStyles.datosSolicitud}>
+                                                    <div className={inicioStyles.encabezadoSolicitud}>
+                                                        <h3>{solicitud.comunidad}</h3>
+                                                        <span className={`${inicioStyles.etiqueta} ${claseEtiqueta(solicitud.id_estado)}`}>
+                                                            {String(solicitud.estado).toLowerCase()}
+                                                        </span>
+                                                    </div>
+                                                    <p>Solicitada el {new Date(solicitud.fecha_solicitud).toLocaleDateString("es-MX")}</p>
+                                                </div>
+
+                                                {solicitud.id_estado === ID_ESTADO_PENDIENTE && (
+                                                    <div className={inicioStyles.menu} onClick={(evento) => evento.stopPropagation()}>
+                                                        <button type="button" className={inicioStyles.botonMenu}
+                                                                aria-label={`Opciones de la solicitud a ${solicitud.comunidad}`}
+                                                                aria-haspopup="menu"
+                                                                aria-expanded={menuAbierto === solicitud.id_integrante}
+                                                                onClick={() => setMenuAbierto(menuAbierto === solicitud.id_integrante ? null : solicitud.id_integrante)}>
+                                                            ⋮
                                                         </button>
+
+                                                        {menuAbierto === solicitud.id_integrante && (
+                                                            <div className={inicioStyles.opcionesMenu} role="menu">
+                                                                <button type="button" role="menuitem"
+                                                                        className={inicioStyles.opcionMenu}
+                                                                        disabled={borrando === solicitud.id_integrante}
+                                                                        onClick={() => borrarSolicitud(solicitud)}>
+                                                                    {borrando === solicitud.id_integrante ? "Borrando..." : "Borrar solicitud"}
+                                                                </button>
+                                                            </div>
+                                                        )}
                                                     </div>
                                                 )}
-                                            </div>
-                                        )}
-                                    </article>
-                                ))}
-                            </div>
-                        )}
-                    </>
-                )}
-            </section>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </section>
+                            )}
+                        </>
+                    )}
+                </div>
+            </div>
         </main>
     )
 }

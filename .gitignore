@@ -43,3 +43,18 @@ next-env.d.ts
 .idea
 AGENTS.md
 README.md
+# cloudflare / opennext
+.open-next
+.wrangler
+.dev.vars*
+
+
+/outIA
+/AGENTS.md
+/OpenCode.md
+/workflow.md
+/.opencode
+/docs
+/CLAUDE.md
+/CLAUDE.local.md
+/.claude

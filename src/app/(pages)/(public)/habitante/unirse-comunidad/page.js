@@ -1,49 +1,52 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 
-import FondoCuenta from "../../../../components/FondoCuenta";
+import FondoCuenta from "@/app/components/FondoCuenta";
+import { useAuth } from "@/app/components/AuthProvider";
 import styles from "@/app/styles/Home.module.css";
 import comunidadStyles from "@/app/styles/UnirseComunidad.module.css";
-import { solicitarAPI } from "../../../../services/api";
+import { solicitarAPI } from "@/app/services/api";
+
+const ERRORES_SESION = ["Token requerido", "Token inválido o expirado"];
+
+const normalizar = (texto) => String(texto ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
 
 export default function UnirseComunidad() {
+    const { setUsuario } = useAuth();
     const [nombreBusqueda, setNombreBusqueda] = useState("");
-    const [resultados, setResultados] = useState([]);
+    const [comunidades, setComunidades] = useState([]);
     const [codigoComunidad, setCodigoComunidad] = useState("");
-    const [cargando, setCargando] = useState(false);
-    const [busquedaRealizada, setBusquedaRealizada] = useState(false);
+    const [cargando, setCargando] = useState(true);
     const [error, setError] = useState("");
 
-    async function buscarComunidad(evento) {
-        evento.preventDefault();
-
-        const nombre = nombreBusqueda.trim();
-
-        if (!nombre) {
-            setError("Escribe el nombre de la comunidad que deseas encontrar.");
-            setResultados([]);
-            setBusquedaRealizada(false);
-            return;
-        }
-
+    async function cargarComunidades() {
         try {
             setCargando(true);
-            setError("");
-            setResultados([]);
-            setBusquedaRealizada(false);
+            setError("")
+            setNombreBusqueda("")
 
-            const respuesta = await solicitarAPI(`/api/comunidad/buscar?nombre=${encodeURIComponent(nombre)}`);
+            const respuesta = await solicitarAPI("/api/comunidad")
 
-            setResultados(Array.isArray(respuesta) ? respuesta : []);
-            setBusquedaRealizada(true);
-        } catch (error) {
-            setError(error.message || "No fue posible buscar comunidades.");
-        } finally {
+            setComunidades(Array.isArray(respuesta) ? respuesta : [])
+        }catch(error) {
+            if(ERRORES_SESION.includes(error.message)) {
+                setUsuario(null)
+                return
+            }
+            setError(error.message || "No fue posible cargar las comunidades")
+        }finally {
             setCargando(false);
         }
     }
+
+    useEffect(() => {
+        cargarComunidades()
+    }, [])
+
+    const busqueda = normalizar(nombreBusqueda);
+    const resultados = busqueda ? comunidades.filter((comunidad) => normalizar(comunidad.nombre).includes(busqueda)) : comunidades;
 
     return (
         <main className={`${styles.container} ${comunidadStyles.paginaUnirse}`}>
@@ -115,23 +118,18 @@ export default function UnirseComunidad() {
                     </div>
 
                     <p className={comunidadStyles.descripcion}>
-                        Escribe el nombre de la comunidad que deseas encontrar
-                        y consulta los resultados disponibles.
+                        Escribe el nombre de la comunidad y la lista se
+                        actualizará mientras escribes.
                     </p>
 
-                    <form className={comunidadStyles.formulario} onSubmit={buscarComunidad}>
+                    <form className={comunidadStyles.formulario} onSubmit={(evento) => evento.preventDefault()}>
                         <label htmlFor="buscarComunidad">
                             Nombre de la comunidad
                         </label>
-                        <input type="search" id="buscarComunidad" name="buscarComunidad" placeholder="Nombre de la comunidad" autoComplete="off" maxLength={150} value={nombreBusqueda} onChange={(evento) => {
-                            setNombreBusqueda(evento.target.value);
-                            setResultados([]);
-                            setBusquedaRealizada(false);
-                            setError("");
-                        }}/>
+                        <input type="search" id="buscarComunidad" name="buscarComunidad" placeholder="Nombre de la comunidad" autoComplete="off" maxLength={150} value={nombreBusqueda} disabled={cargando} onChange={(evento) => setNombreBusqueda(evento.target.value)}/>
 
-                        <button type="submit" className={comunidadStyles.boton} disabled={cargando}>
-                            {cargando ? "Buscando..." : "Buscar comunidad"}
+                        <button type="button" className={comunidadStyles.boton} disabled={cargando} onClick={cargarComunidades}>
+                            {cargando ? "Cargando..." : "Recargar"}
                         </button>
                     </form>
 
@@ -143,20 +141,21 @@ export default function UnirseComunidad() {
 
                     {cargando && (
                         <p className={comunidadStyles.estadoBusqueda}>
-                            Buscando comunidades...
+                            Cargando comunidades...
                         </p>
                     )}
 
-                    {busquedaRealizada && resultados.length === 0 && (
+                    {!cargando && !error && resultados.length === 0 && (
                         <p className={comunidadStyles.estadoBusqueda}>
-                            No encontramos comunidades con ese nombre.
-                            Intenta con otra búsqueda.
+                            {busqueda
+                                ? "No encontramos comunidades con ese nombre. Intenta con otra búsqueda."
+                                : "Todavía no hay comunidades disponibles."}
                         </p>
                     )}
 
-                    {resultados.length > 0 && (
+                    {!cargando && resultados.length > 0 && (
                         <div className={comunidadStyles.resultados}>
-                            <h3>Resultados de búsqueda</h3>
+                            <h3>{busqueda ? "Resultados de búsqueda" : "Todas las comunidades"}</h3>
 
                             {resultados.map((comunidad) => (
                                 <article key={comunidad.id_comunidad} className={comunidadStyles.resultado}>

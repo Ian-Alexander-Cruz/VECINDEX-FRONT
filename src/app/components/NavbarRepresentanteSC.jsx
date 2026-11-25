@@ -10,8 +10,8 @@ export default function NavbarRepresentanteSC() {
     const opciones = [
         {nombre: "Inicio", ruta: "/representante/inicio_SC", icono: "inicio"},
         {nombre: "Crear comunidad", ruta: "/representante/crear-comunidad", icono: "crear"},
-        {nombre: "Ayuda", ruta: "/representante/ayuda", icono: "ayuda"},
-        {nombre: "Cuenta", ruta: "/representante/cuenta", icono: "cuenta"}
+        {nombre: "Ayuda", ruta: "/representante/ayudacc", icono: "ayudacc"},
+        {nombre: "Cuenta", ruta: "/representante/cuentacc", icono: "cuentacc"}
     ];
 
     function Icono({ tipo }) {
@@ -43,7 +43,7 @@ export default function NavbarRepresentanteSC() {
                     </>
                 )}
 
-                {tipo === "ayuda" && (
+                {tipo === "ayudacc" && (
                     <>
                         <circle cx="12" cy="12" r="9" />
                         <path d="M9.5 9a2.5 2.5 0 1 1 4.2 1.8c-1.2 1-1.7 1.4-1.7 3.2" />
@@ -51,7 +51,7 @@ export default function NavbarRepresentanteSC() {
                     </>
                 )}
 
-                {tipo === "cuenta" && (
+                {tipo === "cuentacc" && (
                     <>
                         <circle cx="12" cy="8" r="3.5" />
                         <path d="M5 21a7 7 0 0 1 14 0" />

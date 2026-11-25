@@ -10,8 +10,8 @@ export default function NavbarHabitanteSC() {
     const opciones = [
         {nombre: "Inicio", ruta: "/habitante/inicio_SC", icono: "inicio"},
         {nombre: "Unirse a comunidad", ruta: "/habitante/unirse-comunidad", icono: "unirse"},
-        {nombre: "Ayuda", ruta: "/habitante/ayuda", icono: "ayuda"},
-        {nombre: "Cuenta", ruta: "/habitante/cuenta", icono: "cuenta"}
+        {nombre: "Ayuda", ruta: "/habitante/ayuda", icono: "ayudacc"},
+        {nombre: "Cuenta", ruta: "/habitante/cuenta", icono: "cuentacc"}
     ];
 
     function Icono({ tipo }) {
@@ -43,7 +43,7 @@ export default function NavbarHabitanteSC() {
                     </>
                 )}
 
-                {tipo === "ayuda" && (
+                {tipo === "ayudacc" && (
                     <>
                         <circle cx="12" cy="12" r="9" />
                         <path d="M9.5 9a2.5 2.5 0 1 1 4.2 1.8c-1.2 1-1.7 1.4-1.7 3.2" />
@@ -51,7 +51,7 @@ export default function NavbarHabitanteSC() {
                     </>
                 )}
 
-                {tipo === "cuenta" && (
+                {tipo === "cuentacc" && (
                     <>
                         <circle cx="12" cy="8" r="3.5" />
                         <path d="M5 21a7 7 0 0 1 14 0" />

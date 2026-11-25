@@ -18,7 +18,6 @@ export default function Subir() {
         {clave: "encuesta", nombre: "Crear encuesta", descripcion: "Una votación para que los habitantes opinen."}
     ];
 
-
     useEffect(() => {
         async function cargarTipos() {
             try {
@@ -136,7 +135,13 @@ export default function Subir() {
                     ))}
                 </div>
 
-                {seleccion === "evento" && (
+                {seleccion === "evento" && tipos.length === 0 && (
+                    <p className={styles.pendiente}>
+                        No se pudieron cargar los tipos de evento. Revisa que el catálogo tenga datos.
+                    </p>
+                )}
+
+                {seleccion === "evento" && tipos.length > 0 && (
                     <form className={styles.formulario} onSubmit={crearEvento}>
                         <div className={styles.campo}>
                             <label htmlFor="titulo"> Título del evento </label>
@@ -170,12 +175,10 @@ export default function Subir() {
                     </form>
                 )}
 
-                {/* AQUI VA EL FORMULARIO DE PUBLICACION */}
                 {seleccion === "publicacion" && (
                     <p className={styles.pendiente}>El formulario de publicaciones todavía no está hecho.</p>
                 )}
 
-                {/* AQUI VA EL FORMULARIO DE ENCUESTA */}
                 {seleccion === "encuesta" && (
                     <p className={styles.pendiente}>El formulario de encuestas todavía no está hecho.</p>
                 )}

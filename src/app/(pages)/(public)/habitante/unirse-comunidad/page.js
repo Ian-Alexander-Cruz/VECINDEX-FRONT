@@ -27,13 +27,23 @@ export default function UnirseComunidad() {
     const [cargando, setCargando] = useState(true);
     const [error, setError] = useState("");
     const [recargas, setRecargas] = useState(0);
+    const [idsOcupados, setIdsOcupados] = useState([]);
 
     useEffect(() => {
         async function cargarComunidades() {
             try {
-                const respuesta = await solicitarAPI("/api/comunidad")
+                const [respuesta, perfil] = await Promise.all([
+                    solicitarAPI("/api/comunidad"),
+                    solicitarAPI("/api/habitante/perfil")
+                ])
+
+                const ocupadas = [
+                    ...(Array.isArray(perfil.membresias) ? perfil.membresias : []),
+                    ...(Array.isArray(perfil.solicitudes) ? perfil.solicitudes.filter((solicitud) => solicitud.id_estado === 3) : [])
+                ].map((fila) => fila.id_comunidad)
 
                 setComunidades(Array.isArray(respuesta) ? respuesta : [])
+                setIdsOcupados(ocupadas)
             }catch(error) {
                 if(ERRORES_SESION.includes(error.message)) {
                     setUsuario(null)
@@ -71,11 +81,17 @@ export default function UnirseComunidad() {
             return;
         }
 
+        if (idsOcupados.includes(comunidad.id_comunidad)) {
+            setErrorCodigo("Ya perteneces a esta comunidad o tienes una solicitud pendiente.");
+            return;
+        }
+
         router.push(`/habitante/comunidad/${comunidad.id_comunidad}`);
     }
 
     const busqueda = normalizar(nombreBusqueda);
-    const resultados = busqueda ? comunidades.filter((comunidad) => normalizar(comunidad.nombre).includes(busqueda)) : comunidades;
+    const disponibles = comunidades.filter((comunidad) => !idsOcupados.includes(comunidad.id_comunidad));
+    const resultados = busqueda ? disponibles.filter((comunidad) => normalizar(comunidad.nombre).includes(busqueda)) : disponibles;
 
     return (
         <main className={`${styles.container} ${comunidadStyles.paginaUnirse}`}>

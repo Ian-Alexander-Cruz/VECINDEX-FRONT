@@ -1,7 +1,9 @@
 "use client";
 
+
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 import FondoCuenta from "@/app/components/FondoCuenta";
 import { useAuth } from "@/app/components/AuthProvider";
@@ -13,40 +15,83 @@ const ERRORES_SESION = ["Token requerido", "Token inválido o expirado"];
 
 const normalizar = (texto) => String(texto ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
 
+const PATRON_CODIGO = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i;
+
 export default function UnirseComunidad() {
     const { setUsuario } = useAuth();
+    const router = useRouter();
+    const [errorCodigo, setErrorCodigo] = useState("");
     const [nombreBusqueda, setNombreBusqueda] = useState("");
     const [comunidades, setComunidades] = useState([]);
     const [codigoComunidad, setCodigoComunidad] = useState("");
     const [cargando, setCargando] = useState(true);
     const [error, setError] = useState("");
-
-    async function cargarComunidades() {
-        try {
-            setCargando(true);
-            setError("")
-            setNombreBusqueda("")
-
-            const respuesta = await solicitarAPI("/api/comunidad")
-
-            setComunidades(Array.isArray(respuesta) ? respuesta : [])
-        }catch(error) {
-            if(ERRORES_SESION.includes(error.message)) {
-                setUsuario(null)
-                return
-            }
-            setError(error.message || "No fue posible cargar las comunidades")
-        }finally {
-            setCargando(false);
-        }
-    }
+    const [recargas, setRecargas] = useState(0);
+    const [idsOcupados, setIdsOcupados] = useState([]);
 
     useEffect(() => {
+        async function cargarComunidades() {
+            try {
+                const [respuesta, perfil] = await Promise.all([
+                    solicitarAPI("/api/comunidad"),
+                    solicitarAPI("/api/habitante/perfil")
+                ])
+
+                const ocupadas = [
+                    ...(Array.isArray(perfil.membresias) ? perfil.membresias : []),
+                    ...(Array.isArray(perfil.solicitudes) ? perfil.solicitudes.filter((solicitud) => solicitud.id_estado === 3) : [])
+                ].map((fila) => fila.id_comunidad)
+
+                setComunidades(Array.isArray(respuesta) ? respuesta : [])
+                setIdsOcupados(ocupadas)
+            }catch(error) {
+                if(ERRORES_SESION.includes(error.message)) {
+                    setUsuario(null)
+                    return
+                }
+                setError(error.message || "No fue posible cargar las comunidades")
+            }finally {
+                setCargando(false);
+            }
+        }
         cargarComunidades()
-    }, [])
+    }, [recargas, setUsuario])
+
+    function recargar() {
+        setCargando(true)
+        setError("")
+        setNombreBusqueda("")
+        setRecargas((n) => n + 1)
+    }
+
+    function continuarConCodigo(evento) {
+        evento.preventDefault();
+
+        const codigo = codigoComunidad.match(PATRON_CODIGO)?.[0].toLowerCase();
+
+        if (!codigo) {
+            setErrorCodigo("El código no es válido.");
+            return;
+        }
+
+        const comunidad = comunidades.find((comunidad) => comunidad.codigo?.toLowerCase() === codigo);
+
+        if (!comunidad) {
+            setErrorCodigo("No encontramos una comunidad con ese código.");
+            return;
+        }
+
+        if (idsOcupados.includes(comunidad.id_comunidad)) {
+            setErrorCodigo("Ya perteneces a esta comunidad o tienes una solicitud pendiente.");
+            return;
+        }
+
+        router.push(`/habitante/comunidad/${comunidad.id_comunidad}`);
+    }
 
     const busqueda = normalizar(nombreBusqueda);
-    const resultados = busqueda ? comunidades.filter((comunidad) => normalizar(comunidad.nombre).includes(busqueda)) : comunidades;
+    const disponibles = comunidades.filter((comunidad) => !idsOcupados.includes(comunidad.id_comunidad));
+    const resultados = busqueda ? disponibles.filter((comunidad) => normalizar(comunidad.nombre).includes(busqueda)) : disponibles;
 
     return (
         <main className={`${styles.container} ${comunidadStyles.paginaUnirse}`}>
@@ -83,23 +128,28 @@ export default function UnirseComunidad() {
                         QR proporcionado por tu representante.
                     </p>
 
-                    <form className={comunidadStyles.formulario}>
+                    <form className={comunidadStyles.formulario} onSubmit={continuarConCodigo}>
                         <label htmlFor="codigoComunidad">
                             Código de comunidad
                         </label>
-                        <input type="text" id="codigoComunidad" name="codigoComunidad" placeholder="Introduce tu código de invitación" autoComplete="off" inputMode="numeric" pattern="[0-9]*" required value={codigoComunidad} onChange={(evento) => {
-                            setCodigoComunidad(
-                                evento.target.value.replace(/\D/g, "")
-                            );
+                        <input type="text" id="codigoComunidad" name="codigoComunidad" placeholder="Introduce tu código de invitación" autoComplete="off" maxLength={300} value={codigoComunidad} onChange={(evento) => {
+                            setCodigoComunidad(evento.target.value);
+                            setErrorCodigo("");
                         }}/>
                         <small className={comunidadStyles.ayudaCodigo}>
-                            Introduce el código que obtuviste al escanear el QR de tu comunidad.
+                            Introduce o pega el código que obtuviste al escanear el QR de tu comunidad.
                         </small>
 
-                        <button type="button" className={comunidadStyles.boton}>
+                        <button type="submit" className={comunidadStyles.boton} disabled={cargando || !codigoComunidad.trim()}>
                             Continuar
                         </button>
                     </form>
+
+                    {errorCodigo && (
+                        <p className={comunidadStyles.errorBusqueda}>
+                            {errorCodigo}
+                        </p>
+                    )}
                 </section>
 
                 <section className={comunidadStyles.tarjeta}>
@@ -128,7 +178,7 @@ export default function UnirseComunidad() {
                         </label>
                         <input type="search" id="buscarComunidad" name="buscarComunidad" placeholder="Nombre de la comunidad" autoComplete="off" maxLength={150} value={nombreBusqueda} disabled={cargando} onChange={(evento) => setNombreBusqueda(evento.target.value)}/>
 
-                        <button type="button" className={comunidadStyles.boton} disabled={cargando} onClick={cargarComunidades}>
+                        <button type="button" className={comunidadStyles.boton} disabled={cargando} onClick={recargar}>
                             {cargando ? "Cargando..." : "Recargar"}
                         </button>
                     </form>

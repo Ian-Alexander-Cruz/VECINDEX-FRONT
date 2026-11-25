@@ -105,23 +105,19 @@ export default function RepresentantesDetalle({ params }) {
             setProcesando(true);
             setMensajeAccion("");
 
-            await solicitarAPI(`/api/representante/${representante.id_representante}`, {
-                method: "DELETE"
-            });
+            await solicitarAPI(`/api/representante/${representante.id_representante}`, {method: "DELETE"});
 
             router.push("/administrador/representantes");
         } catch (err) {
             console.error("Error al eliminar representante:", err);
-            setMensajeAccion(
-                err.message || "No fue posible eliminar al representante."
-            );
+            setMensajeAccion(err.message || "No fue posible eliminar al representante.");
         } finally {
             setProcesando(false);
         }
     };
 
     return (
-        <main className={styles.main}>
+        <main className={styles.container}>
             <FondoCuenta />
 
             {cargando ? (
@@ -259,6 +255,18 @@ export default function RepresentantesDetalle({ params }) {
                             </p>
                         )}
                     </section>
+
+                    <div className={styles.acciones}>
+                        <button type="button" className={styles.botonEliminar} onClick={eliminarRepresentante} disabled={procesando || editando}>
+                            {procesando ? "Eliminando..." : "Eliminar representante"}
+                        </button>
+                    </div>
+
+                    {mensajeAccion && (
+                        <p className={styles.mensajeAccion}>
+                            {mensajeAccion}
+                        </p>
+                    )}
                 </section>
             ) : (
                 <p>No se encontró al representante.</p>

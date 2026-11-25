@@ -45,7 +45,7 @@ export default function HabitanteDetalle({ params }) {
     }, [id]);
 
     async function eliminarHabitante() {
-        const confirmado = window.confirm("¿Estás seguro de que deseas eliminar esta cuenta?");
+        const confirmado = window.confirm("¿Estás seguro de que deseas eliminar esta cuentacc?");
 
         if (!confirmado) return;
 
@@ -218,7 +218,7 @@ export default function HabitanteDetalle({ params }) {
 
                         <section className={styles.acciones}>
                             <button type="button" className={styles.botonEliminar} onClick={eliminarHabitante} disabled={procesando || editando}>
-                                {procesando ? "Eliminando..." : "Eliminar cuenta"}
+                                {procesando ? "Eliminando..." : "Eliminar cuentacc"}
                             </button>
                         </section>
 

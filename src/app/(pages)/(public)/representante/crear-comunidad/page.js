@@ -69,6 +69,19 @@ export default function CrearComunidad() {
                             required
                         />
                     </div>
+
+                    <div className={cuentaStyles.campoEdicion}>
+                        <label htmlFor="ubicacion">Ubicación</label>
+                        <input
+                            type="text"
+                            id="ubicacion"
+                            name="ubicacion"
+                            placeholder="Ej. Calle, colonia, municipio"
+                            maxLength={255}
+                            required
+                        />
+                    </div>
+
                 </form>
 
             </section>

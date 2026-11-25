@@ -140,7 +140,7 @@ export default function InicioSC() {
                                                         <h3>{membresia.comunidad}</h3>
                                                         <p>Miembro desde {new Date(membresia.fecha_solicitud).toLocaleDateString("es-MX")}</p>
 
-                                                        <Link href={"/habitante/inicio_CC"} className={inicioStyles.boton}>
+                                                        <Link href={`/habitante/inicio_CC?comunidad=${membresia.id_comunidad}`} className={inicioStyles.boton}>
                                                             Ingresar
                                                         </Link>
                                                     </div>

@@ -1,19 +1,22 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import styles from "../components/NavbarCuenta.module.css";
 
 export default function NavbarHabitanteCC() {
     const pathname = usePathname();
+    const comunidad = useSearchParams().get("comunidad");
+    const consulta = /^\d+$/.test(comunidad ?? "") ? `?comunidad=${comunidad}` : "";
 
     const opciones = [
         {nombre: "Inicio", ruta: "/habitante/inicio_CC", icono: "inicio"},
         {nombre: "Mapa", ruta: "/habitante/mapa", icono: "mapa"},
         {nombre: "Crear petición", ruta: "/habitante/crear-peticion", icono: "crear"},
         {nombre: "Eventos", ruta: "/habitante/eventos", icono: "eventos"},
-        {nombre: "Ayuda", ruta: "/habitante/ayuda", icono: "ayudacc"},
-        {nombre: "Cuenta", ruta: "/habitante/cuenta", icono: "cuentacc"}
+        {nombre: "Ayuda", ruta: "/habitante/ayudacc", icono: "ayudacc"},
+        {nombre: "Cuenta", ruta: "/habitante/cuentacc", icono: "cuentacc"},
+        {nombre: "Mis comunidades", ruta: "/habitante/inicio_SC", icono: "salir", sinComunidad: true}
     ];
 
     function Icono({ tipo }) {
@@ -73,6 +76,13 @@ export default function NavbarHabitanteCC() {
                         <path d="M5 21a7 7 0 0 1 14 0" />
                     </>
                 )}
+
+                {tipo === "salir" && (
+                    <>
+                        <path d="M15 5H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h9" />
+                        <path d="M10 12h10M17 9l3 3-3 3" transform="rotate(180 15 12)" />
+                    </>
+                )}
             </svg>
         );
     }
@@ -86,7 +96,7 @@ export default function NavbarHabitanteCC() {
                     return (
                         <li key={opcion.ruta}>
                             <Link
-                                href={opcion.ruta}
+                                href={opcion.sinComunidad ? opcion.ruta : `${opcion.ruta}${consulta}`}
                                 className={`${styles.navLink} ${activo ? styles.activo : ""}`}
                                 aria-current={activo ? "page" : undefined}
                             >

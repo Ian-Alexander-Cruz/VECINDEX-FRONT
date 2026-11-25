@@ -5,12 +5,14 @@ import FondoCuenta from "@/app/components/FondoCuenta";
 import styles from "@/app/styles/Home.module.css";
 import cuentaStyles from "@/app/styles/Cuenta.module.css";
 import { useAuth } from "@/app/components/AuthProvider";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { solicitarAPI } from "@/app/services/api";
 
 export default function Cuenta() {
     const { usuario, setUsuario } = useAuth();
     const router = useRouter();
+    const comunidad = useSearchParams().get("comunidad");
+    const consulta = /^\d+$/.test(comunidad ?? "") ? `?comunidad=${comunidad}` : "";
 
     async function cerrarSesion() {
         try {
@@ -99,7 +101,7 @@ export default function Cuenta() {
                     </article>
                 </div>
 
-                <Link href="/habitante/editar-cuenta" className={cuentaStyles.botonEditar}>
+                <Link href={`/habitante/editar-cuentacc${consulta}`} className={cuentaStyles.botonEditar}>
                     Editar cuenta
                 </Link>
             </section>

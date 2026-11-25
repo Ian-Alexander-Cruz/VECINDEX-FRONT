@@ -1,12 +1,12 @@
 "use client"
 
 import Link from "next/link";
-import FondoCuenta from "../../../../components/FondoCuenta";
+import FondoCuenta from "@/app/components/FondoCuenta";
 import styles from "@/app/styles/Home.module.css";
 import cuentaStyles from "@/app/styles/Cuenta.module.css";
-import { useAuth } from "../../../../components/AuthProvider";
+import { useAuth } from "@/app/components/AuthProvider";
 import { useRouter } from "next/navigation";
-import { solicitarAPI } from "../../../../services/api";
+import { solicitarAPI } from "@/app/services/api";
 
 export default function Cuenta() {
     const { usuario, setUsuario } = useAuth();

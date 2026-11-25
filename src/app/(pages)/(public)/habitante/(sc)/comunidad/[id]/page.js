@@ -3,10 +3,10 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import FondoCuenta from "../../../../../components/FondoCuenta";
+import FondoCuenta from "@/app/components/FondoCuenta";
 import styles from "@/app/styles/Home.module.css";
 import comunidadStyles from "@/app/styles/Comunidad.module.css";
-import { solicitarAPI } from "../../../../../services/api";
+import { solicitarAPI } from "@/app/services/api";
 
 export default function Comunidad() {
     const { id } = useParams();

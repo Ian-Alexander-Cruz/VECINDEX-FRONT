@@ -131,3 +131,35 @@
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 20px;
 }
+
+.tarjeta {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid rgba(51, 206, 191, 0.25);
+    border-radius: 14px;
+    background: rgba(23, 25, 67, 0.75);
+    backdrop-filter: blur(8px);
+    color: #FFFFFF;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.tarjeta:hover {
+    background: rgba(23, 25, 67, 0.9);
+    transform: translateY(-3px);
+}
+
+.tarjetaImagen {
+    display: block;
+    width: 100%;
+    height: 165px;
+    object-fit: cover;
+}
+
+.tarjetaCuerpo {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    flex: 1;
+    padding: 22px;
+}

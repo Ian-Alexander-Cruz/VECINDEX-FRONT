@@ -23,3 +23,37 @@
     box-shadow: 0 10px 30px rgba(23, 25, 67, 0.2);
     box-sizing: border-box;
 }
+/* Encabezado */
+
+.encabezadoSubir {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin-bottom: 28px;
+    text-align: left;
+}
+
+.iconoSubir {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 14px;
+    background: rgba(51, 206, 191, 0.12);
+    color: #33CEBF;
+}
+
+.encabezadoSubir h1 {
+    margin: 0;
+    color: #FFFFFF;
+    font-size: 27px;
+    font-weight: 800;
+}
+
+.encabezadoSubir p {
+    margin: 6px 0 0;
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 14px;
+}

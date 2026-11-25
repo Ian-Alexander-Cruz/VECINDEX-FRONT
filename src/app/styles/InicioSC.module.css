@@ -1,0 +1,97 @@
+.seccionSolicitudes {
+    margin-top: 32px;
+}
+
+.encabezadoSolicitud {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 7px;
+}
+
+.encabezadoSolicitud h4 {
+    margin: 0;
+}
+
+.etiqueta {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: capitalize;
+}
+
+.etiquetaPendiente {
+    background: rgba(245, 197, 66, 0.18);
+    color: #F5C542;
+}
+
+.etiquetaRechazado {
+    background: rgba(255, 99, 99, 0.18);
+    color: #FF7B7B;
+}
+
+.etiquetaOtro {
+    background: rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.menu {
+    position: relative;
+    align-self: flex-start;
+}
+
+.botonMenu {
+    width: 34px;
+    height: 34px;
+    border: none;
+    border-radius: 9px;
+    background: transparent;
+    color: #fff;
+    font-size: 20px;
+    line-height: 1;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.botonMenu:hover,
+.botonMenu:focus-visible {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.opcionesMenu {
+    position: absolute;
+    top: 38px;
+    right: 0;
+    z-index: 10;
+    min-width: 170px;
+    padding: 6px;
+    border: 1px solid rgba(51, 206, 191, 0.2);
+    border-radius: 10px;
+    background: #171943;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+}
+
+.opcionMenu {
+    width: 100%;
+    padding: 9px 12px;
+    border: none;
+    border-radius: 7px;
+    background: transparent;
+    color: #FF7B7B;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+}
+
+.opcionMenu:hover:not(:disabled) {
+    background: rgba(255, 99, 99, 0.12);
+}
+
+.opcionMenu:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}

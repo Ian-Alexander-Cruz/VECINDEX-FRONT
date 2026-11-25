@@ -81,6 +81,46 @@ export default function HabitanteDetalle({ params }) {
         setErrorEdicion("");
     }
 
+    async function guardarEdicion(evento) {
+        evento.preventDefault();
+
+        const nombre = nombreEditado.trim();
+        const correo = correoEditado.trim();
+
+        if (!nombre || !correo) {
+            setErrorEdicion("El nombre y el correo son obligatorios.");
+            return;
+        }
+
+        setGuardandoEdicion(true);
+        setErrorEdicion("");
+
+        try {
+            const datos = await solicitarAPI(`/api/usuario/${habitante.id_usuario}`, {
+                method: "PUT",
+                body: JSON.stringify({
+                    nombre,
+                    correo,
+                    contrasena: contrasenaEditada
+                })
+            });
+
+            setHabitante(actual => ({
+                ...actual,
+                ...datos,
+                nombre: datos.nombre ?? nombre,
+                correo: datos.correo ?? correo
+            }));
+
+            setEditando(false);
+            setContrasenaEditada("");
+        } catch (error) {
+            setErrorEdicion(error.message);
+        } finally {
+            setGuardandoEdicion(false);
+        }
+    }
+
     return (
         <main className={styles.container}>
             <FondoCuenta />
@@ -126,7 +166,7 @@ export default function HabitanteDetalle({ params }) {
                             </div>
 
                             {editando ? (
-                                <form className={styles.formularioEdicion} onSubmit={(evento) => evento.preventDefault()}>
+                                <form className={styles.formularioEdicion} onSubmit={guardarEdicion}>
                                     <div className={styles.campo}>
                                         <label htmlFor="nombreEditado">
                                             Nombre completo

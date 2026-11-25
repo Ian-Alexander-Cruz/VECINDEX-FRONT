@@ -124,6 +124,38 @@ export default function Inicio() {
         return lista;
     }
 
+    useEffect(() => {
+        let activo = true;
+
+        async function cargarActividad() {
+            const resultados = await Promise.allSettled([
+                solicitarAPI("/api/publicacion/mias"),
+                solicitarAPI("/api/encuesta/mias"),
+                solicitarAPI("/api/peticion/mias")
+            ]);
+
+            if (!activo) return;
+
+            const rechazados = resultados.filter((resultado) => resultado.status === "rejected");
+            const mensajes = rechazados.map((resultado) => resultado.reason?.message).filter(Boolean);
+
+            if (rechazados.length === 3 && mensajes.every((mensaje) => mensaje === sinComunidadApi)) {
+                setSinComunidad(true);
+            } else if (rechazados.length === 3) {
+                setError(mensajes[0] || "No fue posible cargar la actividad de tu comunidad.");
+            }
+
+            setItems(construirItems(resultados));
+            setCargando(false);
+        }
+
+        cargarActividad();
+
+        return () => {
+            activo = false;
+        };
+    }, []);
+
     return (
         <main className={styles.container}>
             <FondoCuenta />

@@ -116,6 +116,19 @@ export default function RepresentantesDetalle({ params }) {
         }
     };
 
+    function obtenerFormato(url) {
+        try {
+            const ruta = new URL(url).pathname;
+            return ruta.split(".").pop().toLowerCase();
+        } catch {
+            return "";
+        }
+    }
+
+    const formato = representante?.constancia
+        ? obtenerFormato(representante.constancia)
+        : "";
+
     return (
         <main className={styles.container}>
             <FondoCuenta />
@@ -208,13 +221,22 @@ export default function RepresentantesDetalle({ params }) {
                             <div>
                                 <span>Constancia</span>
 
-                                {representante.constancia ? (
-                                    <div className={styles.visorConstancia}>
-                                        <iframe src={representante.constancia} title="Constancia del representante" width="100%" height="500"/>
-                                    </div>
-                                ) : (
-                                    <p>No hay una constancia disponible.</p>
+                                {!representante.constancia && (
+                                    <p className={styles.mensaje}>
+                                        No se pudo obtener el documento de la constancia.
+                                    </p>
                                 )}
+
+                                {representante.constancia && formato === "pdf" && (
+                                    <iframe src={representante.constancia} className={styles.visor} title="Constancia del representante"/>
+                                )}
+
+                                {representante.constancia &&
+                                    ["png", "jpg", "jpeg"].includes(formato) && (
+                                        <div className={styles.contenedorImagen}>
+                                            <img src={representante.constancia} alt="Constancia del representante"/>
+                                        </div>
+                                    )}
                             </div>
                         </div>
                     </section>

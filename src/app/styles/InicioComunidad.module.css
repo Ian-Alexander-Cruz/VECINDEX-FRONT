@@ -229,3 +229,38 @@
     color: #AEB5D8;
     font-size: 12px;
 }
+
+.mensaje,
+.mensajeError {
+    padding: 22px;
+    border-radius: 12px;
+    background: rgba(23, 25, 67, 0.75);
+    color: #FFFFFF;
+    text-align: center;
+    font-size: 15px;
+}
+
+.mensajeError {
+    color: #FF9BA4;
+}
+
+.estadoVacio {
+    padding: 45px 25px;
+    border: 1px dashed rgba(51, 206, 191, 0.35);
+    border-radius: 14px;
+    background: rgba(23, 25, 67, 0.55);
+    color: #E0E2FF;
+    text-align: center;
+}
+
+.estadoVacio h3 {
+    margin: 0 0 10px;
+    color: #FFFFFF;
+    font-size: 20px;
+}
+
+.estadoVacio p {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.6;
+}

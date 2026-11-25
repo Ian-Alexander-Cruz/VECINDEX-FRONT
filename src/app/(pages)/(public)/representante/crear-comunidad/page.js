@@ -41,10 +41,21 @@ export default function CrearComunidad() {
         }
     }
 
+
     return (
         <main className={`${estilosBase.container} ${cuentaStyles.paginaCuenta}`}>
             <FondoCuenta />
-
+            <section className={cuentaStyles.seccionCuenta} aria-labelledby="crear-comunidad">
+                <div className={cuentaStyles.encabezadoEdicion}>
+                    <div>
+                        <h1 id="crear-comunidad">Crear comunidad</h1>
+                        <p>
+                            Registra tu Unidad Habitacional. Un administrador revisará
+                            la solicitud antes de activarla.
+                        </p>
+                    </div>
+                </div>
+            </section>
 
         </main>
     );

@@ -31,8 +31,7 @@ export default function Representantes() {
     const representantesFiltrados = representantes.filter((representante) => {
         const coincideNombre = representante.nombre ?.toLowerCase().includes(busqueda.toLowerCase());
 
-        const tieneComunidad = representante.comunidad !== null &&
-            representante.comunidad !== undefined;
+        const tieneComunidad = representante.comunidad?.id_comunidad != null;
 
         const coincideComunidad =
             filtroComunidad === "todos" ||

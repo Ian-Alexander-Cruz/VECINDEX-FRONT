@@ -255,3 +255,94 @@
         grid-template-columns: 1fr;
     }
 }
+
+
+.imagenComunidad {
+    width: 100%;
+    height: 170px;
+    border-radius: 12px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+    color: rgba(255, 255, 255, 0.65);
+}
+
+.imagenComunidad img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+.gridComunidades {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 22px;
+    margin-top: 20px;
+}
+
+.tarjetaComunidad {
+    background: rgba(23, 25, 67, 0.75);
+    border: 1px solid rgba(51, 206, 191, 0.35);
+    border-radius: 16px;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.tarjetaComunidad:hover {
+    transform: translateY(-4px);
+    border-color: #33CEBF;
+}
+
+.datosComunidad {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+}
+
+.datosComunidad h3 {
+    color: white;
+    font-size: 1.15rem;
+    margin: 0;
+}
+
+.datosComunidad p {
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 0.9rem;
+    margin: 0;
+    line-height: 1.5;
+}
+
+@media (max-width: 600px) {
+    .gridComunidades {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+.estadoNormal, .estadoSuspendida {
+    width: fit-content;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.estadoNormal {
+    color: #33CEBF;
+    background: rgba(51, 206, 191, 0.13);
+    border: 1px solid rgba(51, 206, 191, 0.4);
+}
+
+.estadoSuspendida {
+    color: #ffc56e;
+    background: rgba(255, 197, 110, 0.12);
+    border: 1px solid rgba(255, 197, 110, 0.4);
+}
+

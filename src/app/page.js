@@ -8,7 +8,7 @@ import RedireccionSesion from "./components/RedireccionSesion";
 export default function Home() {
   return (
       <main className={styles.container}>
-        <RedireccionSesion>
+
 
 
         <BackgroundMap />
@@ -99,7 +99,7 @@ export default function Home() {
         </section>
 
         <Footer />
-        </RedireccionSesion>
+
       </main>
 
   );

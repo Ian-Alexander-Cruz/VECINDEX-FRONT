@@ -1,10 +1,50 @@
-import styles from "../../../../styles/Home.module.css";
+"use client";
+
+import { useState } from "react";
+import Link from "next/link";
+
 import FondoCuenta from "../../../../components/FondoCuenta";
+import estilosBase from "@/app/styles/Home.module.css";
+import cuentaStyles from "@/app/styles/Cuenta.module.css";
+import { solicitarAPI } from "../../../../services/api";
 
 export default function CrearComunidad() {
+
+    const [mensaje, setMensaje] = useState("");
+    const [tipoMensaje, setTipoMensaje] = useState("");
+    const [cargando, setCargando] = useState(false);
+
+    async function solicitarCreacion(evento) {
+        evento.preventDefault();
+
+        setMensaje("");
+        setTipoMensaje("");
+        setCargando(true);
+
+        const formulario = evento.currentTarget;
+        const datos = new FormData(formulario);
+
+        try {
+            await solicitarAPI("/api/comunidad", {
+                method: "POST",
+                body: datos
+            });
+
+            formulario.reset();
+            setMensaje("Tu solicitud se envió correctamente. Un administrador revisará la comunidad antes de activarla.");
+            setTipoMensaje("exito");
+        } catch (error) {
+            setMensaje(error.message || "No fue posible enviar la solicitud.");
+            setTipoMensaje("error");
+        } finally {
+            setCargando(false);
+        }
+    }
+
     return (
-        <main className={styles.container}>
+        <main className={`${estilosBase.container} ${cuentaStyles.paginaCuenta}`}>
             <FondoCuenta />
+
 
         </main>
     );

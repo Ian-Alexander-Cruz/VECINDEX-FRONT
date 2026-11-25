@@ -44,3 +44,34 @@
     margin-bottom: 32px;
     flex-wrap: wrap;
 }
+.busqueda {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+    min-width: 250px;
+    max-width: 500px;
+    padding: 13px 17px;
+    border: 1px solid rgba(51, 206, 191, 0.3);
+    border-radius: 10px;
+    background: rgba(23, 25, 67, 0.82);
+    color: #33CEBF;
+}
+
+.busqueda span {
+    font-size: 22px;
+    line-height: 1;
+}
+
+.busqueda input {
+    width: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: #FFFFFF;
+    font-size: 15px;
+}
+
+.busqueda input::placeholder {
+    color: #AEB5D8;
+}

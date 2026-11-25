@@ -299,3 +299,18 @@
     color: #FF8585;
     font-size: 14px;
 }
+
+.visorConstancia {
+    width: 100%;
+    margin-top: 15px;
+    overflow: hidden;
+    border: 1px solid rgba(51, 206, 191, 0.25);
+    border-radius: 12px;
+    background: #FFFFFF;
+}
+
+.visorConstancia iframe {
+    display: block;
+    width: 100%;
+    border: none;
+}

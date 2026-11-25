@@ -71,7 +71,10 @@ export default function Comunidades() {
                     </header>
 
                     <div className={styles.controles}>
-                        <input type="text" placeholder="Buscar comunidad por nombre..." value={busqueda} onChange={(e) => setBusqueda(e.target.value)} className={styles.busqueda}/>
+                        <div className={styles.busqueda}>
+                            <span>⌕</span>
+                            <input type="text" placeholder="Buscar comunidad por nombre..." value={busqueda} onChange={(evento) => setBusqueda(evento.target.value)}/>
+                        </div>
 
                         <div className={styles.filtros}>
                             <button className={filtro === "todas" ? styles.filtroActivo : ""} onClick={() => setFiltro("todas")}>

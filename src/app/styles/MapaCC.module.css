@@ -1,0 +1,366 @@
+.pagina {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    margin-left: 88px;
+    padding: 40px 45px 45px;
+    display: flex;
+    justify-content: center;
+}
+
+.contenido {
+    width: 100%;
+    max-width: 1200px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.encabezado h1 {
+    margin: 0;
+    color: #fff;
+    font-size: 30px;
+    font-weight: 800;
+}
+
+.encabezado p {
+    margin: 8px 0 0;
+    max-width: 65ch;
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+.filtros {
+    margin: 0;
+    padding: 0;
+    border: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.filtros legend {
+    width: 100%;
+    margin-bottom: 8px;
+    color: rgba(255, 255, 255, 0.65);
+    font-size: 13px;
+}
+
+.filtro {
+    --color-pin: #FFFFFF;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    border: 1px solid rgba(51, 206, 191, 0.25);
+    background: rgba(23, 25, 67, 0.8);
+    color: rgba(255, 255, 255, 0.55);
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.filtro[aria-pressed="true"] {
+    border-color: rgba(51, 206, 191, 0.6);
+    color: #fff;
+}
+
+.puntoFiltro {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    background: var(--color-pin);
+    opacity: 0.4;
+}
+
+.filtro[aria-pressed="true"] .puntoFiltro {
+    opacity: 1;
+}
+
+.zona {
+    position: relative;
+    height: max(460px, calc(100vh - 260px));
+    overflow: hidden;
+    border-radius: 22px;
+    border: 1px solid rgba(51, 206, 191, 0.25);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+}
+
+.mapa {
+    width: 100%;
+    height: 100%;
+}
+
+.pin {
+    --color-pin: #FFFFFF;
+    width: 22px;
+    height: 22px;
+    padding: 0;
+    border-radius: 50%;
+    border: 3px solid #171943;
+    background: var(--color-pin);
+    box-shadow: 0 0 0 2px var(--color-pin), 0 4px 10px rgba(0, 0, 0, 0.45);
+    cursor: pointer;
+}
+
+.pinSeleccionado {
+    width: 30px;
+    height: 30px;
+    box-shadow: 0 0 0 3px #fff, 0 0 0 7px var(--color-pin), 0 6px 14px rgba(0, 0, 0, 0.5);
+}
+
+.pin:focus-visible,
+.filtro:focus-visible,
+.botonApoyo:focus-visible,
+.cerrar:focus-visible,
+.enlace:focus-visible {
+    outline: 2px solid #75F0DF;
+    outline-offset: 3px;
+}
+
+.detalle {
+    --color-pin: #FFFFFF;
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    bottom: 14px;
+    z-index: 2;
+    width: min(360px, calc(100% - 28px));
+    padding: 22px 22px 24px;
+    overflow-y: auto;
+    border-radius: 18px;
+    border: 1px solid rgba(51, 206, 191, 0.3);
+    background: rgba(23, 25, 67, 0.95);
+    backdrop-filter: blur(8px);
+    color: #fff;
+}
+
+.cabeceraDetalle {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.cabeceraDetalle h2 {
+    margin: 0;
+    font-size: 19px;
+    font-weight: 700;
+    line-height: 1.3;
+    overflow-wrap: anywhere;
+}
+
+.cerrar {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+    border: none;
+    border-radius: 9px;
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.etiquetas {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.etiqueta {
+    padding: 3px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--color-pin);
+    color: var(--color-pin);
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.etiqueta::first-letter {
+    text-transform: uppercase;
+}
+
+.etiquetaTipo {
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.foto {
+    display: block;
+    width: 100%;
+    max-height: 180px;
+    margin-top: 16px;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+.texto {
+    margin: 14px 0 0;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 14px;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+}
+
+.datos {
+    margin: 16px 0 0;
+    display: grid;
+    gap: 10px;
+}
+
+.datos div {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    font-size: 13px;
+}
+
+.datos dt {
+    flex-shrink: 0;
+    color: rgba(255, 255, 255, 0.58);
+}
+
+.datos dd {
+    margin: 0;
+    color: #fff;
+    text-align: right;
+    overflow-wrap: anywhere;
+}
+
+.apoyos {
+    margin-top: 20px;
+    padding-top: 18px;
+    border-top: 1px solid rgba(51, 206, 191, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+}
+
+.conteo strong {
+    display: block;
+    color: #33CEBF;
+    font-size: 26px;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.conteo span {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 12px;
+}
+
+.botonApoyo {
+    padding: 11px 18px;
+    border: none;
+    border-radius: 10px;
+    background: #33CEBF;
+    color: #171943;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.botonApoyo:hover:not(:disabled) {
+    background: #28B5A8;
+}
+
+.botonApoyo:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+.botonQuitar {
+    background: transparent;
+    border: 1px solid #33CEBF;
+    color: #75F0DF;
+}
+
+.botonQuitar:hover:not(:disabled) {
+    background: rgba(51, 206, 191, 0.12);
+}
+
+.notaApoyo {
+    color: rgba(255, 255, 255, 0.65);
+    font-size: 13px;
+    text-align: right;
+}
+
+.errorApoyo {
+    margin: 12px 0 0;
+    color: #ffb8be;
+    font-size: 13px;
+}
+
+.nota {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 13px;
+}
+
+.mensaje,
+.mensajeError {
+    margin: 0;
+    padding: 22px;
+    border-radius: 16px;
+    background: rgba(23, 25, 67, 0.82);
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+.mensajeError {
+    border: 1px solid rgba(255, 100, 110, 0.5);
+    color: #ffb8be;
+}
+
+.enlace {
+    display: inline-block;
+    margin-top: 10px;
+    color: #75F0DF;
+    font-weight: 700;
+}
+
+@media (max-width: 600px) {
+    .pagina {
+        margin-left: 76px;
+        padding: 26px 16px;
+    }
+
+    .encabezado h1 {
+        font-size: 24px;
+    }
+
+    .zona {
+        height: 70vh;
+    }
+
+    .detalle {
+        top: auto;
+        left: 10px;
+        right: 10px;
+        bottom: 40px;
+        width: auto;
+        max-height: 60%;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .filtro,
+    .botonApoyo {
+        transition: none;
+    }
+}

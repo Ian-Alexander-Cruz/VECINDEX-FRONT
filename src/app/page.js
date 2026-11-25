@@ -3,10 +3,14 @@ import BackgroundMap from "./components/BackgroundMap";
 import Footer from "./components/Footer";
 import styles from "./styles/Home.module.css";
 import info from "./styles/QueEsVecindex.module.css";
+import RedireccionSesion from "./components/RedireccionSesion";
 
 export default function Home() {
   return (
       <main className={styles.container}>
+        <RedireccionSesion>
+
+
         <BackgroundMap />
 
         <Navbar />
@@ -95,6 +99,8 @@ export default function Home() {
         </section>
 
         <Footer />
+        </RedireccionSesion>
       </main>
+
   );
 }

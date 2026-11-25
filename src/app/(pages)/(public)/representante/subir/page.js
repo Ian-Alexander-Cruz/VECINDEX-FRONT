@@ -119,7 +119,54 @@ export default function Subir() {
             setCargando(false);
         }
     }
+    async function crearEncuesta(evento) {
+        evento.preventDefault();
 
+        setMensaje("");
+        setTipoMensaje("");
+
+        const formulario = evento.currentTarget;
+        const datosFormulario = new FormData(formulario);
+
+        const opciones = String(datosFormulario.get("opciones") || "")
+            .split("\n")
+            .map((opcion) => opcion.trim())
+            .filter(Boolean);
+
+        const fechaCierre = String(datosFormulario.get("fechaCierre") || "").trim();
+
+        if (opciones.length < 2) {
+            setMensaje("La encuesta necesita al menos 2 opciones");
+            setTipoMensaje("error");
+            return;
+        }
+
+        setCargando(true);
+
+        try {
+            await solicitarAPI("/api/encuesta", {
+                method: "POST",
+                body: JSON.stringify({
+                    titulo: datosFormulario.get("titulo"),
+                    opciones,
+                    fechaCierre: fechaCierre || null
+                })
+            });
+
+            setMensaje("Encuesta creada correctamente. Ya puedes verla en Inicio");
+            setTipoMensaje("exito");
+            formulario.reset();
+            setSeleccion("");
+
+        } catch (error) {
+            setMensaje(error.message);
+            setTipoMensaje("error");
+
+        } finally {
+            setCargando(false);
+        }
+    }
+    const hoy = new Date().toLocaleDateString("en-CA", { timeZone: "America/Mexico_City" });
     return (
         <main className={styles.paginaSubir}>
             <FondoCuenta />

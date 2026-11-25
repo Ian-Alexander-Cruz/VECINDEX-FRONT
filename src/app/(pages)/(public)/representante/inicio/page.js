@@ -54,7 +54,10 @@ export default function Inicio() {
         return `${String(valor.getDate()).padStart(2, "0")} ${meses[valor.getMonth()]} ${valor.getFullYear()}`;
     }
 
-
+    function aTiempo(fecha) {
+        const valor = new Date(fecha ?? 0).getTime();
+        return Number.isNaN(valor) ? 0 : valor;
+    }
 
     return (
         <main className={styles.container}>

@@ -177,6 +177,47 @@ export default function Inicio() {
         return [...filtrados].sort((a, b) => b.tiempo - a.tiempo);
     }, [items, filtro, busqueda]);
 
+
+    function tarjeta(item) {
+        return (
+            <article key={item.clave} className={styles.tarjeta}>
+                {item.imagen && (
+                    <img
+                        src={item.imagen}
+                        alt=""
+                        className={styles.tarjetaImagen}
+                        loading="lazy"
+                    />
+                )}
+
+                <div className={styles.tarjetaCuerpo}>
+                    <span className={`${styles.chip} ${claseChip[item.tipo]}`}>
+                        {tipos[item.tipo]}
+                    </span>
+
+                    <h3 className={styles.tarjetaTitulo}>{item.titulo}</h3>
+
+                    {item.descripcion && (
+                        <p className={styles.tarjetaDescripcion}>{item.descripcion}</p>
+                    )}
+
+                    <div className={styles.tarjetaMeta}>
+                        {item.meta.map((dato, indice) => (
+                            <span key={`${dato}-${indice}`} className={styles.metaItem}>
+                                {dato}
+                            </span>
+                        ))}
+
+                        <span className={styles.tarjetaFecha}>
+                            {formatearFecha(item.fecha)}
+                        </span>
+                    </div>
+                </div>
+            </article>
+        );
+    }
+
+
     return (
         <main className={styles.container}>
             <FondoCuenta />

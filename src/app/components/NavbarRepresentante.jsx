@@ -26,3 +26,8 @@ export default function NavbarRepresentante() {
 
         revisarComunidad();
     }, []);
+
+    if (tieneComunidad === null) return null;
+
+    return tieneComunidad ? <NavbarRepresentanteCC /> : <NavbarRepresentanteSC />;
+}

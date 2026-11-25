@@ -82,6 +82,18 @@ export default function CrearComunidad() {
                         />
                     </div>
 
+                    <div className={cuentaStyles.campoEdicion}>
+                        <label htmlFor="foto">Foto de la unidad habitacional</label>
+                        <input
+                            type="file"
+                            id="foto"
+                            name="foto"
+                            accept=".jpg,.jpeg,.png"
+                            required
+                        />
+                        <small>Formatos permitidos: JPG o PNG. Máximo 5 MB.</small>
+                    </div>
+
                 </form>
 
             </section>

@@ -94,6 +94,32 @@ export default function RepresentantesDetalle({ params }) {
         }
     };
 
+    const eliminarRepresentante = async () => {
+        const confirmar = window.confirm(
+            "¿Estás seguro de que deseas eliminar este representante? Esta acción no se puede deshacer."
+        );
+
+        if (!confirmar) return;
+
+        try {
+            setProcesando(true);
+            setMensajeAccion("");
+
+            await solicitarAPI(`/api/representante/${representante.id_representante}`, {
+                method: "DELETE"
+            });
+
+            router.push("/administrador/representantes");
+        } catch (err) {
+            console.error("Error al eliminar representante:", err);
+            setMensajeAccion(
+                err.message || "No fue posible eliminar al representante."
+            );
+        } finally {
+            setProcesando(false);
+        }
+    };
+
     return (
         <main className={styles.main}>
             <FondoCuenta />

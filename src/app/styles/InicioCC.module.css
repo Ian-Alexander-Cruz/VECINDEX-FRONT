@@ -1,0 +1,435 @@
+.pagina {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    margin-left: 88px;
+    padding: 45px 45px 55px;
+    display: flex;
+    justify-content: center;
+}
+
+.contenido {
+    width: 100%;
+    max-width: 1100px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+}
+
+.cabecera {
+    overflow: hidden;
+    border-radius: 22px;
+    border: 1px solid rgba(51, 206, 191, 0.25);
+    background: rgba(23, 25, 67, 0.82);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+}
+
+.portada {
+    aspect-ratio: 16 / 4.5;
+    background: rgba(51, 206, 191, 0.08);
+    border-bottom: 1px solid rgba(51, 206, 191, 0.25);
+}
+
+.portada img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.sinFoto {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sinFoto svg {
+    width: 52px;
+    height: 60px;
+    fill: rgba(51, 206, 191, 0.5);
+}
+
+.resumen {
+    padding: 28px 32px 30px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 420px);
+    gap: 28px;
+    align-items: start;
+}
+
+.identidad h1 {
+    margin: 0;
+    color: #fff;
+    font-size: 32px;
+    font-weight: 800;
+    line-height: 1.15;
+    overflow-wrap: anywhere;
+}
+
+.ubicacion {
+    margin: 12px 0 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    max-width: 60ch;
+    color: #75F0DF;
+    font-size: 15px;
+    line-height: 1.5;
+}
+
+.ubicacion svg {
+    width: 15px;
+    height: 18px;
+    margin-top: 2px;
+    flex-shrink: 0;
+    fill: #33CEBF;
+}
+
+.descripcion {
+    margin: 14px 0 0;
+    max-width: 65ch;
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 14px;
+    line-height: 1.65;
+    overflow-wrap: anywhere;
+}
+
+.ficha {
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    border-radius: 16px;
+    border: 1px solid rgba(51, 206, 191, 0.22);
+    background: rgba(15, 17, 52, 0.6);
+}
+
+.dato {
+    padding: 16px 18px;
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 4px;
+}
+
+.dato:nth-child(odd) {
+    border-right: 1px solid rgba(51, 206, 191, 0.14);
+}
+
+.dato:nth-child(-n + 2) {
+    border-bottom: 1px solid rgba(51, 206, 191, 0.14);
+}
+
+.dato dt {
+    color: rgba(255, 255, 255, 0.62);
+    font-size: 13px;
+    line-height: 1.35;
+}
+
+.dato dd {
+    margin: 0;
+    color: #33CEBF;
+    font-size: 28px;
+    font-weight: 800;
+    line-height: 1.1;
+}
+
+.dato dd.datoTexto {
+    font-size: 18px;
+    padding-top: 6px;
+}
+
+.columnas {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+    gap: 24px;
+    align-items: start;
+}
+
+.panel {
+    padding: 26px 26px 28px;
+    border-radius: 20px;
+    border: 1px solid rgba(51, 206, 191, 0.2);
+    background: rgba(23, 25, 67, 0.78);
+    backdrop-filter: blur(8px);
+}
+
+.panel h2 {
+    margin: 0 0 18px;
+    color: #fff;
+    font-size: 19px;
+    font-weight: 700;
+}
+
+.lista {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.publicacion {
+    padding: 16px 0;
+    display: flex;
+    gap: 16px;
+}
+
+.publicacion + .publicacion,
+.encuesta + .encuesta {
+    border-top: 1px solid rgba(51, 206, 191, 0.12);
+}
+
+.publicacion:first-child,
+.encuesta:first-child {
+    padding-top: 0;
+}
+
+.imagenPublicacion {
+    width: 96px;
+    height: 80px;
+    flex-shrink: 0;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+.textoPublicacion {
+    flex: 1;
+    min-width: 0;
+}
+
+.encabezadoPublicacion {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px 10px;
+}
+
+.encabezadoPublicacion h3 {
+    margin: 0;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 700;
+    overflow-wrap: anywhere;
+}
+
+.etiqueta {
+    padding: 3px 9px;
+    border-radius: 999px;
+    background: rgba(51, 206, 191, 0.14);
+    color: #75F0DF;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: capitalize;
+}
+
+.fecha {
+    margin: 4px 0 0;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 12px;
+}
+
+.textoPublicacion p.cuerpoPublicacion {
+    margin: 8px 0 0;
+    max-width: 65ch;
+    color: rgba(255, 255, 255, 0.78);
+    font-size: 14px;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+}
+
+.encuesta {
+    padding: 18px 0;
+}
+
+.encuesta h3 {
+    margin: 0;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+}
+
+.opciones {
+    margin: 14px 0 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.opcion {
+    position: relative;
+    width: 100%;
+    padding: 10px 12px;
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    overflow: hidden;
+    border-radius: 10px;
+    border: 1px solid rgba(51, 206, 191, 0.2);
+    background: rgba(15, 17, 52, 0.55);
+    color: #fff;
+    font: inherit;
+    font-size: 14px;
+    text-align: left;
+}
+
+button.opcion {
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+}
+
+button.opcion:hover:not(:disabled) {
+    border-color: #33CEBF;
+}
+
+button.opcion:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.opcion:focus-visible,
+.botonTexto:focus-visible,
+.enlace:focus-visible {
+    outline: 2px solid #75F0DF;
+    outline-offset: 2px;
+}
+
+.barra {
+    position: absolute;
+    inset: 0 auto 0 0;
+    background: rgba(51, 206, 191, 0.16);
+    transition: width 0.4s ease;
+}
+
+.opcionElegida {
+    border-color: #33CEBF;
+}
+
+.opcionElegida .barra {
+    background: rgba(51, 206, 191, 0.32);
+}
+
+.nombreOpcion,
+.porcentaje {
+    position: relative;
+}
+
+.nombreOpcion {
+    overflow-wrap: anywhere;
+}
+
+.porcentaje {
+    flex-shrink: 0;
+    color: rgba(255, 255, 255, 0.75);
+    font-weight: 700;
+}
+
+.pieEncuesta {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    color: rgba(255, 255, 255, 0.55);
+    font-size: 12px;
+}
+
+.botonTexto {
+    padding: 0;
+    border: none;
+    background: none;
+    color: #75F0DF;
+    font: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: pointer;
+}
+
+.botonTexto:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.errorEncuesta {
+    margin: 10px 0 0;
+    color: #ffb8be;
+    font-size: 13px;
+}
+
+.vacio {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.62);
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.mensaje,
+.mensajeError {
+    margin: 0;
+    padding: 22px;
+    border-radius: 16px;
+    background: rgba(23, 25, 67, 0.82);
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+.mensajeError {
+    border: 1px solid rgba(255, 100, 110, 0.5);
+    color: #ffb8be;
+}
+
+.enlace {
+    display: inline-block;
+    margin-top: 12px;
+    color: #75F0DF;
+    font-weight: 700;
+}
+
+@media (max-width: 900px) {
+    .resumen,
+    .columnas {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .pagina {
+        margin-left: 76px;
+        padding: 28px 16px;
+    }
+
+    .portada {
+        aspect-ratio: 16 / 7;
+    }
+
+    .resumen {
+        padding: 22px 18px;
+    }
+
+    .identidad h1 {
+        font-size: 25px;
+    }
+
+    .panel {
+        padding: 20px 18px;
+    }
+
+    .imagenPublicacion {
+        width: 72px;
+        height: 64px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .barra,
+    button.opcion {
+        transition: none;
+    }
+}

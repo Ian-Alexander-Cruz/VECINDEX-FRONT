@@ -102,3 +102,32 @@
     color: #171943;
     font-weight: 700;
 }
+
+.seccionListado {
+    margin-top: 10px;
+}
+
+.encabezadoListado {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    margin-bottom: 22px;
+    color: #FFFFFF;
+}
+
+.encabezadoListado h2 {
+    margin: 0;
+    font-size: 21px;
+}
+
+.encabezadoListado span {
+    color: #AEB5D8;
+    font-size: 14px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}

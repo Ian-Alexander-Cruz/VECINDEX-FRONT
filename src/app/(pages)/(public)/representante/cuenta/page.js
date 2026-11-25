@@ -28,7 +28,7 @@ export default function Cuenta() {
         if (!confirmar) return;
 
         try {
-            await solicitarAPI("/api/habitante/perfil", {method: "DELETE"});
+            await solicitarAPI("/api/representante/perfil", {method: "DELETE"});
 
             try {
                 await solicitarAPI("/api/usuario/cerrarSesion", {method: "POST"});

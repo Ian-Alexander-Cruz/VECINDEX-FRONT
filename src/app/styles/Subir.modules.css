@@ -23,7 +23,7 @@
     box-shadow: 0 10px 30px rgba(23, 25, 67, 0.2);
     box-sizing: border-box;
 }
-/* Encabezado */
+
 
 .encabezadoSubir {
     display: flex;
@@ -57,7 +57,7 @@
     color: rgba(255, 255, 255, 0.75);
     font-size: 14px;
 }
-/* Los tres botones de que quieres crear */
+
 
 .opciones {
     display: flex;
@@ -84,5 +84,179 @@
 .opcion:hover {
     background: rgba(51, 206, 191, 0.08);
     border-color: #33CEBF;
+}
+
+
+.opcion[data-activo="true"] {
+    background: rgba(51, 206, 191, 0.12);
+    border-color: #33CEBF;
+}
+
+.nombreOpcion {
+    color: #33CEBF;
+    font-size: 16px;
+    font-weight: 750;
+}
+
+.descripcionOpcion {
+    color: rgba(255, 255, 255, 0.80);
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+
+
+.formulario {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 25px;
+}
+
+.campo {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+}
+
+.campo label {
+    color: #FFFFFF;
+    font-size: 14px;
+    font-weight: 650;
+}
+
+.campo input,
+.campo textarea {
+    width: 100%;
+    padding: 14px 16px;
+    box-sizing: border-box;
+    border: 1px solid rgba(51, 206, 191, 0.28);
+    border-radius: 10px;
+    outline: none;
+    background: rgba(255, 255, 255, 0.06);
+    color: #FFFFFF;
+    font-size: 15px;
+    font-family: inherit;
+    transition: border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+}
+
+.campo textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.campo input[type="date"] {
+    color-scheme: dark;
+}
+
+.campo input::placeholder,
+.campo textarea::placeholder {
+    color: rgba(255, 255, 255, 0.42);
+}
+
+.campo input:focus,
+.campo textarea:focus {
+    border-color: #33CEBF;
+    background: rgba(51, 206, 191, 0.07);
+    box-shadow: 0 0 0 3px rgba(51, 206, 191, 0.12);
+}
+
+.botonGuardar {
+    width: 100%;
+    padding: 15px 22px;
+    border: none;
+    border-radius: 10px;
+    background: #33CEBF;
+    color: #171943;
+    font-size: 15px;
+    font-weight: 750;
+    cursor: pointer;
+    transition: background 0.25s ease, transform 0.25s ease;
+}
+
+.botonGuardar:hover:not(:disabled) {
+    background: #28B5A8;
+    transform: translateY(-2px);
+}
+
+.botonGuardar:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+
+/* Mensajes y pendientes */
+
+.mensaje {
+    margin: 0 0 20px;
+    padding: 13px 16px;
+    border-radius: 10px;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.mensaje[data-tipo="exito"] {
+    border: 1px solid rgba(51, 206, 191, 0.4);
+    background: rgba(51, 206, 191, 0.12);
+    color: #75E8D9;
+}
+
+.mensaje[data-tipo="error"] {
+    border: 1px solid rgba(228, 91, 104, 0.4);
+    background: rgba(228, 91, 104, 0.12);
+    color: #FF9BA4;
+}
+
+.pendiente {
+    margin: 25px 0 0;
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 15px;
+}
+
+
+@media (max-width: 900px) {
+    .paginaSubir {
+        padding: 35px 25px;
+    }
+
+    .seccionSubir {
+        padding: 27px;
+    }
+}
+
+@media (max-width: 600px) {
+    .paginaSubir {
+        margin-left: 76px;
+        padding: 25px 14px;
+        gap: 22px;
+    }
+
+    .seccionSubir {
+        padding: 20px 16px;
+        border-radius: 15px;
+    }
+
+    .encabezadoSubir {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+
+    .encabezadoSubir h1 {
+        font-size: 23px;
+    }
+
+    .opcion {
+        padding: 15px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .opcion,
+    .campo input,
+    .campo textarea,
+    .botonGuardar {
+        transition: none;
+    }
 }
 

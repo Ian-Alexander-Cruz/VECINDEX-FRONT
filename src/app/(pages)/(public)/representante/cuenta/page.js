@@ -23,7 +23,7 @@ export default function Cuenta() {
     }
 
     async function eliminarCuenta() {
-        const confirmar = window.confirm("¿Estás seguro de que deseas eliminar tu cuenta? Esta acción no se puede deshacer.");
+        const confirmar = window.confirm("¿Estás seguro de que deseas eliminar tu cuentacc? Esta acción no se puede deshacer.");
 
         if (!confirmar) return;
 
@@ -38,12 +38,12 @@ export default function Cuenta() {
 
             setUsuario(null);
 
-            alert("Tu cuenta ha sido eliminada correctamente.");
+            alert("Tu cuentacc ha sido eliminada correctamente.");
 
             router.replace("/login");
 
         } catch (error) {
-            alert(error.message || "No fue posible eliminar tu cuenta.");
+            alert(error.message || "No fue posible eliminar tu cuentacc.");
         }
     }
 

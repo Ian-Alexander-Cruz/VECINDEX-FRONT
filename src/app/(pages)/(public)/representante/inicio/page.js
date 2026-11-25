@@ -222,7 +222,91 @@ export default function Inicio() {
         <main className={styles.container}>
             <FondoCuenta />
 
+            <section className={styles.panel} aria-labelledby="titulo-inicio">
+                <header className={styles.encabezado}>
+                    <span className={styles.etiqueta}>
+                        VECINDEX REPRESENTANTE
+                    </span>
 
+                    <h1 id="titulo-inicio">Inicio</h1>
+
+                    <p>
+                        Consulta la actividad de tu comunidad.
+                    </p>
+                </header>
+
+                {!sinComunidad && (
+                    <div className={styles.controles}>
+                        <div className={styles.busqueda}>
+                            <span>⌕</span>
+                            <input
+                                type="search"
+                                placeholder="Buscar en la actividad de tu comunidad..."
+                                value={busqueda}
+                                onChange={(evento) => setBusqueda(evento.target.value)}
+                            />
+                        </div>
+
+                        <div className={styles.filtros}>
+                            {filtros.map((opcion) => (
+                                <button
+                                    key={opcion.valor}
+                                    type="button"
+                                    className={filtro === opcion.valor ? styles.filtroActivo : ""}
+                                    onClick={() => setFiltro(opcion.valor)}
+                                >
+                                    {opcion.etiqueta}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                {cargando && (
+                    <p className={styles.mensaje}>
+                        Cargando actividad...
+                    </p>
+                )}
+
+                {!cargando && sinComunidad && (
+                    <div className={styles.estadoVacio}>
+                        <h3>Aún no tienes una comunidad aprobada</h3>
+                        <p>
+                            Crea tu comunidad para empezar a ver publicaciones,
+                            encuestas y peticiones.
+                        </p>
+                        <Link href="/representante/crear-comunidad" className={styles.botonCrear}>
+                            Crear comunidad
+                        </Link>
+                    </div>
+                )}
+
+                {!cargando && !sinComunidad && error && (
+                    <p className={styles.mensajeError}>
+                        {error}
+                    </p>
+                )}
+
+                {!cargando && !sinComunidad && !error && (
+                    <section className={styles.seccionListado}>
+                        <div className={styles.encabezadoListado}>
+                            <h2>Actividad de la comunidad</h2>
+                            <span>{visibles.length} resultados</span>
+                        </div>
+
+                        {visibles.length === 0 ? (
+                            <div className={styles.estadoVacio}>
+                                <h3>Sin actividad por mostrar</h3>
+                                <p>{mensajeVacio[filtro]}</p>
+                            </div>
+                        ) : (
+                            <div className={styles.grid}>
+                                {visibles.map((item) => tarjeta(item))}
+                            </div>
+                        )}
+                    </section>
+                )}
+            </section>
         </main>
     );
 }

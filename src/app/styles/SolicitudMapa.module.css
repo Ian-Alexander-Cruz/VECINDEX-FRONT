@@ -45,3 +45,50 @@
     color: #33CEBF;
     font-size: 20px;
 }
+
+.descripcion {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 15px;
+    line-height: 1.7;
+    overflow-wrap: anywhere;
+}
+
+.subtitulo {
+    margin: 22px 0 12px;
+    color: rgba(255, 255, 255, 0.65);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.aviso {
+    margin: 0;
+    padding: 22px;
+    border-radius: 16px;
+    background: rgba(23, 25, 67, 0.82);
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+.mensaje {
+    margin: 0;
+    padding: 15px 18px;
+    border-radius: 12px;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.mensaje[data-tipo="exito"] {
+    border: 1px solid rgba(51, 206, 191, 0.4);
+    background: rgba(51, 206, 191, 0.12);
+    color: #75E8D9;
+}
+
+.mensaje[data-tipo="error"] {
+    border: 1px solid rgba(228, 91, 104, 0.4);
+    background: rgba(228, 91, 104, 0.12);
+    color: #FFB8BE;
+}

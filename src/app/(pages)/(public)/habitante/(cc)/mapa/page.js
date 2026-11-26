@@ -12,7 +12,8 @@ import { solicitarAPI } from "@/app/services/api";
 
 const ERRORES_SESION = ["Token requerido", "Token inválido o expirado"];
 const SIN_MAPA = "La comunidad todavía no tiene mapa";
-const ESTILO_MAPA = "https://tiles.openfreemap.org/styles/fiord";
+const ESTILO_MAPA = "https://tiles.openfreemap.org/styles/liberty";
+const SATELITE = "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
 const ID_ESTATUS_ATENDIDA = 4;
 const ESTATUS = [
     { id: 1, nombre: "Pendiente", color: "#F5C542" },
@@ -92,6 +93,12 @@ export default function Mapa(){
     const [idSeleccionada, setIdSeleccionada] = useState(null);
     const [apoyando, setApoyando] = useState(false);
     const [errorApoyo, setErrorApoyo] = useState("");
+    const [vistaSatelite, setVistaSatelite] = useState(false);
+
+    useEffect(() => {
+        if (!mapaListo || !mapa.current) return;
+        mapa.current.instancia.setLayoutProperty("satelite", "visibility", vistaSatelite ? "visible" : "none");
+    }, [vistaSatelite, mapaListo]);
 
     useEffect(() => {
         if(!idValido) return
@@ -146,6 +153,9 @@ export default function Mapa(){
             mapa.current = {instancia, maplibregl}
 
             instancia.on("load", async () => {
+                const primeraEtiqueta = instancia.getStyle().layers.find((capa) => capa.type === "symbol")?.id
+                instancia.addSource("satelite", {type: "raster", tiles: [SATELITE], tileSize: 256, maxzoom: 19, attribution: "Imágenes © Esri, Maxar, Earthstar Geographics"})
+                instancia.addLayer({id: "satelite", type: "raster", source: "satelite", layout: {visibility: "none"}}, primeraEtiqueta)
                 instancia.addSource("unidad", { type: "geojson", data: urlMapa });
                 instancia.addLayer({ id: "unidad-relleno", type: "fill", source: "unidad", paint: { "fill-color": "#33CEBF", "fill-opacity": 0.12 } });
                 instancia.addLayer({ id: "unidad-borde", type: "line", source: "unidad", paint: { "line-color": "#33CEBF", "line-width": 2.5 } });
@@ -282,6 +292,9 @@ export default function Mapa(){
                                         {estatus.nombre} ({peticiones.filter((peticion) => peticion.id_estatus === estatus.id && coordenadas(peticion)).length})
                                     </button>
                                 ))}
+                                <button type="button" className={mapaStyles.filtro} aria-pressed={vistaSatelite} onClick={() => setVistaSatelite((actual) => !actual)}>
+                                    {vistaSatelite ? "Ver mapa" : "Ver satélite"}
+                                </button>
                             </fieldset>
 
                             {errorMapa && <p className={mapaStyles.mensajeError} role="alert">{errorMapa}</p>}

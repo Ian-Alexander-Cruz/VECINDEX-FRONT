@@ -145,3 +145,138 @@
     font-size: 14px;
     font-weight: 650;
 }
+
+.campo textarea {
+    width: 100%;
+    min-height: 110px;
+    padding: 14px 16px;
+    box-sizing: border-box;
+    border: 1px solid rgba(51, 206, 191, 0.28);
+    border-radius: 10px;
+    outline: none;
+    resize: vertical;
+    background: rgba(255, 255, 255, 0.06);
+    color: #FFFFFF;
+    font-family: inherit;
+    font-size: 15px;
+    transition: border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+}
+
+.campo textarea::placeholder {
+    color: rgba(255, 255, 255, 0.42);
+}
+
+.campo textarea:focus {
+    border-color: #33CEBF;
+    background: rgba(51, 206, 191, 0.07);
+    box-shadow: 0 0 0 3px rgba(51, 206, 191, 0.12);
+}
+
+.selectorArchivo {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    box-sizing: border-box;
+    border: 1px dashed rgba(51, 206, 191, 0.5);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    color: #FFFFFF;
+    cursor: pointer;
+}
+
+.selectorArchivo::file-selector-button {
+    margin-right: 15px;
+    padding: 9px 14px;
+    border: none;
+    border-radius: 6px;
+    background: #33CEBF;
+    color: #171943;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.selectorArchivo::file-selector-button:hover {
+    background: #28B5A8;
+}
+
+.acciones {
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 25px;
+}
+
+.botonPrincipal,
+.botonSecundario {
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.botonPrincipal {
+    border: none;
+    background: #33CEBF;
+    color: #171943;
+}
+
+.botonPrincipal:hover:not(:disabled) {
+    background: #28B5A8;
+    transform: translateY(-2px);
+}
+
+.botonSecundario {
+    border: 1px solid #33CEBF;
+    background: transparent;
+    color: #75F0DF;
+}
+
+.botonSecundario:hover:not(:disabled) {
+    background: rgba(51, 206, 191, 0.12);
+}
+
+.botonPrincipal:disabled,
+.botonSecundario:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+@media (max-width: 600px) {
+    .pagina {
+        margin-left: 76px;
+        padding: 26px 16px;
+    }
+
+    .encabezado h1 {
+        font-size: 24px;
+    }
+
+    .tarjeta {
+        padding: 18px;
+    }
+
+    .zona {
+        height: 65vh;
+    }
+
+    .acciones {
+        flex-direction: column;
+    }
+
+    .botonPrincipal,
+    .botonSecundario {
+        width: 100%;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .campo textarea,
+    .botonPrincipal,
+    .botonSecundario {
+        transition: none;
+    }
+}

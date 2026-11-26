@@ -228,9 +228,9 @@ function Dashboard() {
                                                 const elegida = encuesta.mi_voto === opcion.id_opcion;
                                                 const contenido = (
                                                     <>
-                                                        <span className={inicioStyles.barra} style={{ width: `${yaVoto ? porcentaje : 0}%` }} aria-hidden="true" />
+                                                        <span className={inicioStyles.barra} style={{ width: `${porcentaje}%` }} aria-hidden="true" />
                                                         <span className={inicioStyles.nombreOpcion}>{opcion.opcion}</span>
-                                                        {yaVoto && <span className={inicioStyles.porcentaje}>{porcentaje}%</span>}
+                                                        <span className={inicioStyles.porcentaje}>{porcentaje}%</span>
                                                     </>
                                                 );
 

@@ -51,6 +51,16 @@ export default function Subir() {
         });
     }
 
+    function quitarOpcionVacia(indice) {
+        setOpcionesEncuesta((actuales) => {
+            if (indice < 2 || actuales[indice]?.trim()) return actuales;
+
+            const nuevas = actuales.filter((opcion, posicion) => posicion !== indice);
+
+            return nuevas[nuevas.length - 1]?.trim() ? [...nuevas, ""] : nuevas;
+        });
+    }
+
     async function crearEvento(evento) {
         evento.preventDefault();
 
@@ -319,6 +329,7 @@ export default function Subir() {
                                     type="text"
                                     value={opcion}
                                     onChange={(evento) => actualizarOpcion(indice, evento.target.value)}
+                                    onBlur={() => quitarOpcionVacia(indice)}
                                     placeholder={`Opción ${indice + 1}`}
                                     aria-label={`Opción ${indice + 1}`}
                                     maxLength={120}

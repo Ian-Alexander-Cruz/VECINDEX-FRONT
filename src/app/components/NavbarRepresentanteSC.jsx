@@ -71,7 +71,7 @@ export default function NavbarRepresentanteSC() {
     }
 
     return (
-        <nav className={styles.navbar} aria-label="Navegación del habitante">
+        <nav className={styles.navbar} aria-label="Navegación del representante">
             <ul className={styles.lista}>
                 {opciones.map((opcion) => {
                     const activo = pathname === opcion.ruta;

@@ -21,12 +21,14 @@ export default function Comunidades() {
 
                 const [normales, suspendidas] = await Promise.all([
                     solicitarAPI("/api/comunidad"),
-                    solicitarAPI("/api/comunidad/estado/4")
+                    solicitarAPI("/api/comunidad/estado/4"),
+                    solicitarAPI("/api/comunidad/estado/5")
                 ]);
 
                 setComunidades([
                     ...normales,
-                    ...suspendidas
+                    ...suspendidas,
+                    ...eliminadas
                 ]);
             } catch (error) {
                 console.error(error);
@@ -45,7 +47,8 @@ export default function Comunidades() {
         const coincideEstado =
             filtro === "todas" ||
             (filtro === "normal" && comunidad.id_estado === 1) ||
-            (filtro === "suspendida" && comunidad.id_estado === 4);
+            (filtro === "suspendida" && comunidad.id_estado === 4) ||
+            (filtro === "eliminada" && comunidad.id_estado === 5);
 
         return coincideNombre && coincideEstado;
     });
@@ -87,6 +90,10 @@ export default function Comunidades() {
 
                             <button className={filtro === "suspendida" ? styles.filtroActivo : ""} onClick={() => setFiltro("suspendida")}>
                                 Suspendidas
+                            </button>
+
+                            <button className={filtro === "eliminada" ? styles.filtroActivo : ""} onClick={() => setFiltro("eliminada")}>
+                                Eliminadas
                             </button>
                         </div>
                     </div>
@@ -130,7 +137,7 @@ export default function Comunidades() {
                                                 {comunidad.ubicacion || "Ubicación no disponible"}
                                             </p>
 
-                                            <span className={comunidad.id_estado === 1 ? styles.estadoNormal : styles.estadoSuspendida}>
+                                            <span className={comunidad.id_estado === 1 ? styles.estadoNormal : comunidad.id_estado === 4 ? styles.estadoSuspendida : styles.estadoEliminada}>
                                                 {comunidad.id_estado === 1 ? "Normal" : "Suspendida"}
                                             </span>
                                         </div>

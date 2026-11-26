@@ -346,3 +346,9 @@
     border: 1px solid rgba(255, 197, 110, 0.4);
 }
 
+.estadoEliminada {
+    color: #ff7777;
+    background: rgba(255, 119, 119, 0.12);
+    border: 1px solid rgba(255, 119, 119, 0.4);
+}
+

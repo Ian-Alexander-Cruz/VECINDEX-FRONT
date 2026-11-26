@@ -193,12 +193,30 @@
     margin-top: 30px;
 }
 
-.botonEliminar, .botonDeshabilitado, .botonVolver {
+.botonEliminar, .botonSalir, .botonDeshabilitado, .botonVolver {
     padding: 13px 24px;
     border-radius: 10px;
     font-size: 14px;
     font-weight: 700;
     transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.botonSalir {
+    border: 1px solid rgba(51, 206, 191, 0.4);
+    background: transparent;
+    color: #75F0DF;
+    cursor: pointer;
+}
+
+.botonSalir:hover:not(:disabled) {
+    background: rgba(51, 206, 191, 0.12);
+    transform: translateY(-2px);
+}
+
+.botonSalir:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
 }
 
 .botonEliminar {
@@ -276,7 +294,7 @@
         justify-content: stretch;
     }
 
-    .botonEliminar, .botonDeshabilitado {
+    .botonEliminar, .botonSalir, .botonDeshabilitado {
         width: 100%;
     }
 }

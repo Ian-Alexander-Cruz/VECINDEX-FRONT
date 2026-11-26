@@ -18,6 +18,7 @@ export default function MiComunidad() {
     const [error, setError] = useState("");
     const [mensajeAccion, setMensajeAccion] = useState("");
     const [procesando, setProcesando] = useState(false);
+    const [saliendo, setSaliendo] = useState(false);
 
     useEffect(() => {
         async function cargarIntegrantes() {
@@ -50,6 +51,25 @@ export default function MiComunidad() {
         } catch (error) {
             setMensajeAccion(error.message);
             setProcesando(false);
+        }
+    }
+
+    async function salirDeComunidad() {
+        const confirmado = window.confirm(
+            "¿Estás seguro de que deseas salir de tu comunidad? La comunidad quedará sin representante y pasará a estado Suspendido."
+        );
+
+        if (!confirmado) return;
+
+        setSaliendo(true);
+        setMensajeAccion("");
+
+        try {
+            await solicitarAPI("/api/comunidad/perfil/salir", { method: "PUT" });
+            router.replace("/representante/inicio_SC");
+        } catch (error) {
+            setMensajeAccion(error.message);
+            setSaliendo(false);
         }
     }
 
@@ -107,36 +127,28 @@ export default function MiComunidad() {
                 )}
 
                 <div className={styles.acciones}>
-                    {/*
-                        BOTÓN DESHABILITADO A PROPÓSITO
-
-                        No existe forma de que un representante se salga de su comunidad.
-                        La única ruta de salida es DELETE /api/integrante/comunidad/:id, y está
-                        declarada con soloRol("habitante"), así que al representante lo rechaza.
-                        Además, en el modelo la función salir() busca en dintegrante por
-                        id_habitante, y un representante no tiene uno: su relación con la
-                        comunidad es mcomunidad.id_representante.
-
-                        Para habilitarlo haría falta una ruta nueva en el backend.
-                    */}
-                    <button type="button" className={styles.botonDeshabilitado} disabled>
-                        Salir de la comunidad
+                    <button
+                        type="button"
+                        className={styles.botonSalir}
+                        onClick={salirDeComunidad}
+                        disabled={saliendo || procesando || cargando}
+                    >
+                        {saliendo ? "Saliendo..." : "Salir de la comunidad"}
                     </button>
 
                     <button
                         type="button"
                         className={styles.botonEliminar}
                         onClick={eliminarComunidad}
-                        disabled={procesando || cargando}
+                        disabled={procesando || saliendo || cargando}
                     >
                         {procesando ? "Eliminando..." : "Eliminar comunidad"}
                     </button>
                 </div>
 
                 <p className={styles.nota}>
-                    Salir de la comunidad no está disponible para un representante. El backend no tiene esa
-                    operación: solo los habitantes pueden salirse. Si el representante ya no quiere la
-                    comunidad, la opción es eliminarla.
+                    Si sales, la comunidad quedará sin representante y pasará a estado Suspendido. Después
+                    puedes volver a unirte desde “Unirse a comunidad”.
                 </p>
             </div>
         </main>

@@ -274,6 +274,7 @@ export default function Mapa(){
                 evento.stopPropagation();
                 setIdSeleccionada(peticion.id_peticion);
                 setErrorApoyo("");
+                setAvisoNueva("");
             });
 
             const marcador = new actual.maplibregl.Marker({ element: pin }).setLngLat(posicion).addTo(actual.instancia);
@@ -377,6 +378,27 @@ export default function Mapa(){
                 return;
             }
             setErrorApoyo(error.message || "No fue posible registrar tu apoyo.");
+        } finally {
+            setApoyando(false);
+        }
+    }
+
+    async function eliminarPeticion(peticion) {
+        if (!window.confirm(`¿Seguro que quieres eliminar "${peticion.titulo}"? Esta acción no se puede deshacer.`)) return;
+
+        try {
+            setApoyando(true);
+            setErrorApoyo("");
+            await solicitarAPI(`/api/peticion/${peticion.id_peticion}`, { method: "DELETE" });
+            setPeticiones((actuales) => actuales.filter((actual) => actual.id_peticion !== peticion.id_peticion));
+            setIdSeleccionada(null);
+            setAvisoNueva("Tu petición se eliminó correctamente.");
+        } catch (error) {
+            if (ERRORES_SESION.includes(error.message)) {
+                setUsuario(null);
+                return;
+            }
+            setErrorApoyo(error.message || "No fue posible eliminar la petición.");
         } finally {
             setApoyando(false);
         }
@@ -508,7 +530,9 @@ export default function Mapa(){
                                             </p>
 
                                             {seleccionada.es_mia ? (
-                                                <span className={mapaStyles.notaApoyo}>Es tu petición</span>
+                                                <button type="button" className={mapaStyles.botonEliminar} disabled={apoyando} onClick={() => eliminarPeticion(seleccionada)}>
+                                                    {apoyando ? "Eliminando..." : "Eliminar petición"}
+                                                </button>
                                             ) : seleccionada.id_estatus === ID_ESTATUS_ATENDIDA ? (
                                                 <span className={mapaStyles.notaApoyo}>Ya fue atendida</span>
                                             ) : (

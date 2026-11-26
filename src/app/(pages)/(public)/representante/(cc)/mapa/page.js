@@ -10,6 +10,7 @@ import { solicitarAPI } from "@/app/services/api";
 const ESTILO_MAPA = "https://tiles.openfreemap.org/styles/liberty";
 const SATELITE = "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}";
 const DENUE = "https://www.inegi.org.mx/app/api/denue/v1/consulta/Buscar/todos";
+const SIN_MAPA = "La comunidad todavía no tiene mapa";
 const PENDIENTE = 1;
 const EN_REVISION = 2;
 const EN_PROCESO = 3;
@@ -82,6 +83,7 @@ function anillos(geojson) {
 
 export default function SolicitudMapa() {
     const [solicitud, setSolicitud] = useState(null);
+    const [urlMapa, setUrlMapa] = useState(null);
     const [peticiones, setPeticiones] = useState([]);
     const [cargando, setCargando] = useState(true);
     const [error, setError] = useState("");
@@ -99,18 +101,30 @@ export default function SolicitudMapa() {
     const marcadores = useRef(new Map());
 
     useEffect(() => {
-        async function cargarSolicitudes() {
+        async function cargarDatos() {
             try {
-                const lista = await solicitarAPI("/api/mapa/mias");
+                const [lista, perfil] = await Promise.all([
+                    solicitarAPI("/api/mapa/mias"),
+                    solicitarAPI("/api/comunidad/perfil")
+                ]);
+
                 const actual = Array.isArray(lista) && lista.length ? lista[0] : null;
                 setSolicitud(actual);
 
-                if (actual && (actual.id_estatus === EN_REVISION || actual.id_estatus === ATENDIDA)) {
-                    const listaPeticiones = await solicitarAPI("/api/peticion/mias");
-                    setPeticiones(Array.isArray(listaPeticiones)
-                        ? [...listaPeticiones].sort((a, b) => (b.total_apoyos ?? 0) - (a.total_apoyos ?? 0))
-                        : []);
-                }
+                if (!perfil?.id_comunidad) return;
+
+                const [respuestaMapa, listaPeticiones] = await Promise.all([
+                    solicitarAPI(`/api/mapa/comunidad/${perfil.id_comunidad}`).catch((error) => {
+                        if (error.message === SIN_MAPA) return null;
+                        throw error;
+                    }),
+                    solicitarAPI("/api/peticion/mias")
+                ]);
+
+                setUrlMapa(respuestaMapa?.geojson ?? null);
+                setPeticiones(Array.isArray(listaPeticiones)
+                    ? [...listaPeticiones].sort((a, b) => (b.total_apoyos ?? 0) - (a.total_apoyos ?? 0))
+                    : []);
             } catch (error) {
                 setError(error.message);
             } finally {
@@ -118,12 +132,11 @@ export default function SolicitudMapa() {
             }
         }
 
-        cargarSolicitudes();
+        cargarDatos();
     }, []);
 
     const estatus = solicitud?.id_estatus ?? null;
-    const urlMapa = (estatus === EN_REVISION || estatus === ATENDIDA) ? solicitud.archivos_mapa : null;
-    const puedePedir = !cargando && !error && solicitud === null;
+    const puedePedir = !cargando && !error && !urlMapa && !solicitud;
     const seleccionada = peticiones.find((peticion) => peticion.id_peticion === idSeleccionada);
     const sinUbicacion = peticiones.filter((peticion) => !coordenadas(peticion)).length;
 
@@ -347,7 +360,7 @@ export default function SolicitudMapa() {
                     <p className={styles.mensaje} data-tipo="error" role="alert">{error}</p>
                 )}
 
-                {!cargando && !error && estatus === PENDIENTE && (
+                {!cargando && !error && !urlMapa && estatus === PENDIENTE && (
                     <section className={styles.tarjeta}>
                         <h2>Tu solicitud está pendiente</h2>
                         <p className={styles.descripcion}>
@@ -372,7 +385,7 @@ export default function SolicitudMapa() {
                     </section>
                 )}
 
-                {!cargando && !error && estatus === EN_PROCESO && (
+                {!cargando && !error && !urlMapa && (estatus === EN_PROCESO || estatus === EN_REVISION) && (
                     <section className={styles.tarjeta}>
                         <h2>Un administrador está trabajando en tu mapa</h2>
                         <p className={styles.descripcion}>
@@ -390,13 +403,11 @@ export default function SolicitudMapa() {
                     </section>
                 )}
 
-                {!cargando && !error && (estatus === EN_REVISION || estatus === ATENDIDA) && (
+                {!cargando && !error && urlMapa && (
                     <section className={styles.tarjeta}>
-                        <h2>{estatus === EN_REVISION ? "Revisa el mapa" : "Mapa de tu unidad"}</h2>
+                        <h2>Mapa de tu unidad</h2>
                         <p className={styles.descripcion}>
-                            {estatus === EN_REVISION
-                                ? "El administrador entregó el mapa de tu unidad. Revisa que el área esté bien delimitada; abajo están las peticiones de los habitantes."
-                                : "Este es el mapa registrado para tu comunidad. Toca un punto para ver la petición del habitante."}
+                            Este es el mapa registrado para tu comunidad. Toca un punto para ver la petición del habitante.
                         </p>
 
                         <fieldset className={`${mapaStyles.filtros} ${styles.filtrosMapa}`}>

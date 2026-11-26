@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import FondoCuenta from "@/app/components/FondoCuenta";
 import styles from "@/app/styles/Home.module.css";
@@ -12,36 +12,6 @@ import { solicitarAPI } from "@/app/services/api";
 export default function Cuenta() {
     const { usuario, setUsuario } = useAuth();
     const router = useRouter();
-    const [comunidad, setComunidad] = useState(null);
-    const [cargandoComunidad, setCargandoComunidad] = useState(true);
-
-    useEffect(() => {
-        let activo = true;
-
-        async function cargarComunidad() {
-            try {
-                const datos = await solicitarAPI("/api/comunidad/perfil");
-
-                if (activo) {
-                    setComunidad(datos);
-                }
-            } catch {
-                if (activo) {
-                    setComunidad(null);
-                }
-            } finally {
-                if (activo) {
-                    setCargandoComunidad(false);
-                }
-            }
-        }
-
-        cargarComunidad();
-
-        return () => {
-            activo = false;
-        };
-    }, []);
 
     async function cerrarSesion() {
         try {
@@ -134,48 +104,6 @@ export default function Cuenta() {
                     Editar cuenta
                 </Link>
             </section>
-
-            {cargandoComunidad && (
-                <section className={cuentaStyles.seccionCuenta} aria-busy="true">
-                    <h2 className={cuentaStyles.subtituloEdicion}>
-                        Código de invitación
-                    </h2>
-
-                    <p className={cuentaStyles.descripcion}>
-                        Cargando código de invitación…
-                    </p>
-                </section>
-            )}
-
-            {!cargandoComunidad && comunidad?.id_comunidad && (
-                <section className={cuentaStyles.seccionCuenta} aria-labelledby="codigo-invitacion">
-                    <h2 id="codigo-invitacion" className={cuentaStyles.subtituloEdicion}>
-                        Código de invitación
-                    </h2>
-
-                    <p className={cuentaStyles.descripcion}>
-                        Comparte este código o el QR con las personas que quieran unirse a {comunidad.nombre || "tu comunidad"}.
-                    </p>
-
-                    <div className={cuentaStyles.qrContenedor}>
-                        <img
-                            className={cuentaStyles.qrImagen}
-                            src={`https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(comunidad.id_comunidad)}`}
-                            alt="Código QR de invitación a la comunidad"
-                            width={220}
-                            height={220}
-                        />
-
-                        <code className={cuentaStyles.codigoInvitacion}>
-                            {comunidad.id_comunidad}
-                        </code>
-
-                        <p className={cuentaStyles.ayudaInvitacion}>
-                            También pueden escribirlo en “Unirse con código” dentro de la aplicación.
-                        </p>
-                    </div>
-                </section>
-            )}
 
             <section className={cuentaStyles.seccionEliminar} aria-labelledby="eliminar-cuenta">
                 <h2

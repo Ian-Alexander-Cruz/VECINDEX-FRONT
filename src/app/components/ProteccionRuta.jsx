@@ -1,14 +1,16 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "./AuthProvider";
+import { solicitarAPI } from "../services/api";
 import BackgroundMap from "./BackgroundMap";
 import styles from "../styles/RedireccionSesion.module.css";
 
-export default function ProteccionRuta({ rolPermitido, children }) {
+export default function ProteccionRuta({ rolPermitido, requiereComunidad = false, children }) {
     const { usuario, cargandoSesion, errorSesion } = useAuth();
     const router = useRouter();
+    const [verificandoComunidad, setVerificandoComunidad] = useState(requiereComunidad);
 
     useEffect(() => {
         if (cargandoSesion || errorSesion) return;
@@ -27,13 +29,39 @@ export default function ProteccionRuta({ rolPermitido, children }) {
             } else {
                 router.replace("/login");
             }
+            return;
         }
-    }, [usuario, cargandoSesion, errorSesion, rolPermitido, router]);
 
-    if (cargandoSesion || errorSesion) {
+        if (!requiereComunidad) return;
+
+        let activo = true;
+
+        async function verificarComunidad() {
+            try {
+                await solicitarAPI("/api/comunidad/perfil");
+                if (activo) setVerificandoComunidad(false);
+            } catch (error) {
+                if (activo && error.message === "Comunidad no encontrada") {
+                    router.replace("/representante/inicio_SC");
+                    return;
+                }
+                if (activo) setVerificandoComunidad(false);
+            }
+        }
+
+        verificarComunidad();
+
+        return () => {
+            activo = false;
+        };
+    }, [usuario, cargandoSesion, errorSesion, rolPermitido, requiereComunidad, router]);
+
+    if (cargandoSesion || errorSesion || verificandoComunidad) {
         const texto = errorSesion
             ? "No fue posible comprobar tu sesión. Intenta nuevamente."
-            : "Verificando sesión";
+            : verificandoComunidad
+                ? "Verificando tu comunidad"
+                : "Verificando sesión";
 
         return (
             <div className={styles.pantalla} role="status" aria-live="polite">

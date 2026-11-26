@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import FondoCuenta from "@/app/components/FondoCuenta";
 import styles from "@/app/styles/MiComunidad.module.css";
+import cuentaStyles from "@/app/styles/Cuenta.module.css";
 import { solicitarAPI } from "@/app/services/api";
 
 const formatearFecha = (fecha) => fecha
@@ -14,6 +15,7 @@ const formatearFecha = (fecha) => fecha
 export default function MiComunidad() {
     const router = useRouter();
     const [integrantes, setIntegrantes] = useState([]);
+    const [codigoComunidad, setCodigoComunidad] = useState("");
     const [cargando, setCargando] = useState(true);
     const [error, setError] = useState("");
     const [mensajeAccion, setMensajeAccion] = useState("");
@@ -21,18 +23,35 @@ export default function MiComunidad() {
     const [saliendo, setSaliendo] = useState(false);
 
     useEffect(() => {
-        async function cargarIntegrantes() {
+        let activo = true;
+
+        async function cargarComunidad() {
             try {
-                const lista = await solicitarAPI("/api/integrante");
-                setIntegrantes(Array.isArray(lista) ? lista : []);
+                const [lista, perfil] = await Promise.all([
+                    solicitarAPI("/api/integrante"),
+                    solicitarAPI("/api/comunidad/perfil")
+                ]);
+
+                if (activo) {
+                    setIntegrantes(Array.isArray(lista) ? lista : []);
+                    setCodigoComunidad(perfil?.codigo || "");
+                }
             } catch (error) {
-                setError(error.message);
+                if (activo) {
+                    setError(error.message);
+                }
             } finally {
-                setCargando(false);
+                if (activo) {
+                    setCargando(false);
+                }
             }
         }
 
-        cargarIntegrantes();
+        cargarComunidad();
+
+        return () => {
+            activo = false;
+        };
     }, []);
 
     async function eliminarComunidad() {
@@ -123,6 +142,36 @@ export default function MiComunidad() {
                                 ))}
                             </div>
                         )}
+                    </section>
+                )}
+
+                {codigoComunidad && (
+                    <section className={cuentaStyles.seccionCuenta} aria-labelledby="codigo-invitacion">
+                        <h2 id="codigo-invitacion" className={cuentaStyles.subtituloEdicion}>
+                            Código de invitación
+                        </h2>
+
+                        <p className={cuentaStyles.descripcion}>
+                            Comparte este código o el QR con las personas que quieran unirse a tu comunidad.
+                        </p>
+
+                        <div className={cuentaStyles.qrContenedor}>
+                            <img
+                                className={cuentaStyles.qrImagen}
+                                src={`https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(codigoComunidad)}`}
+                                alt="Código QR de invitación a la comunidad"
+                                width={220}
+                                height={220}
+                            />
+
+                            <code className={cuentaStyles.codigoInvitacion}>
+                                {codigoComunidad}
+                            </code>
+
+                            <p className={cuentaStyles.ayudaInvitacion}>
+                                También pueden escribirlo en “Unirse con código” dentro de la aplicación.
+                            </p>
+                        </div>
                     </section>
                 )}
 

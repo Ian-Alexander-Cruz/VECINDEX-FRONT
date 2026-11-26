@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import FondoCuenta from "@/app/components/FondoCuenta";
 import styles from "@/app/styles/Home.module.css";
-import cuentaStyles from "@/app/styles/Cuenta.module.css";
+import cuentaStyles from "@/app/styles/EditarCuenta.module.css";
 import { solicitarAPI } from "@/app/services/api";
 import { useAuth } from "@/app/components/AuthProvider";
 

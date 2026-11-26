@@ -178,7 +178,7 @@ export default function UnirseComunidad() {
                         </label>
                         <input type="search" id="buscarComunidad" name="buscarComunidad" placeholder="Nombre de la comunidad" autoComplete="off" maxLength={150} value={nombreBusqueda} disabled={cargando} onChange={(evento) => setNombreBusqueda(evento.target.value)}/>
 
-                        <button type="button" className={comunidadStyles.boton} disabled={cargando} onClick={recargar}>
+                        <button type="button" className={`${comunidadStyles.boton} ${comunidadStyles.botonSecundario}`} disabled={cargando} onClick={recargar}>
                             {cargando ? "Cargando..." : "Recargar"}
                         </button>
                     </form>
@@ -205,7 +205,10 @@ export default function UnirseComunidad() {
 
                     {!cargando && resultados.length > 0 && (
                         <div className={comunidadStyles.resultados}>
-                            <h3>{busqueda ? "Resultados de búsqueda" : "Todas las comunidades"}</h3>
+                            <h3>
+                                {busqueda ? "Resultados de búsqueda" : "Todas las comunidades"}
+                                <span className={comunidadStyles.conteo}>{resultados.length}</span>
+                            </h3>
 
                             {resultados.map((comunidad) => (
                                 <article key={comunidad.id_comunidad} className={comunidadStyles.resultado}>
@@ -226,6 +229,9 @@ export default function UnirseComunidad() {
 
                                         <Link href={`/habitante/comunidad/${comunidad.id_comunidad}`} className={comunidadStyles.botonVisualizar}>
                                             Visualizar
+                                            <svg className={comunidadStyles.iconoBoton} viewBox="0 0 24 24" aria-hidden="true">
+                                                <path d="M5 12h14M13 6l6 6-6 6"/>
+                                            </svg>
                                         </Link>
                                     </div>
                                 </article>

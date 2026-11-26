@@ -7,7 +7,7 @@ export default function Navbar() {
         <header className={styles.navbar}>
             <Link href="/" className={styles.logo}>
                 <Image
-                    src="/images/logo-vecindex.jpg"
+                    src="/images/img.png"
                     alt="Vecindex - Inicio"
                     width={180}
                     height={55}

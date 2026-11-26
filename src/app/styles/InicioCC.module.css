@@ -385,6 +385,40 @@ button.opcion:disabled {
     color: #ffb8be;
 }
 
+.salida {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+    margin-top: 24px;
+}
+
+.botonSalir {
+    border: none;
+    border-radius: 8px;
+    padding: 12px 24px;
+    background: #D94B5B;
+    color: #FFFFFF;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.botonSalir:hover {
+    background: #B83A49;
+}
+
+.botonSalir:focus-visible {
+    outline: 2px solid #FF8585;
+    outline-offset: 2px;
+}
+
+.botonSalir:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
 .tarjetaEnlace {
     display: flex;
     flex: 1;

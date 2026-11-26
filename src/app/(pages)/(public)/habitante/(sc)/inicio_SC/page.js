@@ -95,7 +95,7 @@ export default function InicioSC() {
                         <p>
                             {membresias.length > 0
                                 ? "Entra a una de tus comunidades o revisa cómo van tus solicitudes."
-                                : "Únete a la comunidad donde vives para usar todas las funciones de tu cuentacc."}
+                                : "Únete a la comunidad donde vives para usar todas las funciones de tu cuenta."}
                         </p>
                     </header>
 

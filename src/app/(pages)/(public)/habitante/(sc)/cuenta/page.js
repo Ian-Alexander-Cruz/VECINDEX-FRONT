@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react";
 import Link from "next/link";
 import FondoCuenta from "@/app/components/FondoCuenta";
 import styles from "@/app/styles/Home.module.css";
@@ -12,22 +13,29 @@ export default function Cuenta() {
     const { usuario, setUsuario } = useAuth();
     const router = useRouter();
 
+    const [procesando, setProcesando] = useState(false);
+    const [error, setError] = useState("");
+
     async function cerrarSesion() {
         try {
+            setProcesando(true);
+            setError("");
             await solicitarAPI("/api/usuario/cerrarSesion", {method: "POST"});
             setUsuario(null);
             router.replace("/login");
         } catch (error) {
-            alert(error.message || "No fue posible cerrar la sesión.");
+            setError(error.message || "No fue posible cerrar la sesión.");
+        } finally {
+            setProcesando(false);
         }
     }
 
     async function eliminarCuenta() {
-        const confirmar = window.confirm("¿Estás seguro de que deseas eliminar tu cuentacc? Esta acción no se puede deshacer.");
-
-        if (!confirmar) return;
+        if (!window.confirm("¿Estás seguro de que deseas eliminar tu cuenta? Esta acción no se puede deshacer.")) return;
 
         try {
+            setProcesando(true);
+            setError("");
             await solicitarAPI("/api/habitante/perfil", {method: "DELETE"});
 
             try {
@@ -37,13 +45,11 @@ export default function Cuenta() {
             }
 
             setUsuario(null);
-
-            alert("Tu cuentacc ha sido eliminada correctamente.");
-
             router.replace("/login");
-
         } catch (error) {
-            alert(error.message || "No fue posible eliminar tu cuentacc.");
+            setError(error.message || "No fue posible eliminar tu cuenta.");
+        } finally {
+            setProcesando(false);
         }
     }
 
@@ -118,14 +124,16 @@ export default function Cuenta() {
                 </p>
 
                 <div className={cuentaStyles.botonesCuenta}>
-                    <button type="button" className={cuentaStyles.botonEliminar} onClick={eliminarCuenta}>
+                    <button type="button" className={cuentaStyles.botonEliminar} onClick={eliminarCuenta} disabled={procesando}>
                         Eliminar cuenta
                     </button>
 
-                    <button type="button" className={cuentaStyles.botonCerrarSesion} onClick={cerrarSesion}>
+                    <button type="button" className={cuentaStyles.botonCerrarSesion} onClick={cerrarSesion} disabled={procesando}>
                         Cerrar sesión
                     </button>
                 </div>
+
+                {error && <p className={cuentaStyles.mensajeError} role="alert">{error}</p>}
             </section>
         </main>
     );

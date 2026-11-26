@@ -251,7 +251,7 @@ export default function Subir() {
 
                         <div className={styles.campo}>
                             <label htmlFor="fechaEvento"> Fecha del evento </label>
-                            <input type="date" id="fechaEvento" name="fechaEvento" required/>
+                            <input type="date" id="fechaEvento" name="fechaEvento" min={hoy} required/>
                         </div>
 
                         <button type="submit" className={styles.botonGuardar} disabled={cargando}>

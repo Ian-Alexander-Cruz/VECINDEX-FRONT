@@ -30,3 +30,18 @@
     font-size: 15px;
     line-height: 1.6;
 }
+
+.tarjeta {
+    padding: 25px;
+    border: 1px solid rgba(51, 206, 191, 0.25);
+    border-radius: 14px;
+    background: rgba(23, 25, 67, 0.82);
+    backdrop-filter: blur(8px);
+    color: #FFFFFF;
+}
+
+.tarjeta h2 {
+    margin: 0 0 14px;
+    color: #33CEBF;
+    font-size: 20px;
+}

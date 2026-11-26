@@ -2,7 +2,7 @@
 
 import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import FondoCuenta from "@/app/components/FondoCuenta";
 import { useAuth } from "@/app/components/AuthProvider";
 import styles from "@/app/styles/Home.module.css";
@@ -31,6 +31,9 @@ function Dashboard() {
     const [error, setError] = useState("");
     const [votando, setVotando] = useState(null);
     const [erroresVoto, setErroresVoto] = useState({});
+    const router = useRouter();
+    const [saliendo, setSaliendo] = useState(false);
+    const [errorSalir, setErrorSalir] = useState("");
 
     useEffect(() => {
         if (!idValido) return;
@@ -90,6 +93,24 @@ function Dashboard() {
             }));
         } finally {
             setVotando(null);
+        }
+    }
+
+    async function salirDeComunidad() {
+        if (!window.confirm(`¿Seguro que quieres salir de ${comunidad.nombre}? Para volver tendrás que enviar otra solicitud.`)) return;
+
+        try {
+            setSaliendo(true);
+            setErrorSalir("");
+            await solicitarAPI(`/api/integrante/comunidad/${idComunidad}`, { method: "DELETE" });
+            router.push("/habitante/inicio_SC");
+        } catch (error) {
+            if (ERRORES_SESION.includes(error.message)) {
+                setUsuario(null);
+                return;
+            }
+            setErrorSalir(error.message || "No fue posible salir de la comunidad.");
+            setSaliendo(false);
         }
     }
 
@@ -183,6 +204,7 @@ function Dashboard() {
                         <ul className={inicioStyles.lista}>
                             {publicaciones.slice(0, MAXIMO_PUBLICACIONES).map((publicacion) => (
                                 <li key={publicacion.id_publicacion} className={inicioStyles.publicacion}>
+                                    <Link href={`/habitante/detalles/publicacion/${publicacion.id_publicacion}?comunidad=${idComunidad}`} className={inicioStyles.tarjetaEnlace}>
                                     {publicacion.imagen && (
                                         <img src={publicacion.imagen} alt="" className={inicioStyles.imagenPublicacion} />
                                     )}
@@ -199,6 +221,7 @@ function Dashboard() {
                                             <p className={inicioStyles.cuerpoPublicacion}>{publicacion.descripcion}</p>
                                         )}
                                     </div>
+                                    </Link>
                                 </li>
                             ))}
                         </ul>
@@ -218,7 +241,7 @@ function Dashboard() {
 
                                 return (
                                     <li key={encuesta.id_encuesta} className={inicioStyles.encuesta}>
-                                        <h3>{encuesta.titulo}</h3>
+                                        <h3><Link href={`/habitante/detalles/encuesta/${encuesta.id_encuesta}?comunidad=${idComunidad}`} className={inicioStyles.enlaceTitulo}>{encuesta.titulo}</Link></h3>
 
                                         <ul className={inicioStyles.opciones}>
                                             {lista(encuesta.opciones).map((opcion) => {
@@ -260,6 +283,7 @@ function Dashboard() {
                                                 </button>
                                             )}
                                             {!yaVoto && ocupada && <span role="status">Registrando voto...</span>}
+                                            <Link href={`/habitante/detalles/encuesta/${encuesta.id_encuesta}?comunidad=${idComunidad}`} className={inicioStyles.botonTexto}>Ver detalle</Link>
                                         </div>
 
                                         {erroresVoto[encuesta.id_encuesta] && (
@@ -271,6 +295,13 @@ function Dashboard() {
                         </ul>
                     )}
                 </section>
+            </div>
+
+            <div className={inicioStyles.salida}>
+                <button type="button" className={inicioStyles.botonSalir} disabled={saliendo} onClick={salirDeComunidad}>
+                    {saliendo ? "Saliendo..." : "Salir de la comunidad"}
+                </button>
+                {errorSalir && <p className={inicioStyles.errorEncuesta} role="alert">{errorSalir}</p>}
             </div>
         </>
     );

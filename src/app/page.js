@@ -87,9 +87,9 @@ export default function Home() {
               La app de Vecindex para Android.
             </p>
 
-            <a href="/downloads/vecindex.apk" download className={info.downloadButton}>
-              Descargar Vecindex {/*en el href todavía no está la ruta, pero ahí irá la ruta cuando tengamos la aplicación*/}
-            </a>
+            <p className={info.downloadButton}>
+              Descargar Vecindex {}
+            </p>
 
           </div>
 

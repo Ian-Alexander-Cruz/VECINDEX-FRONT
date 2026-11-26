@@ -385,6 +385,69 @@ button.opcion:disabled {
     color: #ffb8be;
 }
 
+.salida {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+    margin-top: 24px;
+}
+
+.botonSalir {
+    border: none;
+    border-radius: 8px;
+    padding: 12px 24px;
+    background: #D94B5B;
+    color: #FFFFFF;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.botonSalir:hover {
+    background: #B83A49;
+}
+
+.botonSalir:focus-visible {
+    outline: 2px solid #FF8585;
+    outline-offset: 2px;
+}
+
+.botonSalir:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.tarjetaEnlace {
+    display: flex;
+    flex: 1;
+    gap: 16px;
+    color: inherit;
+    text-decoration: none;
+}
+
+.tarjetaEnlace:hover h3,
+.tarjetaEnlace:focus-visible h3 {
+    color: #75F0DF;
+}
+
+.tarjetaEnlace:focus-visible {
+    outline: 2px solid #75F0DF;
+    outline-offset: 2px;
+}
+
+.enlaceTitulo {
+    color: inherit;
+    text-decoration: none;
+}
+
+.enlaceTitulo:hover,
+.enlaceTitulo:focus-visible {
+    color: #75F0DF;
+    text-decoration: underline;
+}
+
 .enlace {
     display: inline-block;
     margin-top: 12px;

@@ -12,7 +12,6 @@ export default function NavbarHabitanteCC() {
     const opciones = [
         {nombre: "Inicio", ruta: "/habitante/inicio_CC", icono: "inicio"},
         {nombre: "Mapa", ruta: "/habitante/mapa", icono: "mapa"},
-        {nombre: "Crear petición", ruta: "/habitante/crear-peticion", icono: "crear"},
         {nombre: "Eventos", ruta: "/habitante/eventos", icono: "eventos"},
         {nombre: "Ayuda", ruta: "/habitante/ayudacc", icono: "ayudacc"},
         {nombre: "Cuenta", ruta: "/habitante/cuentacc", icono: "cuentacc"},
@@ -45,13 +44,6 @@ export default function NavbarHabitanteCC() {
                     <>
                         <path d="M3 6.5 9 4l6 2.5 6-2.5v13.5L15 20l-6-2.5L3 20z" />
                         <path d="M9 4v13.5M15 6.5V20" />
-                    </>
-                )}
-
-                {tipo === "crear" && (
-                    <>
-                        <circle cx="12" cy="12" r="9" />
-                        <path d="M12 8v8M8 12h8" />
                     </>
                 )}
 

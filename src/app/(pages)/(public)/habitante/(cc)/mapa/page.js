@@ -16,6 +16,9 @@ const ESTILO_MAPA = "https://tiles.openfreemap.org/styles/liberty";
 const SATELITE = "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}";
 const DENUE = "https://www.inegi.org.mx/app/api/denue/v1/consulta/Buscar/todos";
 const ID_ESTATUS_ATENDIDA = 4;
+const MAXIMO_EVIDENCIAS = 5;
+const LIMITE_FOTO = 5 * 1024 * 1024;
+const FORMATO_IMAGEN = /\.(jpg|jpeg|png)$/i;
 const ESTATUS = [
     { id: 1, nombre: "Pendiente", color: "#F5C542" },
     { id: 2, nombre: "En revisión", color: "#6EA8FE" },
@@ -66,6 +69,15 @@ function radioMetros([[oeste, sur], [este, norte]]){
     return Math.min(5000, Math.ceil(Math.hypot(ancho, alto) / 2))
 }
 
+function dentroDe([x, y], anillo){
+    let dentro = false
+    for(let i = 0, j = anillo.length - 1; i < anillo.length; j = i++){
+        const [xi, yi] = anillo[i], [xj, yj] = anillo[j]
+        if((yi > y) !== (yj > y) && x < (xj - xi) * (y - yi) / (yj - yi) + xi) dentro = !dentro
+    }
+    return dentro
+}
+
 function anillos(geojson){
     const lista = []
 
@@ -101,6 +113,14 @@ export default function Mapa(){
     const [apoyando, setApoyando] = useState(false);
     const [errorApoyo, setErrorApoyo] = useState("");
     const [vistaSatelite, setVistaSatelite] = useState(false);
+    const [tipos, setTipos] = useState([]);
+    const [colocando, setColocando] = useState(false);
+    const [punto, setPunto] = useState(null);
+    const [enviando, setEnviando] = useState(false);
+    const [errorNueva, setErrorNueva] = useState("");
+    const [avisoNueva, setAvisoNueva] = useState("");
+    const colocandoRef = useRef(false);
+    const anillosRef = useRef([]);
 
     useEffect(() => {
         if (!mapaListo || !mapa.current?.instancia.getLayer("satelite")) return;
@@ -112,12 +132,13 @@ export default function Mapa(){
 
         async function cargar(){
             try {
-                const [respuestaMapa, listaMapa] = await Promise.all([
+                const [respuestaMapa, listaMapa, listaTipos] = await Promise.all([
                     solicitarAPI(`/api/mapa/comunidad/${idComunidad}`).catch((error) => {
                         if(error.message === SIN_MAPA) return null
                         throw error
                     }),
-                    solicitarAPI(`/api/peticion/comunidad/${idComunidad}`)
+                    solicitarAPI(`/api/peticion/comunidad/${idComunidad}`),
+                    solicitarAPI("/api/peticion/tipos")
                 ])
 
                 if(!respuestaMapa?.geojson){
@@ -126,6 +147,7 @@ export default function Mapa(){
                 }
                 setUrlMapa(respuestaMapa.geojson)
                 setPeticiones(Array.isArray(listaMapa) ? listaMapa : [])
+                setTipos(Array.isArray(listaTipos) ? listaTipos : [])
             }catch(error){
                 if(ERRORES_SESION.includes(error.message)){
                     setUsuario(null)
@@ -156,7 +178,16 @@ export default function Mapa(){
                 zoom: 15
             })
             instancia.addControl(new maplibregl.NavigationControl({showCompass: false}), "top-right")
-            instancia.on("click", () => setIdSeleccionada(null))
+            instancia.on("click", (evento) => {
+                if(!colocandoRef.current) return setIdSeleccionada(null)
+                const posicion = [evento.lngLat.lng, evento.lngLat.lat]
+                if(anillosRef.current.length && !anillosRef.current.some((anillo) => dentroDe(posicion, anillo))){
+                    setErrorNueva("Elige un punto dentro de la unidad.")
+                    return
+                }
+                setErrorNueva("")
+                setPunto(posicion)
+            })
             mapa.current = {instancia, maplibregl}
 
             instancia.on("load", async () => {
@@ -176,6 +207,7 @@ export default function Mapa(){
                         instancia.setMaxBounds(instancia.getBounds())
                     }
                     const huecos = anillos(datos)
+                    anillosRef.current = huecos
                     if(huecos.length){
                         instancia.addSource("fuera", {type: "geojson", data: {type: "Feature", properties: {}, geometry: {type: "Polygon", coordinates: [[[-180, -85], [180, -85], [180, 85], [-180, 85], [-180, -85]], ...huecos]}}})
                         instancia.addLayer({id: "fuera", type: "fill", source: "fuera", paint: {"fill-color": "#171943", "fill-opacity": 1}}, "unidad-borde")
@@ -196,6 +228,7 @@ export default function Mapa(){
                             instancia.addLayer({id: "locales-nombre", type: "symbol", source: "locales", minzoom: 17, layout: {"text-field": ["get", "nombre"], "text-font": ["Noto Sans Regular"], "text-size": 10, "text-offset": [0, 0.9], "text-anchor": "top", "text-max-width": 7, "text-optional": true}, paint: {"text-color": "#7A7F92", "text-halo-color": "#FFFFFF", "text-halo-width": 1}}, debajoDe)
 
                             instancia.on("click", "locales-punto", (evento) => {
+                                if(colocandoRef.current) return
                                 const {nombre, giro} = evento.features[0].properties
                                 new maplibregl.Popup({closeButton: false}).setLngLat(evento.features[0].geometry.coordinates).setText(`${nombre} · ${giro}`).addTo(instancia)
                             })
@@ -241,6 +274,7 @@ export default function Mapa(){
                 evento.stopPropagation();
                 setIdSeleccionada(peticion.id_peticion);
                 setErrorApoyo("");
+                setAvisoNueva("");
             });
 
             const marcador = new actual.maplibregl.Marker({ element: pin }).setLngLat(posicion).addTo(actual.instancia);
@@ -256,9 +290,68 @@ export default function Mapa(){
         marcadores.current.forEach(({ marcador, idEstatus }, idPeticion) => {
             const elemento = marcador.getElement();
             elemento.style.display = visibles.includes(idEstatus) ? "" : "none";
+            elemento.style.pointerEvents = colocando ? "none" : "";
             elemento.classList.toggle(mapaStyles.pinSeleccionado, idPeticion === idSeleccionada);
         });
-    }, [visibles, idSeleccionada, peticiones, mapaListo]);
+    }, [visibles, idSeleccionada, peticiones, mapaListo, colocando]);
+
+    useEffect(() => {
+        colocandoRef.current = colocando;
+        if (mapaListo && mapa.current) mapa.current.instancia.getCanvas().style.cursor = colocando ? "crosshair" : "";
+    }, [colocando, mapaListo]);
+
+    useEffect(() => {
+        const actual = mapa.current;
+        if (!mapaListo || !actual || !punto) return;
+        const marcador = new actual.maplibregl.Marker({ color: "#F28B54" }).setLngLat(punto).addTo(actual.instancia);
+        return () => marcador.remove();
+    }, [punto, mapaListo]);
+
+    function alternarColocar() {
+        setColocando((actual) => !actual);
+        setPunto(null);
+        setErrorNueva("");
+        setAvisoNueva("");
+        setIdSeleccionada(null);
+    }
+
+    async function crearPeticion(evento) {
+        evento.preventDefault();
+        if (!punto) return setErrorNueva("Toca el mapa para elegir dónde está el problema.");
+
+        const formulario = evento.currentTarget;
+        const datos = new FormData(formulario);
+        const evidencias = datos.getAll("evidencias").filter((archivo) => archivo.size > 0);
+
+        if (evidencias.length > MAXIMO_EVIDENCIAS) return setErrorNueva(`Solo puedes adjuntar hasta ${MAXIMO_EVIDENCIAS} evidencias.`);
+        if (evidencias.some((archivo) => !FORMATO_IMAGEN.test(archivo.name))) return setErrorNueva("Las evidencias deben ser imágenes jpg, jpeg o png.");
+        if (evidencias.some((archivo) => archivo.size > LIMITE_FOTO)) return setErrorNueva("Cada evidencia no puede exceder 5 MB.");
+
+        datos.delete("evidencias");
+        evidencias.forEach((archivo) => datos.append("evidencias", archivo));
+        datos.append("idComunidad", idComunidad);
+        datos.append("longitud", String(punto[0]));
+        datos.append("latitud", String(punto[1]));
+
+        try {
+            setEnviando(true);
+            setErrorNueva("");
+            await solicitarAPI("/api/peticion", { method: "POST", body: datos });
+            const lista = await solicitarAPI(`/api/peticion/comunidad/${idComunidad}`);
+            setPeticiones(Array.isArray(lista) ? lista : []);
+            setColocando(false);
+            setPunto(null);
+            setAvisoNueva("Tu petición se registró correctamente.");
+        } catch (error) {
+            if (ERRORES_SESION.includes(error.message)) {
+                setUsuario(null);
+                return;
+            }
+            setErrorNueva(error.message || "No fue posible registrar la petición.");
+        } finally {
+            setEnviando(false);
+        }
+    }
 
     function alternarFiltro(idEstatus) {
         setVisibles((actuales) => actuales.includes(idEstatus)
@@ -285,6 +378,27 @@ export default function Mapa(){
                 return;
             }
             setErrorApoyo(error.message || "No fue posible registrar tu apoyo.");
+        } finally {
+            setApoyando(false);
+        }
+    }
+
+    async function eliminarPeticion(peticion) {
+        if (!window.confirm(`¿Seguro que quieres eliminar "${peticion.titulo}"? Esta acción no se puede deshacer.`)) return;
+
+        try {
+            setApoyando(true);
+            setErrorApoyo("");
+            await solicitarAPI(`/api/peticion/${peticion.id_peticion}`, { method: "DELETE" });
+            setPeticiones((actuales) => actuales.filter((actual) => actual.id_peticion !== peticion.id_peticion));
+            setIdSeleccionada(null);
+            setAvisoNueva("Tu petición se eliminó correctamente.");
+        } catch (error) {
+            if (ERRORES_SESION.includes(error.message)) {
+                setUsuario(null);
+                return;
+            }
+            setErrorApoyo(error.message || "No fue posible eliminar la petición.");
         } finally {
             setApoyando(false);
         }
@@ -328,14 +442,60 @@ export default function Mapa(){
                                 <button type="button" className={mapaStyles.filtro} aria-pressed={vistaSatelite} onClick={() => setVistaSatelite((actual) => !actual)}>
                                     {vistaSatelite ? "Ver mapa" : "Ver satélite"}
                                 </button>
+                                <button type="button" className={mapaStyles.filtro} aria-pressed={colocando} onClick={alternarColocar}>
+                                    {colocando ? "Cancelar petición" : "Nueva petición"}
+                                </button>
                             </fieldset>
 
                             {errorMapa && <p className={mapaStyles.mensajeError} role="alert">{errorMapa}</p>}
+                            {colocando && !punto && <p className={mapaStyles.mensaje} role="status">Toca el mapa donde está el problema.</p>}
+                            {avisoNueva && <p className={mapaStyles.mensaje} role="status">{avisoNueva}</p>}
+                            {errorNueva && !punto && <p className={mapaStyles.mensajeError} role="alert">{errorNueva}</p>}
 
                             <div className={mapaStyles.zona}>
                                 <div ref={contenedor} className={mapaStyles.mapa} aria-label="Mapa de la unidad habitacional con las peticiones" role="region" />
 
-                                {seleccionada && (
+                                {colocando && punto && (
+                                    <aside className={mapaStyles.detalle} aria-labelledby="nueva-peticion">
+                                        <div className={mapaStyles.cabeceraDetalle}>
+                                            <h2 id="nueva-peticion">Nueva petición</h2>
+                                            <button type="button" className={mapaStyles.cerrar} aria-label="Cancelar petición" onClick={alternarColocar}>×</button>
+                                        </div>
+
+                                        <form className={mapaStyles.formulario} onSubmit={crearPeticion}>
+                                            <label htmlFor="idTipoProblema">Tipo de problema</label>
+                                            <select id="idTipoProblema" name="idTipoProblema" required defaultValue="">
+                                                <option value="" disabled>Selecciona una opción</option>
+                                                {tipos.map((tipo) => <option key={tipo.id_tipo_problema} value={tipo.id_tipo_problema}>{tipo.nombre}</option>)}
+                                            </select>
+
+                                            <label htmlFor="titulo">Título</label>
+                                            <input id="titulo" name="titulo" maxLength={50} required placeholder="Ej. Lámpara fundida en el andador" />
+
+                                            <label htmlFor="descripcion">Descripción</label>
+                                            <textarea id="descripcion" name="descripcion" maxLength={100} required placeholder="¿Qué pasa y desde cuándo?" />
+
+                                            <label htmlFor="ubicacion">Ubicación</label>
+                                            <input id="ubicacion" name="ubicacion" maxLength={100} required placeholder="Ej. Edificio B, planta baja" />
+
+                                            <label htmlFor="detalleUbicacion">Referencias (opcional)</label>
+                                            <input id="detalleUbicacion" name="detalleUbicacion" maxLength={200} placeholder="Ej. Junto a la caseta" />
+
+                                            <label htmlFor="evidencias">Evidencias (opcional, hasta 5 fotos jpg o png de 5 MB)</label>
+                                            <input id="evidencias" name="evidencias" type="file" accept=".jpg,.jpeg,.png" multiple />
+
+                                            <p className={mapaStyles.nota}>Puedes tocar otro punto del mapa para mover el pin.</p>
+
+                                            <button type="submit" className={mapaStyles.botonApoyo} disabled={enviando}>
+                                                {enviando ? "Enviando..." : "Enviar petición"}
+                                            </button>
+                                        </form>
+
+                                        {errorNueva && <p className={mapaStyles.errorApoyo} role="alert">{errorNueva}</p>}
+                                    </aside>
+                                )}
+
+                                {seleccionada && !colocando && (
                                     <aside className={mapaStyles.detalle} aria-labelledby="detalle-peticion" style={{ "--color-pin": colorDe(seleccionada.id_estatus) }}>
                                         <div className={mapaStyles.cabeceraDetalle}>
                                             <h2 id="detalle-peticion">{seleccionada.titulo}</h2>
@@ -370,7 +530,9 @@ export default function Mapa(){
                                             </p>
 
                                             {seleccionada.es_mia ? (
-                                                <span className={mapaStyles.notaApoyo}>Es tu petición</span>
+                                                <button type="button" className={mapaStyles.botonEliminar} disabled={apoyando} onClick={() => eliminarPeticion(seleccionada)}>
+                                                    {apoyando ? "Eliminando..." : "Eliminar petición"}
+                                                </button>
                                             ) : seleccionada.id_estatus === ID_ESTATUS_ATENDIDA ? (
                                                 <span className={mapaStyles.notaApoyo}>Ya fue atendida</span>
                                             ) : (

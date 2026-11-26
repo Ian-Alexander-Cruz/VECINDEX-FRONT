@@ -370,3 +370,72 @@
         transition: none;
     }
 }
+.formulario {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 16px;
+}
+
+.formulario label {
+    margin-top: 6px;
+    color: #AEB5D8;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.formulario input,
+.formulario select,
+.formulario textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(51, 206, 191, 0.35);
+    background: #171943;
+    color: #FFFFFF;
+    font: inherit;
+    font-size: 14px;
+}
+
+.formulario textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+.formulario input:focus,
+.formulario select:focus,
+.formulario textarea:focus {
+    outline: none;
+    border-color: #33CEBF;
+}
+
+.formulario button[type="submit"] {
+    margin-top: 10px;
+}
+
+.botonEliminar {
+    padding: 11px 18px;
+    border: none;
+    border-radius: 10px;
+    background: #D94B5B;
+    color: #FFFFFF;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.botonEliminar:hover:not(:disabled) {
+    background: #B83A49;
+}
+
+.botonEliminar:focus-visible {
+    outline: 2px solid #FF8585;
+    outline-offset: 2px;
+}
+
+.botonEliminar:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}

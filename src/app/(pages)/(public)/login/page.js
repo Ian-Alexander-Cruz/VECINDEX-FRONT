@@ -39,7 +39,19 @@ export default function Login() {
             if (respuesta.usuario.rol === "habitante") {
                 router.replace("/habitante/inicio_SC");
             } else if (respuesta.usuario.rol === "representante") {
-                router.replace("/representante/inicio_SC");
+                let destino = "/representante/inicio_SC";
+
+                try {
+                    const perfil = await solicitarAPI("/api/representante/perfil");
+                    const comunidad = perfil.comunidad;
+                    const tieneComunidad = Array.isArray(comunidad) ? comunidad.length > 0 : Boolean(comunidad);
+
+                    if (tieneComunidad) destino = "/representante/inicio";
+                } catch (error) {
+                    console.error(error);
+                }
+
+                router.replace(destino);
             } else if (respuesta.usuario.rol === "administrador") {
                 router.replace("/administrador/inicio");
             } else {

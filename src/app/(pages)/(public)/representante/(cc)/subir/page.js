@@ -1,9 +1,9 @@
 "use client"
 
 import { useEffect, useState } from "react";
-import FondoCuenta from "../../../../components/FondoCuenta";
+import FondoCuenta from "@/app/components/FondoCuenta";
 import styles from "@/app/styles/Subir.module.css";
-import { solicitarAPI } from "../../../../services/api";
+import { solicitarAPI } from "@/app/services/api";
 
 export default function Subir() {
     const [seleccion, setSeleccion] = useState("");

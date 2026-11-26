@@ -1,6 +1,6 @@
-import styles from "../../../../styles/Home.module.css";
-import FondoCuenta from "../../../../components/FondoCuenta";
-import ayudaStyles from "../../../../styles/Ayuda.module.css";
+import styles from "@/app/styles/Home.module.css";
+import FondoCuenta from "@/app/components/FondoCuenta";
+import ayudaStyles from "@/app/styles/Ayuda.module.css";
 
 export default function Ayuda() {
     return (

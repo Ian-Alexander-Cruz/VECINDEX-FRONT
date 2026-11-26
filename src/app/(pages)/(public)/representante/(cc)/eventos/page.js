@@ -1,9 +1,9 @@
 "use client"
 
 import { useEffect, useState } from "react";
-import FondoCuenta from "../../../../components/FondoCuenta";
+import FondoCuenta from "@/app/components/FondoCuenta";
 import styles from "@/app/styles/Eventos.module.css";
-import { solicitarAPI } from "../../../../services/api";
+import { solicitarAPI } from "@/app/services/api";
 
 export default function Eventos() {
     const [eventos, setEventos] = useState([]);

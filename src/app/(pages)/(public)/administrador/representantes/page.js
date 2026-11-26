@@ -10,14 +10,19 @@ export default function Representantes() {
     const [representantes, setRepresentantes] = useState([]);
     const [busqueda, setBusqueda] = useState("");
     const [filtroComunidad, setFiltroComunidad] = useState("todos");
+    const [filtroEstado, setFiltroEstado] = useState("activos");
     const [cargando, setCargando] = useState(true);
     const [error, setError] = useState("");
 
     useEffect(() => {
         async function cargarRepresentantes() {
             try {
-                const datos = await solicitarAPI("/api/representante");
-                setRepresentantes(datos);
+                const [normales, eliminados] = await Promise.all([
+                    solicitarAPI("/api/representante"),
+                    solicitarAPI("/api/representante/estado/5")
+                ]);
+
+                setRepresentantes([...normales, ...eliminados]);
             } catch (error) {
                 setError(error.message);
             } finally {
@@ -29,7 +34,11 @@ export default function Representantes() {
     }, []);
 
     const representantesFiltrados = representantes.filter((representante) => {
-        const coincideNombre = representante.nombre ?.toLowerCase().includes(busqueda.toLowerCase());
+        const coincideNombre = representante.nombre?.toLowerCase().includes(busqueda.toLowerCase());
+
+        const esEliminado = representante.id_estado === 5;
+        const coincideEstado =
+            filtroEstado === "eliminados" ? esEliminado : !esEliminado;
 
         const tieneComunidad = representante.comunidad?.id_comunidad != null;
 
@@ -38,7 +47,7 @@ export default function Representantes() {
             (filtroComunidad === "con" && tieneComunidad) ||
             (filtroComunidad === "sin" && !tieneComunidad);
 
-        return coincideNombre && coincideComunidad;
+        return coincideNombre && coincideEstado && coincideComunidad;
     });
 
     return (
@@ -65,16 +74,28 @@ export default function Representantes() {
                     </div>
 
                     <div className={styles.filtros}>
-                        <button className={filtroComunidad === "todos" ? styles.filtroActivo : ""} onClick={() => setFiltroComunidad("todos")}>
+                        <button className={filtroComunidad === "todos" ? styles.filtroActivo : ""}onClick={() => {
+                            setFiltroComunidad("todos");
+                            setFiltroEstado("activos");}}>
                             Todos
                         </button>
 
-                        <button className={filtroComunidad === "con" ? styles.filtroActivo : ""} onClick={() => setFiltroComunidad("con")}>
+                        <button className={filtroComunidad === "con" ? styles.filtroActivo : ""} onClick={() => {
+                            setFiltroComunidad("con");
+                            setFiltroEstado("activos");
+                        }}>
                             Con comunidad
                         </button>
 
-                        <button className={filtroComunidad === "sin" ? styles.filtroActivo : ""} onClick={() => setFiltroComunidad("sin")}>
+                        <button className={filtroComunidad === "sin" ? styles.filtroActivo : ""} onClick={() => {
+                            setFiltroComunidad("sin");
+                            setFiltroEstado("activos");
+                        }}>
                             Sin comunidad
+                        </button>
+
+                        <button type="button" className={filtroEstado === "eliminados" ? styles.filtroActivo : ""} onClick={() => setFiltroEstado("eliminados")}>
+                            Eliminadas
                         </button>
                     </div>
                 </div>
@@ -115,7 +136,11 @@ export default function Representantes() {
 
                                             <p>{representante.correo}</p>
 
-                                            {tieneComunidad ? (
+                                            {representante.id_estado === 5 ? (
+                                                <span className={styles.etiquetaSinComunidad}>
+                                                    Eliminado
+                                                 </span>
+                                            ) : tieneComunidad ? (
                                                 <div className={styles.comunidades}>
                                                     <span className={styles.etiquetaComunidad}>
                                                         Con comunidad

@@ -60,7 +60,7 @@ export default function EventoDetalle({ params }) {
             <section className={styles.panelDetalle}>
                 <header className={styles.encabezado}>
                     <span className={styles.etiqueta}>
-                        VECINDEX REPRESENTANTE
+                        VECINDEX HABITANTE
                     </span>
 
                     <h1>Evento</h1>

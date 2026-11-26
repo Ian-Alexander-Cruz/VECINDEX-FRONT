@@ -385,6 +385,24 @@ button.opcion:disabled {
     color: #ffb8be;
 }
 
+.tarjetaEnlace {
+    display: flex;
+    flex: 1;
+    gap: 16px;
+    color: inherit;
+    text-decoration: none;
+}
+
+.tarjetaEnlace:hover h3,
+.tarjetaEnlace:focus-visible h3 {
+    color: #75F0DF;
+}
+
+.tarjetaEnlace:focus-visible {
+    outline: 2px solid #75F0DF;
+    outline-offset: 2px;
+}
+
 .enlaceTitulo {
     color: inherit;
     text-decoration: none;

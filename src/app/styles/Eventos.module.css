@@ -227,6 +227,17 @@
     border-color: #33CEBF;
 }
 
+.enlaceEvento {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+}
+
+.enlaceEvento:focus-visible {
+    outline: 3px solid #33CEBF;
+    outline-offset: 3px;
+}
+
 .tipoEvento {
     display: inline-block;
     margin-bottom: 8px;

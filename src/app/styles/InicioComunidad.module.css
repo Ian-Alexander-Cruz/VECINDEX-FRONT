@@ -132,9 +132,23 @@
     gap: 20px;
 }
 
+.tarjetaEnlace {
+    display: block;
+    height: 100%;
+    color: inherit;
+    text-decoration: none;
+}
+
+.tarjetaEnlace:focus-visible {
+    outline: 3px solid #33CEBF;
+    outline-offset: 3px;
+    border-radius: 14px;
+}
+
 .tarjeta {
     display: flex;
     flex-direction: column;
+    height: 100%;
     overflow: hidden;
     border: 1px solid rgba(51, 206, 191, 0.25);
     border-radius: 14px;

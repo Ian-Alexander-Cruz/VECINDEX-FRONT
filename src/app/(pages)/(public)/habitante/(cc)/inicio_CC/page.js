@@ -241,7 +241,7 @@ function Dashboard() {
 
                                 return (
                                     <li key={encuesta.id_encuesta} className={inicioStyles.encuesta}>
-                                        <h3><Link href={`/habitante/detalles/encuesta/${encuesta.id_encuesta}?comunidad=${idComunidad}`} className={inicioStyles.enlaceTitulo}>{encuesta.titulo}</Link></h3>
+                                        <h3>{encuesta.titulo}</h3>
 
                                         <ul className={inicioStyles.opciones}>
                                             {lista(encuesta.opciones).map((opcion) => {

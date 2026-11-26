@@ -1,15 +1,20 @@
 "use client";
 
 import { use, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import FondoCuenta from "@/app/components/FondoCuenta";
 import { solicitarAPI } from "@/app/services/api";
 import styles from "@/app/styles/ComunidadDetalle.module.css";
 
 export default function EncuestaDetalle({ params }) {
     const { id } = use(params);
+    const router = useRouter();
     const [encuesta, setEncuesta] = useState(null);
     const [cargando, setCargando] = useState(true);
     const [error, setError] = useState("");
+    const [procesando, setProcesando] = useState(false);
+    const [mensajeAccion, setMensajeAccion] = useState("");
+    const [errorAccion, setErrorAccion] = useState(false);
 
     useEffect(() => {
         let activo = true;
@@ -51,6 +56,41 @@ export default function EncuestaDetalle({ params }) {
 
     function porcentaje(votos, total) {
         return total ? Math.round((votos / total) * 100) : 0;
+    }
+
+    async function cerrarEncuesta() {
+        if (!window.confirm("¿Seguro que quieres cerrar esta encuesta? Ya no se podrá votar en ella.")) return;
+
+        setProcesando(true);
+        setMensajeAccion("");
+
+        try {
+            const actualizada = await solicitarAPI(`/api/encuesta/${id}/cerrar`, { method: "PUT" });
+            setEncuesta(actualizada);
+            setMensajeAccion("La encuesta se cerró correctamente.");
+            setErrorAccion(false);
+        } catch (error) {
+            setMensajeAccion(error.message);
+            setErrorAccion(true);
+        } finally {
+            setProcesando(false);
+        }
+    }
+
+    async function eliminarEncuesta() {
+        if (!window.confirm("¿Seguro que quieres eliminar esta encuesta? Esta acción no se puede deshacer.")) return;
+
+        setProcesando(true);
+        setMensajeAccion("");
+
+        try {
+            await solicitarAPI(`/api/encuesta/${id}`, { method: "DELETE" });
+            router.push("/representante/inicio");
+        } catch (error) {
+            setMensajeAccion(error.message);
+            setErrorAccion(true);
+            setProcesando(false);
+        }
     }
 
     return (
@@ -136,6 +176,31 @@ export default function EncuestaDetalle({ params }) {
                                 </p>
                             )}
                         </section>
+
+                        <section className={styles.tarjeta}>
+                            <h2>Acciones</h2>
+
+                            <div className={styles.acciones}>
+                                <button className={styles.botonRechazar} onClick={eliminarEncuesta} disabled={procesando}>
+                                    {procesando ? "Procesando..." : "Eliminar encuesta"}
+                                </button>
+
+                                {encuesta.abierta && (
+                                    <button className={styles.botonAprobar} onClick={cerrarEncuesta} disabled={procesando}>
+                                        {procesando ? "Procesando..." : "Cerrar encuesta"}
+                                    </button>
+                                )}
+                            </div>
+                        </section>
+
+                        {mensajeAccion && (
+                            <p
+                                className={styles.mensajeAccion}
+                                role="status"
+                                style={{color: errorAccion ? "#FF8585" : "#33CEBF"}}>
+                                {mensajeAccion}
+                            </p>
+                        )}
                     </>
                 )}
             </section>

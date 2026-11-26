@@ -1,12 +1,16 @@
 "use client";
 
 import { use, useEffect, useState } from "react";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import FondoCuenta from "@/app/components/FondoCuenta";
 import { solicitarAPI } from "@/app/services/api";
 import styles from "@/app/styles/ComunidadDetalle.module.css";
 
 export default function EncuestaDetalle({ params }) {
     const { id } = use(params);
+    const comunidad = useSearchParams().get("comunidad");
+    const volver = `/habitante/inicio_CC${/^\d+$/.test(comunidad ?? "") ? `?comunidad=${comunidad}` : ""}`;
     const [encuesta, setEncuesta] = useState(null);
     const [cargando, setCargando] = useState(true);
     const [error, setError] = useState("");
@@ -138,6 +142,9 @@ export default function EncuestaDetalle({ params }) {
                         </section>
                     </>
                 )}
+                <div className={styles.acciones}>
+                    <Link href={volver} className={styles.botonAprobar}>Volver</Link>
+                </div>
             </section>
         </main>
     );

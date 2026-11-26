@@ -189,7 +189,7 @@ function Dashboard() {
 
                                     <div className={inicioStyles.textoPublicacion}>
                                         <div className={inicioStyles.encabezadoPublicacion}>
-                                            <h3>{publicacion.titulo}</h3>
+                                            <h3><Link href={`/habitante/detalles/publicacion/${publicacion.id_publicacion}?comunidad=${idComunidad}`} className={inicioStyles.enlaceTitulo}>{publicacion.titulo}</Link></h3>
                                             {publicacion.estatus && (
                                                 <span className={inicioStyles.etiqueta}>{String(publicacion.estatus).toLowerCase()}</span>
                                             )}
@@ -218,7 +218,7 @@ function Dashboard() {
 
                                 return (
                                     <li key={encuesta.id_encuesta} className={inicioStyles.encuesta}>
-                                        <h3>{encuesta.titulo}</h3>
+                                        <h3><Link href={`/habitante/detalles/encuesta/${encuesta.id_encuesta}?comunidad=${idComunidad}`} className={inicioStyles.enlaceTitulo}>{encuesta.titulo}</Link></h3>
 
                                         <ul className={inicioStyles.opciones}>
                                             {lista(encuesta.opciones).map((opcion) => {

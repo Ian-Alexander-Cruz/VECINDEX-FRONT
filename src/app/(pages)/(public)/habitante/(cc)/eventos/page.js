@@ -91,7 +91,7 @@ export default function Eventos() {
                     <ul className={styles.listaEventos}>
                         {eventos.map((evento) => (
                             <li key={evento.id_evento}>
-                                <Link href={`/habitante/detalles/evento/${evento.id_evento}`} className={`${styles.tarjetaEvento} ${styles.enlaceEvento}`}>
+                                <Link href={`/habitante/detalles/evento/${evento.id_evento}?comunidad=${idComunidad}`} className={`${styles.tarjetaEvento} ${styles.enlaceEvento}`}>
                                     <span className={styles.tipoEvento}>{evento.tipo_evento}</span>
 
                                     <h3>{evento.titulo}</h3>

@@ -136,7 +136,7 @@ export default function MiComunidad() {
                 <p className={styles.nota}>
                     Salir de la comunidad no está disponible para un representante. El backend no tiene esa
                     operación: solo los habitantes pueden salirse. Si el representante ya no quiere la
-                    comunidad, la opción es eliminarla.
+                    comunidad.
                 </p>
             </div>
         </main>

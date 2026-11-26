@@ -3,8 +3,8 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 
-import FondoCuenta from "../../../../components/FondoCuenta";
-import { solicitarAPI } from "../../../../services/api";
+import FondoCuenta from "@/app/components/FondoCuenta";
+import { solicitarAPI } from "@/app/services/api";
 import styles from "@/app/styles/InicioComunidad.module.css";
 
 export default function Inicio() {

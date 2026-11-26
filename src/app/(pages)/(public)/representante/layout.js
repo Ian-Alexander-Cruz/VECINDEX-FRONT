@@ -1,11 +1,8 @@
-import ProteccionRuta from "../../../components/ProteccionRuta";
-import NavbarRepresentante from "../../../components/NavbarRepresentante";
+import ProteccionRuta from "@/app/components/ProteccionRuta";
 
 export default function RepresentanteLayout({ children }) {
     return (
         <ProteccionRuta rolPermitido="representante">
-            <NavbarRepresentante/>
-
             {children}
         </ProteccionRuta>
     );

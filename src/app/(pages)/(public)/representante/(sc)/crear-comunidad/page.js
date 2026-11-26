@@ -3,10 +3,10 @@
 import { useState } from "react";
 import Link from "next/link";
 
-import FondoCuenta from "../../../../components/FondoCuenta";
+import FondoCuenta from "@/app/components/FondoCuenta";
 import estilosBase from "@/app/styles/Home.module.css";
 import cuentaStyles from "@/app/styles/Cuenta.module.css";
-import { solicitarAPI } from "../../../../services/api";
+import { solicitarAPI } from "@/app/services/api";
 
 export default function CrearComunidad() {
 
@@ -119,6 +119,12 @@ export default function CrearComunidad() {
                     </button>
 
                 </form>
+
+                {mensaje && tipoMensaje === "exito" && (
+                    <Link href="/representante/inicio" className={cuentaStyles.volverCuenta}>
+                        Ir a mi comunidad
+                    </Link>
+                )}
 
             </section>
 

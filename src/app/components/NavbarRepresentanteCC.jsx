@@ -12,8 +12,8 @@ export default function NavbarRepresentanteCC() {
         {nombre: "Subir", ruta: "/representante/subir", icono: "subir"},
         {nombre: "Eventos", ruta: "/representante/eventos", icono: "eventos"},
         {nombre: "Mapa", ruta: "/representante/mapa", icono: "mapa"},
-        {nombre: "Ayuda", ruta: "/representante/ayuda", icono: "ayuda"},
-        {nombre: "Cuenta", ruta: "/representante/cuenta", icono: "cuenta"}
+        {nombre: "Ayuda", ruta: "/representante/ayudacc", icono: "ayuda"},
+        {nombre: "Cuenta", ruta: "/representante/cuentacc", icono: "cuenta"}
     ];
     function Icono({ tipo }) {
         const propiedades = {

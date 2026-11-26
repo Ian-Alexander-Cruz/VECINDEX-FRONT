@@ -1,4 +1,4 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://vecindex-web.onrender.com";
 const ERRORES = ["Token requerido", "Token inválido o expirado"]
 
 export async function solicitarAPI(ruta, opciones = {}) {

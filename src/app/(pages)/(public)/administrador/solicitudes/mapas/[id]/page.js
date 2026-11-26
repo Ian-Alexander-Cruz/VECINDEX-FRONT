@@ -55,11 +55,7 @@ export default function MapaDetalle({ params }) {
         setErrorAccion(false);
 
         try {
-            const actualizado = await solicitarAPI(
-                `/api/mapa/${id}/aceptar`,
-                {
-                    method: "PUT"
-                }
+            const actualizado = await solicitarAPI(`/api/mapa/${id}/aceptar`, {method: "PUT"}
             );
 
             setSolicitud(actualizado);
@@ -80,9 +76,7 @@ export default function MapaDetalle({ params }) {
             return;
         }
 
-        const confirmado = window.confirm(
-            "¿Estás seguro de que deseas cargar este mapa?"
-        );
+        const confirmado = window.confirm("¿Estás seguro de que deseas cargar este mapa?");
 
         if (!confirmado) return;
 
@@ -94,13 +88,7 @@ export default function MapaDetalle({ params }) {
             const formulario = new FormData();
             formulario.append("mapa", archivoMapa);
 
-            const actualizado = await solicitarAPI(
-                `/api/mapa/${id}/mapa`,
-                {
-                    method: "PUT",
-                    body: formulario
-                }
-            );
+            const actualizado = await solicitarAPI(`/api/mapa/${id}/mapa`, {method: "PUT", body: formulario});
 
             setSolicitud(actualizado);
             setArchivoMapa(null);

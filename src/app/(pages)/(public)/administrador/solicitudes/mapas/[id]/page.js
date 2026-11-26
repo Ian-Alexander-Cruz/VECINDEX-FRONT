@@ -212,8 +212,8 @@ export default function MapaDetalle({ params }) {
                                 )}
 
                                 <section className={styles.acciones}>
-                                    <button type="button" className={styles.botonAprobar} onClick={subirMapa} disabled={procesando || !archivoMapa}>
-                                        {procesando ? "Cargando mapa..." : "Cargar mapa"}
+                                    <button type="button" className={styles.botonAprobar} onClick={() => window.open("https://geojson.io/", "_blank", "noopener,noreferrer")}>
+                                        Ver mapa
                                     </button>
                                 </section>
                             </section>

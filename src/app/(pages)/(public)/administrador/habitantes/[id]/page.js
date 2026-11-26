@@ -258,7 +258,7 @@ export default function HabitanteDetalle({ params }) {
 
                         <section className={styles.acciones}>
                             <button type="button" className={styles.botonEliminar} onClick={eliminarHabitante} disabled={procesando || editando}>
-                                {procesando ? "Eliminando..." : "Eliminar cuentacc"}
+                                {procesando ? "Eliminando..." : "Eliminar habitante"}
                             </button>
                         </section>
 

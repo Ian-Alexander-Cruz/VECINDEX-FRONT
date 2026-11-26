@@ -95,7 +95,7 @@ export default function InicioSC() {
                         <p>
                             {membresias.length > 0
                                 ? "Entra a una de tus comunidades o revisa cómo van tus solicitudes."
-                                : "Únete a la comunidad donde vives para usar todas las funciones de tu cuenta."}
+                                : "Únete a la comunidad donde vives para usar todas las funciones de tu cuentacc."}
                         </p>
                     </header>
 
@@ -140,8 +140,8 @@ export default function InicioSC() {
                                                         <h3>{membresia.comunidad}</h3>
                                                         <p>Miembro desde {new Date(membresia.fecha_solicitud).toLocaleDateString("es-MX")}</p>
 
-                                                        <Link href={`/habitante/comunidad/${membresia.id_comunidad}`} className={inicioStyles.boton}>
-                                                            Visualizar
+                                                        <Link href={`/habitante/inicio_CC?comunidad=${membresia.id_comunidad}`} className={inicioStyles.boton}>
+                                                            Ingresar
                                                         </Link>
                                                     </div>
                                                 </article>

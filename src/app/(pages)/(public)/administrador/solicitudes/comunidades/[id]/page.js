@@ -135,7 +135,7 @@ export default function ComunidadDetalle({ params }) {
                                 <div>
                                     <span>Estado de la solicitud</span>
                                     <p>
-                                        {comunidad.id_estado === 3 ? "Pendiente" : `Estado ${representante.id_estado}`}
+                                        {comunidad.id_estado === 3 ? "Pendiente" : `Estado ${comunidad.id_estado}`}
                                     </p>
                                 </div>
                             </div>

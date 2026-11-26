@@ -12,7 +12,7 @@
 
 
 
-/* Encabezado de la página Mi cuenta */
+/* Encabezado de la página Mi cuentacc */
 
 .encabezadoCuentaPerfil {
     display: flex;
@@ -264,7 +264,7 @@
     }
 }
 
-/*Despues de esto es para editar la cuenta*/
+/*Despues de esto es para editar la cuentacc*/
 
 .encabezadoEdicion {
     display: flex;

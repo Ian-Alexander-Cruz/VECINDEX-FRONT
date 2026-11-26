@@ -3,8 +3,8 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 
-import FondoCuenta from "../../../../components/FondoCuenta";
-import { solicitarAPI } from "../../../../services/api";
+import FondoCuenta from "@/app/components/FondoCuenta";
+import { solicitarAPI } from "@/app/services/api";
 import styles from "@/app/styles/InicioComunidad.module.css";
 
 export default function Inicio() {
@@ -67,6 +67,7 @@ export default function Inicio() {
             publicaciones.value.forEach((publicacion) => {
                 lista.push({
                     clave: `publicacion-${publicacion.id_publicacion}`,
+                    id: publicacion.id_publicacion,
                     tipo: "publicacion",
                     titulo: publicacion.titulo,
                     descripcion: publicacion.descripcion,
@@ -84,6 +85,7 @@ export default function Inicio() {
 
                 lista.push({
                     clave: `encuesta-${encuesta.id_encuesta}`,
+                    id: encuesta.id_encuesta,
                     tipo: "encuesta",
                     titulo: encuesta.titulo,
                     descripcion: `Encuesta con ${opciones} ${opciones === 1 ? "opción" : "opciones"} para votar.`,
@@ -104,6 +106,7 @@ export default function Inicio() {
 
                 lista.push({
                     clave: `peticion-${peticion.id_peticion}`,
+                    id: peticion.id_peticion,
                     tipo: "peticion",
                     titulo: peticion.titulo,
                     descripcion: peticion.descripcion,
@@ -180,40 +183,42 @@ export default function Inicio() {
 
     function tarjeta(item) {
         return (
-            <article key={item.clave} className={styles.tarjeta}>
-                {item.imagen && (
-                    <img
-                        src={item.imagen}
-                        alt=""
-                        className={styles.tarjetaImagen}
-                        loading="lazy"
-                    />
-                )}
-
-                <div className={styles.tarjetaCuerpo}>
-                    <span className={`${styles.chip} ${claseChip[item.tipo]}`}>
-                        {tipos[item.tipo]}
-                    </span>
-
-                    <h3 className={styles.tarjetaTitulo}>{item.titulo}</h3>
-
-                    {item.descripcion && (
-                        <p className={styles.tarjetaDescripcion}>{item.descripcion}</p>
+            <Link key={item.clave} href={`/representante/detalles/${item.tipo}/${item.id}`} className={styles.tarjetaEnlace}>
+                <article className={styles.tarjeta}>
+                    {item.imagen && (
+                        <img
+                            src={item.imagen}
+                            alt=""
+                            className={styles.tarjetaImagen}
+                            loading="lazy"
+                        />
                     )}
 
-                    <div className={styles.tarjetaMeta}>
-                        {item.meta.map((dato, indice) => (
-                            <span key={`${dato}-${indice}`} className={styles.metaItem}>
-                                {dato}
-                            </span>
-                        ))}
-
-                        <span className={styles.tarjetaFecha}>
-                            {formatearFecha(item.fecha)}
+                    <div className={styles.tarjetaCuerpo}>
+                        <span className={`${styles.chip} ${claseChip[item.tipo]}`}>
+                            {tipos[item.tipo]}
                         </span>
+
+                        <h3 className={styles.tarjetaTitulo}>{item.titulo}</h3>
+
+                        {item.descripcion && (
+                            <p className={styles.tarjetaDescripcion}>{item.descripcion}</p>
+                        )}
+
+                        <div className={styles.tarjetaMeta}>
+                            {item.meta.map((dato, indice) => (
+                                <span key={`${dato}-${indice}`} className={styles.metaItem}>
+                                    {dato}
+                                </span>
+                            ))}
+
+                            <span className={styles.tarjetaFecha}>
+                                {formatearFecha(item.fecha)}
+                            </span>
+                        </div>
                     </div>
-                </div>
-            </article>
+                </article>
+            </Link>
         );
     }
 

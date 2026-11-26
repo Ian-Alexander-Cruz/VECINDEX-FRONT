@@ -102,12 +102,6 @@
     padding: 8px 12px;
 }
 
-.mapa :global(.maplibregl-popup-content) {
-    color: #171943;
-    font-size: 13px;
-    padding: 8px 12px;
-}
-
 .pin {
     --color-pin: #FFFFFF;
     width: 22px;

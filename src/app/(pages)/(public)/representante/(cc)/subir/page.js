@@ -1,9 +1,9 @@
 "use client"
 
 import { useEffect, useState } from "react";
-import FondoCuenta from "../../../../components/FondoCuenta";
+import FondoCuenta from "@/app/components/FondoCuenta";
 import styles from "@/app/styles/Subir.module.css";
-import { solicitarAPI } from "../../../../services/api";
+import { solicitarAPI } from "@/app/services/api";
 
 export default function Subir() {
     const [seleccion, setSeleccion] = useState("");
@@ -81,7 +81,92 @@ export default function Subir() {
             setCargando(false);
         }
     }
+    async function crearPublicacion(evento) {
+        evento.preventDefault();
 
+        setMensaje("");
+        setTipoMensaje("");
+
+        const formulario = evento.currentTarget;
+        const datosFormulario = new FormData(formulario);
+        const datos = new FormData();
+
+        datos.append("titulo", datosFormulario.get("titulo"));
+        datos.append("descripcion", datosFormulario.get("descripcion"));
+        datos.append("idEstatus", datosFormulario.get("idEstatus"));
+
+        const imagen = datosFormulario.get("imagen");
+        if (imagen && imagen.size > 0) datos.append("imagen", imagen);
+
+        setCargando(true);
+
+        try {
+            await solicitarAPI("/api/publicacion", {
+                method: "POST",
+                body: datos
+            });
+
+            setMensaje("Publicación creada correctamente. Ya puedes verla en Inicio");
+            setTipoMensaje("exito");
+            formulario.reset();
+            setSeleccion("");
+
+        } catch (error) {
+            setMensaje(error.message);
+            setTipoMensaje("error");
+
+        } finally {
+            setCargando(false);
+        }
+    }
+    async function crearEncuesta(evento) {
+        evento.preventDefault();
+
+        setMensaje("");
+        setTipoMensaje("");
+
+        const formulario = evento.currentTarget;
+        const datosFormulario = new FormData(formulario);
+
+        const opciones = String(datosFormulario.get("opciones") || "")
+            .split("\n")
+            .map((opcion) => opcion.trim())
+            .filter(Boolean);
+
+        const fechaCierre = String(datosFormulario.get("fechaCierre") || "").trim();
+
+        if (opciones.length < 2) {
+            setMensaje("La encuesta necesita al menos 2 opciones");
+            setTipoMensaje("error");
+            return;
+        }
+
+        setCargando(true);
+
+        try {
+            await solicitarAPI("/api/encuesta", {
+                method: "POST",
+                body: JSON.stringify({
+                    titulo: datosFormulario.get("titulo"),
+                    opciones,
+                    fechaCierre: fechaCierre || null
+                })
+            });
+
+            setMensaje("Encuesta creada correctamente. Ya puedes verla en Inicio");
+            setTipoMensaje("exito");
+            formulario.reset();
+            setSeleccion("");
+
+        } catch (error) {
+            setMensaje(error.message);
+            setTipoMensaje("error");
+
+        } finally {
+            setCargando(false);
+        }
+    }
+    const hoy = new Date().toLocaleDateString("en-CA", { timeZone: "America/Mexico_City" });
     return (
         <main className={styles.paginaSubir}>
             <FondoCuenta />
@@ -166,7 +251,7 @@ export default function Subir() {
 
                         <div className={styles.campo}>
                             <label htmlFor="fechaEvento"> Fecha del evento </label>
-                            <input type="date" id="fechaEvento" name="fechaEvento" required/>
+                            <input type="date" id="fechaEvento" name="fechaEvento" min={hoy} required/>
                         </div>
 
                         <button type="submit" className={styles.botonGuardar} disabled={cargando}>
@@ -176,11 +261,57 @@ export default function Subir() {
                 )}
 
                 {seleccion === "publicacion" && (
-                    <p className={styles.pendiente}>El formulario de publicaciones todavía no está hecho.</p>
+                    <form className={styles.formulario} onSubmit={crearPublicacion}>
+                        <div className={styles.campo}>
+                            <label htmlFor="tituloPublicacion"> Título de la publicación </label>
+                            <input type="text" id="tituloPublicacion" name="titulo" placeholder="Reparación de la calle principal" maxLength={150} required/>
+                        </div>
+
+                        <div className={styles.campo}>
+                            <label htmlFor="descripcionPublicacion"> Descripción </label>
+                            <textarea id="descripcionPublicacion" name="descripcion" rows={4} maxLength={1000} placeholder="¿Qué se hizo en la comunidad?" required/>
+                        </div>
+
+                        <div className={styles.campo}>
+                            <label htmlFor="imagenPublicacion"> Imagen (opcional) </label>
+                            <input type="file" id="imagenPublicacion" name="imagen" accept=".jpg,.jpeg,.png"/>
+                        </div>
+
+                        <div className={styles.campo}>
+                            <label htmlFor="idEstatus"> Estatus </label>
+                            <select id="idEstatus" name="idEstatus" defaultValue="3" required>
+                                <option value="3">En proceso</option>
+                                <option value="4">Resuelto</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" className={styles.botonGuardar} disabled={cargando}>
+                            {cargando ? "Creando..." : "Guardar publicación"}
+                        </button>
+                    </form>
                 )}
 
                 {seleccion === "encuesta" && (
-                    <p className={styles.pendiente}>El formulario de encuestas todavía no está hecho.</p>
+                    <form className={styles.formulario} onSubmit={crearEncuesta}>
+                        <div className={styles.campo}>
+                            <label htmlFor="tituloEncuesta"> Título de la encuesta </label>
+                            <input type="text" id="tituloEncuesta" name="titulo" placeholder="¿Qué mejora necesita la comunidad?" maxLength={150} required/>
+                        </div>
+
+                        <div className={styles.campo}>
+                            <label htmlFor="opcionesEncuesta"> Opciones (una por línea) </label>
+                            <textarea id="opcionesEncuesta" name="opciones" rows={4} placeholder={"Sí\nNo"} required/>
+                        </div>
+
+                        <div className={styles.campo}>
+                            <label htmlFor="fechaCierre"> Fecha de cierre (opcional) </label>
+                            <input type="date" id="fechaCierre" name="fechaCierre" min={hoy}/>
+                        </div>
+
+                        <button type="submit" className={styles.botonGuardar} disabled={cargando}>
+                            {cargando ? "Creando..." : "Guardar encuesta"}
+                        </button>
+                    </form>
                 )}
             </section>
         </main>

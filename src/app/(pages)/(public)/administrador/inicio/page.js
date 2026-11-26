@@ -293,9 +293,9 @@ export default function Inicio() {
                                 </p>
                             </div>
 
-                            <button href={`/administrador/solicitudes/mapas/${mapa.id_solicitud_mapa}`} className={styles.botonRevision}>
+                            <Link href={`/administrador/solicitudes/mapas/${mapa.id_solicitud_mapa}`} className={styles.botonRevision}>
                                 Revisar solicitud
-                            </button>
+                            </Link>
                         </article>
                     ))}
                 </section>

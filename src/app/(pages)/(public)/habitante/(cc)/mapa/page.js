@@ -12,8 +12,8 @@ import { solicitarAPI } from "@/app/services/api";
 
 const ERRORES_SESION = ["Token requerido", "Token inválido o expirado"];
 const SIN_MAPA = "La comunidad todavía no tiene mapa";
-const ESTILO_MAPA = "https://tiles.openfreemap.org/styles/liberty"
-const SATELITE = "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+const ESTILO_MAPA = "https://tiles.openfreemap.org/styles/liberty";
+const SATELITE = "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}";
 const DENUE = "https://www.inegi.org.mx/app/api/denue/v1/consulta/Buscar/todos";
 const ID_ESTATUS_ATENDIDA = 4;
 const ESTATUS = [
@@ -103,7 +103,7 @@ export default function Mapa(){
     const [vistaSatelite, setVistaSatelite] = useState(false);
 
     useEffect(() => {
-        if (!mapaListo || !mapa.current) return;
+        if (!mapaListo || !mapa.current?.instancia.getLayer("satelite")) return;
         mapa.current.instancia.setLayoutProperty("satelite", "visibility", vistaSatelite ? "visible" : "none");
     }, [vistaSatelite, mapaListo]);
 
@@ -153,7 +153,7 @@ export default function Mapa(){
                 container: contenedor.current,
                 style: ESTILO_MAPA,
                 center: [-99.1332, 19.4326],
-                zoom: 70
+                zoom: 15
             })
             instancia.addControl(new maplibregl.NavigationControl({showCompass: false}), "top-right")
             instancia.on("click", () => setIdSeleccionada(null))

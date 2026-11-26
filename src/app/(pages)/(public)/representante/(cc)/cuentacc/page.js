@@ -1,12 +1,12 @@
 "use client"
 
 import Link from "next/link";
-import FondoCuenta from "../../../../components/FondoCuenta";
+import FondoCuenta from "@/app/components/FondoCuenta";
 import styles from "@/app/styles/Home.module.css";
 import cuentaStyles from "@/app/styles/Cuenta.module.css";
-import { useAuth } from "../../../../components/AuthProvider";
+import { useAuth } from "@/app/components/AuthProvider";
 import { useRouter } from "next/navigation";
-import { solicitarAPI } from "../../../../services/api";
+import { solicitarAPI } from "@/app/services/api";
 
 export default function Cuenta() {
     const { usuario, setUsuario } = useAuth();
@@ -99,7 +99,7 @@ export default function Cuenta() {
                     </article>
                 </div>
 
-                <Link href="/representante/editar-cuenta" className={cuentaStyles.botonEditar}>
+                <Link href="/representante/editar-cuentacc" className={cuentaStyles.botonEditar}>
                     Editar cuenta
                 </Link>
             </section>

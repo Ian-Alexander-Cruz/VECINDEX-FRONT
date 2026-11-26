@@ -10,8 +10,8 @@ export default function NavbarRepresentanteSC() {
     const opciones = [
         {nombre: "Inicio", ruta: "/representante/inicio_SC", icono: "inicio"},
         {nombre: "Crear comunidad", ruta: "/representante/crear-comunidad", icono: "crear"},
-        {nombre: "Ayuda", ruta: "/representante/ayudacc", icono: "ayudacc"},
-        {nombre: "Cuenta", ruta: "/representante/cuentacc", icono: "cuentacc"}
+        {nombre: "Ayuda", ruta: "/representante/ayuda", icono: "ayudacc"},
+        {nombre: "Cuenta", ruta: "/representante/cuenta", icono: "cuentacc"}
     ];
 
     function Icono({ tipo }) {

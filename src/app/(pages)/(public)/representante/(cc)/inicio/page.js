@@ -122,6 +122,11 @@ export default function Inicio() {
                     fecha: peticion.fecha_creacion,
                     tiempo: aTiempo(peticion.fecha_creacion),
                     apoyos,
+                    detalle: [
+                        peticion.tipo_problema,
+                        peticion.autor ? `Por ${peticion.autor}` : null,
+                        peticion.estatus
+                    ].filter(Boolean).join(" · "),
                     meta: [
                         peticion.tipo_problema,
                         peticion.autor ? `Por ${peticion.autor}` : null,
@@ -203,6 +208,13 @@ export default function Inicio() {
 
         return [...filtrados].sort((a, b) => b.tiempo - a.tiempo);
     }, [items, filtro, busqueda]);
+
+    const peticionesApoyadas = useMemo(
+        () => items
+            .filter((item) => item.tipo === "peticion")
+            .sort((a, b) => b.apoyos - a.apoyos || b.tiempo - a.tiempo),
+        [items]
+    );
 
 
     function tarjeta(item) {
@@ -383,6 +395,44 @@ export default function Inicio() {
                             <p role="status" style={{ margin: 0, color: accionFallida ? "#FF8585" : "#33CEBF", fontSize: "14px" }}>
                                 {mensajeSolicitud}
                             </p>
+                        )}
+                    </section>
+                )}
+
+                {!cargando && !sinComunidad && !error && peticionesApoyadas.length > 0 && (
+                    <section className={styles.seccionPeticiones} aria-labelledby="titulo-peticiones">
+                        <div className={styles.encabezadoListado}>
+                            <h2 id="titulo-peticiones">Peticiones más apoyadas</h2>
+                            <span>De mayor a menor número de apoyos</span>
+                        </div>
+
+                        <ol className={styles.listaPeticiones}>
+                            {peticionesApoyadas.slice(0, 5).map((item, indice) => (
+                                <li key={item.clave}>
+                                    <Link href={`/representante/detalles/peticion/${item.id}`} className={styles.peticionFila}>
+                                        <span className={styles.peticionPosicion}>{indice + 1}</span>
+
+                                        <span className={styles.peticionInfo}>
+                                            <strong>{item.titulo}</strong>
+                                            {item.detalle && <span>{item.detalle}</span>}
+                                        </span>
+
+                                        <span className={styles.peticionApoyos}>
+                                            {item.apoyos} {item.apoyos === 1 ? "apoyo" : "apoyos"}
+                                        </span>
+                                    </Link>
+                                </li>
+                            ))}
+                        </ol>
+
+                        {peticionesApoyadas.length > 5 && (
+                            <button
+                                type="button"
+                                className={styles.botonTodas}
+                                onClick={() => setFiltro("peticion")}
+                            >
+                                Ver todas las peticiones ({peticionesApoyadas.length})
+                            </button>
                         )}
                     </section>
                 )}

@@ -1,15 +1,20 @@
 "use client";
 
 import { use, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import FondoCuenta from "@/app/components/FondoCuenta";
 import { solicitarAPI } from "@/app/services/api";
 import styles from "@/app/styles/ComunidadDetalle.module.css";
 
 export default function PublicacionDetalle({ params }) {
     const { id } = use(params);
+    const router = useRouter();
     const [publicacion, setPublicacion] = useState(null);
     const [cargando, setCargando] = useState(true);
     const [error, setError] = useState("");
+    const [procesando, setProcesando] = useState(false);
+    const [mensajeAccion, setMensajeAccion] = useState("");
+    const [errorAccion, setErrorAccion] = useState(false);
 
     useEffect(() => {
         let activo = true;
@@ -47,6 +52,22 @@ export default function PublicacionDetalle({ params }) {
         if (Number.isNaN(valor.getTime())) return String(fecha);
 
         return `${String(valor.getDate()).padStart(2, "0")}/${String(valor.getMonth() + 1).padStart(2, "0")}/${valor.getFullYear()}`;
+    }
+
+    async function eliminarPublicacion() {
+        if (!window.confirm("¿Seguro que quieres eliminar esta publicación? Esta acción no se puede deshacer.")) return;
+
+        setProcesando(true);
+        setMensajeAccion("");
+
+        try {
+            await solicitarAPI(`/api/publicacion/${id}`, { method: "DELETE" });
+            router.push("/representante/inicio");
+        } catch (error) {
+            setMensajeAccion(error.message);
+            setErrorAccion(true);
+            setProcesando(false);
+        }
     }
 
     return (
@@ -123,6 +144,25 @@ export default function PublicacionDetalle({ params }) {
                                     <img src={publicacion.imagen} alt={publicacion.titulo || "Imagen de la publicación"}/>
                                 </div>
                             </section>
+                        )}
+
+                        <section className={styles.tarjeta}>
+                            <h2>Acciones</h2>
+
+                            <div className={styles.acciones}>
+                                <button className={styles.botonRechazar} onClick={eliminarPublicacion} disabled={procesando}>
+                                    {procesando ? "Procesando..." : "Eliminar publicación"}
+                                </button>
+                            </div>
+                        </section>
+
+                        {mensajeAccion && (
+                            <p
+                                className={styles.mensajeAccion}
+                                role="status"
+                                style={{color: errorAccion ? "#FF8585" : "#33CEBF"}}>
+                                {mensajeAccion}
+                            </p>
                         )}
                     </>
                 )}

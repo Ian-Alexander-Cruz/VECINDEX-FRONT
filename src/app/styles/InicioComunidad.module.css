@@ -36,6 +36,17 @@
     font-size: 16px;
 }
 
+.chipComunidad {
+    display: inline-block;
+    margin-bottom: 10px;
+    padding: 7px 14px;
+    border-radius: 20px;
+    background: rgba(51, 206, 191, 0.12);
+    color: #33CEBF;
+    font-size: 13px;
+    font-weight: 700;
+}
+
 .controles {
     display: flex;
     align-items: center;

@@ -22,7 +22,7 @@
     padding: 64px 48px 80px;
     display: flex;
     justify-content: center;
-    font-family: var(--font-geist-sans), system-ui, sans-serif;
+    font-family: var(--font-sans), system-ui, sans-serif;
     color: var(--texto);
     -webkit-font-smoothing: antialiased;
 }

@@ -15,7 +15,7 @@ const ERRORES_SESION = ["Token requerido", "Token inválido o expirado"];
 
 const normalizar = (texto) => String(texto ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
 
-const PATRON_CODIGO = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i;
+const PATRON_CODIGO = /^(?:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[A-Z0-9]{5}(?:-[A-Z0-9]{5}){3})$/i;
 
 export default function UnirseComunidad() {
     const { setUsuario } = useAuth();
@@ -67,14 +67,14 @@ export default function UnirseComunidad() {
     function continuarConCodigo(evento) {
         evento.preventDefault();
 
-        const codigo = codigoComunidad.match(PATRON_CODIGO)?.[0].toLowerCase();
+        const codigo = codigoComunidad.trim().match(PATRON_CODIGO)?.[0].toUpperCase();
 
         if (!codigo) {
             setErrorCodigo("El código no es válido.");
             return;
         }
 
-        const comunidad = comunidades.find((comunidad) => (comunidad.codigo || comunidad.id_comunidad)?.toLowerCase() === codigo);
+        const comunidad = comunidades.find((comunidad) => String(comunidad.codigo || comunidad.id_comunidad).toUpperCase() === codigo);
 
         if (!comunidad) {
             setErrorCodigo("No encontramos una comunidad con ese código.");

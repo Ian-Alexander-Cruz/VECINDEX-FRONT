@@ -6,6 +6,8 @@ import Link from "next/link";
 import FondoCuenta from "@/app/components/FondoCuenta";
 import { solicitarAPI } from "@/app/services/api";
 import styles from "@/app/styles/InicioComunidad.module.css";
+import homeStyles from "@/app/styles/Home.module.css";
+import detalleStyles from "@/app/styles/ComunidadDetalle.module.css";
 
 export default function Inicio() {
 
@@ -15,6 +17,11 @@ export default function Inicio() {
     const [cargando, setCargando] = useState(true);
     const [sinComunidad, setSinComunidad] = useState(false);
     const [error, setError] = useState("");
+    const [solicitudes, setSolicitudes] = useState([]);
+    const [mensajeSolicitudes, setMensajeSolicitudes] = useState("");
+    const [mensajeSolicitud, setMensajeSolicitud] = useState("");
+    const [accionFallida, setAccionFallida] = useState(false);
+    const [procesandoSolicitud, setProcesandoSolicitud] = useState(null);
 
     const tipos = {
         publicacion: "Publicación",
@@ -134,12 +141,16 @@ export default function Inicio() {
             const resultados = await Promise.allSettled([
                 solicitarAPI("/api/publicacion/mias"),
                 solicitarAPI("/api/encuesta/mias"),
-                solicitarAPI("/api/peticion/mias")
+                solicitarAPI("/api/peticion/mias"),
+                solicitarAPI("/api/integrante/solicitudes")
             ]);
 
             if (!activo) return;
 
-            const rechazados = resultados.filter((resultado) => resultado.status === "rejected");
+            const actividad = resultados.slice(0, 3);
+            const solicitudesResultado = resultados[3];
+
+            const rechazados = actividad.filter((resultado) => resultado.status === "rejected");
             const mensajes = rechazados.map((resultado) => resultado.reason?.message).filter(Boolean);
 
             if (rechazados.length === 3 && mensajes.every((mensaje) => mensaje === sinComunidadApi)) {
@@ -148,7 +159,13 @@ export default function Inicio() {
                 setError(mensajes[0] || "No fue posible cargar la actividad de tu comunidad.");
             }
 
-            setItems(construirItems(resultados));
+            if (solicitudesResultado.status === "fulfilled" && Array.isArray(solicitudesResultado.value)) {
+                setSolicitudes(solicitudesResultado.value);
+            } else if (solicitudesResultado.status === "rejected") {
+                setMensajeSolicitudes(solicitudesResultado.reason?.message || "No se pudieron cargar las solicitudes de ingreso.");
+            }
+
+            setItems(construirItems(actividad));
             setCargando(false);
         }
 
@@ -223,6 +240,25 @@ export default function Inicio() {
     }
 
 
+    async function resolverSolicitud(idIntegrante, aceptar) {
+        setProcesandoSolicitud(idIntegrante);
+        setMensajeSolicitud("");
+
+        try {
+            await solicitarAPI(`/api/integrante/${idIntegrante}/${aceptar ? "aceptar" : "rechazar"}`, { method: "PUT" });
+
+            setSolicitudes((actuales) => actuales.filter((solicitud) => solicitud.id_integrante !== idIntegrante));
+            setMensajeSolicitud(aceptar ? "El habitante ya forma parte de tu comunidad." : "La solicitud fue rechazada.");
+            setAccionFallida(false);
+        } catch (error) {
+            setMensajeSolicitud(error.message);
+            setAccionFallida(true);
+        } finally {
+            setProcesandoSolicitud(null);
+        }
+    }
+
+
     return (
         <main className={styles.container}>
             <FondoCuenta />
@@ -265,6 +301,77 @@ export default function Inicio() {
                             ))}
                         </div>
                     </div>
+                )}
+
+                {!cargando && !sinComunidad && !error && (
+                    <section className={homeStyles.seccionSolicitudes} style={{ marginBottom: "34px" }} aria-labelledby="titulo-solicitudes">
+                        <div className={homeStyles.tituloSeccion}>
+                            <div>
+                                <h2 id="titulo-solicitudes">Solicitudes de ingreso</h2>
+                                <p>
+                                    Acepta o rechaza a los habitantes que quieren unirse a tu comunidad.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className={homeStyles.gridSolicitudes}>
+                            {mensajeSolicitudes && (
+                                <article className={homeStyles.tarjetaSolicitud}>
+                                    <h3>No se pudieron cargar las solicitudes</h3>
+                                    <p>{mensajeSolicitudes}</p>
+                                </article>
+                            )}
+
+                            {!mensajeSolicitudes && solicitudes.length === 0 && (
+                                <article className={homeStyles.tarjetaSolicitud}>
+                                    <h3>Sin solicitudes pendientes</h3>
+                                    <p>Cuando un habitante pida unirse a tu comunidad, aparecerá aquí.</p>
+                                </article>
+                            )}
+
+                            {!mensajeSolicitudes && solicitudes.map((solicitud) => (
+                                <article className={homeStyles.tarjetaSolicitud} key={solicitud.id_integrante}>
+                                    <div className={homeStyles.cabeceraTarjeta}>
+                                        <span className={homeStyles.etiquetaSolicitud}>Habitante</span>
+                                        <span className={homeStyles.estadoPendiente}>Pendiente</span>
+                                    </div>
+
+                                    <h3>{solicitud.nombre || "Habitante sin nombre"}</h3>
+
+                                    <p>Solicita unirse a tu comunidad.</p>
+
+                                    <div className={homeStyles.datosSolicitud}>
+                                        <span>Correo: {solicitud.correo || "No disponible"}</span>
+                                        <span>Solicitó el {formatearFecha(solicitud.fecha_solicitud)}</span>
+                                    </div>
+
+                                    <div className={detalleStyles.acciones} style={{ width: "100%", marginTop: 0 }}>
+                                        <button
+                                            type="button"
+                                            className={detalleStyles.botonRechazar}
+                                            onClick={() => resolverSolicitud(solicitud.id_integrante, false)}
+                                            disabled={procesandoSolicitud === solicitud.id_integrante}>
+                                            {procesandoSolicitud === solicitud.id_integrante ? "Procesando..." : "Rechazar"}
+                                        </button>
+
+                                        <button
+                                            type="button"
+                                            className={detalleStyles.botonAprobar}
+                                            onClick={() => resolverSolicitud(solicitud.id_integrante, true)}
+                                            disabled={procesandoSolicitud === solicitud.id_integrante}>
+                                            {procesandoSolicitud === solicitud.id_integrante ? "Procesando..." : "Aceptar"}
+                                        </button>
+                                    </div>
+                                </article>
+                            ))}
+                        </div>
+
+                        {mensajeSolicitud && (
+                            <p role="status" style={{ margin: 0, color: accionFallida ? "#FF8585" : "#33CEBF", fontSize: "14px" }}>
+                                {mensajeSolicitud}
+                            </p>
+                        )}
+                    </section>
                 )}
 
                 {cargando && (

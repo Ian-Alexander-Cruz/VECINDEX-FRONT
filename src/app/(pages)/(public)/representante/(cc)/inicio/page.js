@@ -18,6 +18,7 @@ export default function Inicio() {
     const [sinComunidad, setSinComunidad] = useState(false);
     const [error, setError] = useState("");
     const [solicitudes, setSolicitudes] = useState([]);
+    const [nombreComunidad, setNombreComunidad] = useState("");
     const [mensajeSolicitudes, setMensajeSolicitudes] = useState("");
     const [mensajeSolicitud, setMensajeSolicitud] = useState("");
     const [accionFallida, setAccionFallida] = useState(false);
@@ -142,13 +143,15 @@ export default function Inicio() {
                 solicitarAPI("/api/publicacion/mias"),
                 solicitarAPI("/api/encuesta/mias"),
                 solicitarAPI("/api/peticion/mias"),
-                solicitarAPI("/api/integrante/solicitudes")
+                solicitarAPI("/api/integrante/solicitudes"),
+                solicitarAPI("/api/comunidad/perfil")
             ]);
 
             if (!activo) return;
 
             const actividad = resultados.slice(0, 3);
             const solicitudesResultado = resultados[3];
+            const perfilResultado = resultados[4];
 
             const rechazados = actividad.filter((resultado) => resultado.status === "rejected");
             const mensajes = rechazados.map((resultado) => resultado.reason?.message).filter(Boolean);
@@ -163,6 +166,10 @@ export default function Inicio() {
                 setSolicitudes(solicitudesResultado.value);
             } else if (solicitudesResultado.status === "rejected") {
                 setMensajeSolicitudes(solicitudesResultado.reason?.message || "No se pudieron cargar las solicitudes de ingreso.");
+            }
+
+            if (perfilResultado.status === "fulfilled") {
+                setNombreComunidad(perfilResultado.value?.nombre || "");
             }
 
             setItems(construirItems(actividad));
@@ -270,6 +277,12 @@ export default function Inicio() {
                     </span>
 
                     <h1 id="titulo-inicio">Inicio</h1>
+
+                    {nombreComunidad && (
+                        <span className={styles.chipComunidad}>
+                            Comunidad: {nombreComunidad}
+                        </span>
+                    )}
 
                     <p>
                         Consulta la actividad de tu comunidad.

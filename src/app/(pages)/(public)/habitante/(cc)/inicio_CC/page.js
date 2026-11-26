@@ -183,6 +183,7 @@ function Dashboard() {
                         <ul className={inicioStyles.lista}>
                             {publicaciones.slice(0, MAXIMO_PUBLICACIONES).map((publicacion) => (
                                 <li key={publicacion.id_publicacion} className={inicioStyles.publicacion}>
+                                    <Link href={`/habitante/detalles/publicacion/${publicacion.id_publicacion}?comunidad=${idComunidad}`} className={inicioStyles.tarjetaEnlace}>
                                     {publicacion.imagen && (
                                         <img src={publicacion.imagen} alt="" className={inicioStyles.imagenPublicacion} />
                                     )}
@@ -199,6 +200,7 @@ function Dashboard() {
                                             <p className={inicioStyles.cuerpoPublicacion}>{publicacion.descripcion}</p>
                                         )}
                                     </div>
+                                    </Link>
                                 </li>
                             ))}
                         </ul>
@@ -218,7 +220,7 @@ function Dashboard() {
 
                                 return (
                                     <li key={encuesta.id_encuesta} className={inicioStyles.encuesta}>
-                                        <h3>{encuesta.titulo}</h3>
+                                        <h3><Link href={`/habitante/detalles/encuesta/${encuesta.id_encuesta}?comunidad=${idComunidad}`} className={inicioStyles.enlaceTitulo}>{encuesta.titulo}</Link></h3>
 
                                         <ul className={inicioStyles.opciones}>
                                             {lista(encuesta.opciones).map((opcion) => {
@@ -260,6 +262,7 @@ function Dashboard() {
                                                 </button>
                                             )}
                                             {!yaVoto && ocupada && <span role="status">Registrando voto...</span>}
+                                            <Link href={`/habitante/detalles/encuesta/${encuesta.id_encuesta}?comunidad=${idComunidad}`} className={inicioStyles.botonTexto}>Ver detalle</Link>
                                         </div>
 
                                         {erroresVoto[encuesta.id_encuesta] && (

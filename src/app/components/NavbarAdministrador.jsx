@@ -11,7 +11,8 @@ export default function NavbarAdministrador() {
         { nombre: "Inicio", ruta: "/administrador/inicio", icono: "inicio" },
         { nombre: "Habitantes", ruta: "/administrador/habitantes", icono: "habitantes" },
         { nombre: "Representantes", ruta: "/administrador/representantes", icono: "representantes" },
-        { nombre: "Comunidades", ruta: "/administrador/comunidades", icono: "comunidades" }
+        { nombre: "Comunidades", ruta: "/administrador/comunidades", icono: "comunidades" },
+        { nombre: "Cuenta", ruta: "/administrador/cuenta", icono: "cuenta" }
     ];
 
     function Icono({ tipo }) {
@@ -59,6 +60,13 @@ export default function NavbarAdministrador() {
                         <path d="M5 21V7l7-4 7 4v14" />
                         <path d="M9 10h.01M15 10h.01M9 14h.01M15 14h.01" />
                         <path d="M10 21v-4h4v4" />
+                    </>
+                )}
+
+                {tipo === "cuenta" && (
+                    <>
+                        <circle cx="12" cy="8" r="3.5" />
+                        <path d="M5 21a7 7 0 0 1 14 0" />
                     </>
                 )}
             </svg>

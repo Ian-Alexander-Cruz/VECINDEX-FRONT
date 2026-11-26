@@ -19,7 +19,7 @@ export default function Comunidades() {
                 setCargando(true);
                 setError("");
 
-                const [normales, suspendidas] = await Promise.all([
+                const [normales, suspendidas,eliminadas] = await Promise.all([
                     solicitarAPI("/api/comunidad"),
                     solicitarAPI("/api/comunidad/estado/4"),
                     solicitarAPI("/api/comunidad/estado/5")
@@ -138,7 +138,7 @@ export default function Comunidades() {
                                             </p>
 
                                             <span className={comunidad.id_estado === 1 ? styles.estadoNormal : comunidad.id_estado === 4 ? styles.estadoSuspendida : styles.estadoEliminada}>
-                                                {comunidad.id_estado === 1 ? "Normal" : "Suspendida"}
+                                                {comunidad.id_estado === 1 ? "Normal" : comunidad.id_estado === 4 ? "Suspendida" : "Eliminada"}
                                             </span>
                                         </div>
 

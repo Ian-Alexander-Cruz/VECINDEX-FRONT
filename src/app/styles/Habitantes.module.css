@@ -326,7 +326,7 @@
 }
 
 
-.estadoNormal, .estadoSuspendida {
+.estadoNormal, .estadoSuspendida, .estadoEliminada {
     width: fit-content;
     padding: 6px 12px;
     border-radius: 20px;

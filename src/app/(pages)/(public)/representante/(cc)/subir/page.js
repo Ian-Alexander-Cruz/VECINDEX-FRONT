@@ -5,12 +5,15 @@ import FondoCuenta from "@/app/components/FondoCuenta";
 import styles from "@/app/styles/Subir.module.css";
 import { solicitarAPI } from "@/app/services/api";
 
+const MAXIMO_OPCIONES = 20;
+
 export default function Subir() {
     const [seleccion, setSeleccion] = useState("");
     const [tipos, setTipos] = useState([]);
     const [mensaje, setMensaje] = useState("");
     const [tipoMensaje, setTipoMensaje] = useState("");
     const [cargando, setCargando] = useState(false);
+    const [opcionesEncuesta, setOpcionesEncuesta] = useState(["", ""]);
 
     const opciones = [
         {clave: "evento", nombre: "Crear evento", descripcion: "Una actividad con fecha para los habitantes de tu comunidad."},
@@ -35,6 +38,17 @@ export default function Subir() {
         setSeleccion(seleccion === clave ? "" : clave);
         setMensaje("");
         setTipoMensaje("");
+    }
+
+    function actualizarOpcion(indice, valor) {
+        setOpcionesEncuesta((actuales) => {
+            const nuevas = actuales.map((opcion, posicion) => (posicion === indice ? valor : opcion));
+
+            if (indice === nuevas.length - 1 && valor.trim() && nuevas.length < MAXIMO_OPCIONES) {
+                nuevas.push("");
+            }
+            return nuevas;
+        });
     }
 
     async function crearEvento(evento) {
@@ -128,10 +142,7 @@ export default function Subir() {
         const formulario = evento.currentTarget;
         const datosFormulario = new FormData(formulario);
 
-        const opciones = String(datosFormulario.get("opciones") || "")
-            .split("\n")
-            .map((opcion) => opcion.trim())
-            .filter(Boolean);
+        const opciones = opcionesEncuesta.map((opcion) => opcion.trim()).filter(Boolean);
 
         const fechaCierre = String(datosFormulario.get("fechaCierre") || "").trim();
 
@@ -156,6 +167,7 @@ export default function Subir() {
             setMensaje("Encuesta creada correctamente. Ya puedes verla en Inicio");
             setTipoMensaje("exito");
             formulario.reset();
+            setOpcionesEncuesta(["", ""]);
             setSeleccion("");
 
         } catch (error) {
@@ -299,8 +311,19 @@ export default function Subir() {
                         </div>
 
                         <div className={styles.campo}>
-                            <label htmlFor="opcionesEncuesta"> Opciones (una por línea) </label>
-                            <textarea id="opcionesEncuesta" name="opciones" rows={4} placeholder={"Sí\nNo"} required/>
+                            <span className={styles.etiquetaOpciones}>Opciones</span>
+
+                            {opcionesEncuesta.map((opcion, indice) => (
+                                <input
+                                    key={indice}
+                                    type="text"
+                                    value={opcion}
+                                    onChange={(evento) => actualizarOpcion(indice, evento.target.value)}
+                                    placeholder={`Opción ${indice + 1}`}
+                                    aria-label={`Opción ${indice + 1}`}
+                                    maxLength={120}
+                                />
+                            ))}
                         </div>
 
                         <div className={styles.campo}>

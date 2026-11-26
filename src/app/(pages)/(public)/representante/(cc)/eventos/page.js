@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import FondoCuenta from "@/app/components/FondoCuenta";
 import styles from "@/app/styles/Eventos.module.css";
 import { solicitarAPI } from "@/app/services/api";
@@ -70,16 +71,18 @@ export default function Eventos() {
                 ) : (
                     <ul className={styles.listaEventos}>
                         {eventos.map((evento) => (
-                            <li key={evento.id_evento} className={styles.tarjetaEvento}>
-                                <span className={styles.tipoEvento}>{evento.tipo_evento}</span>
+                            <li key={evento.id_evento}>
+                                <Link href={`/representante/detalles/evento/${evento.id_evento}`} className={`${styles.tarjetaEvento} ${styles.enlaceEvento}`}>
+                                    <span className={styles.tipoEvento}>{evento.tipo_evento}</span>
 
-                                <h3>{evento.titulo}</h3>
+                                    <h3>{evento.titulo}</h3>
 
-                                <p className={styles.fechaEvento}>{fechaLegible(evento.fecha_evento)}</p>
+                                    <p className={styles.fechaEvento}>{fechaLegible(evento.fecha_evento)}</p>
 
-                                {evento.descripcion && (
-                                    <p className={styles.descripcionEvento}>{evento.descripcion}</p>
-                                )}
+                                    {evento.descripcion && (
+                                        <p className={styles.descripcionEvento}>{evento.descripcion}</p>
+                                    )}
+                                </Link>
                             </li>
                         ))}
                     </ul>

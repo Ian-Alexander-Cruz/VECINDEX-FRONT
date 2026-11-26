@@ -15,3 +15,18 @@
     flex-direction: column;
     gap: 18px;
 }
+
+.encabezado h1 {
+    margin: 0;
+    color: #FFFFFF;
+    font-size: 30px;
+    font-weight: 800;
+}
+
+.encabezado p {
+    margin: 8px 0 0;
+    max-width: 65ch;
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 15px;
+    line-height: 1.6;
+}

@@ -1,4 +1,5 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://vecindex-web.onrender.com";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
+const ERRORES = ["Token requerido", "Token inválido o expirado"]
 
 export async function solicitarAPI(ruta, opciones = {}) {
     const config = opciones;
@@ -17,9 +18,11 @@ export async function solicitarAPI(ruta, opciones = {}) {
     const datos = tipoContenido.includes("application/json") ? await respuesta.json() : await respuesta.text();
 
     if (!respuesta.ok) {
-        throw new Error(
-            datos?.error || `Error en la solicitud: ${respuesta.status}`
-        );
+        const mensaje = datos?.error || `Error en la solicitud: ${respuesta.status}`
+        if (ERRORES.includes(mensaje) && !(ruta === "/api/usuario/perfil" && !config.method) && typeof window !== "undefined") {
+            window.location.href = "/login"
+        }
+        throw new Error(mensaje);
     }
 
     return datos;

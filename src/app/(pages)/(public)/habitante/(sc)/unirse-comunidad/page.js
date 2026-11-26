@@ -74,7 +74,7 @@ export default function UnirseComunidad() {
             return;
         }
 
-        const comunidad = comunidades.find((comunidad) => comunidad.codigo?.toLowerCase() === codigo);
+        const comunidad = comunidades.find((comunidad) => (comunidad.codigo || comunidad.id_comunidad)?.toLowerCase() === codigo);
 
         if (!comunidad) {
             setErrorCodigo("No encontramos una comunidad con ese código.");

@@ -2,7 +2,7 @@
 
 import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import FondoCuenta from "@/app/components/FondoCuenta";
 import { useAuth } from "@/app/components/AuthProvider";
 import styles from "@/app/styles/Home.module.css";
@@ -31,6 +31,9 @@ function Dashboard() {
     const [error, setError] = useState("");
     const [votando, setVotando] = useState(null);
     const [erroresVoto, setErroresVoto] = useState({});
+    const router = useRouter();
+    const [saliendo, setSaliendo] = useState(false);
+    const [errorSalir, setErrorSalir] = useState("");
 
     useEffect(() => {
         if (!idValido) return;
@@ -90,6 +93,24 @@ function Dashboard() {
             }));
         } finally {
             setVotando(null);
+        }
+    }
+
+    async function salirDeComunidad() {
+        if (!window.confirm(`¿Seguro que quieres salir de ${comunidad.nombre}? Para volver tendrás que enviar otra solicitud.`)) return;
+
+        try {
+            setSaliendo(true);
+            setErrorSalir("");
+            await solicitarAPI(`/api/integrante/comunidad/${idComunidad}`, { method: "DELETE" });
+            router.push("/habitante/inicio_SC");
+        } catch (error) {
+            if (ERRORES_SESION.includes(error.message)) {
+                setUsuario(null);
+                return;
+            }
+            setErrorSalir(error.message || "No fue posible salir de la comunidad.");
+            setSaliendo(false);
         }
     }
 
@@ -274,6 +295,13 @@ function Dashboard() {
                         </ul>
                     )}
                 </section>
+            </div>
+
+            <div className={inicioStyles.salida}>
+                <button type="button" className={inicioStyles.botonSalir} disabled={saliendo} onClick={salirDeComunidad}>
+                    {saliendo ? "Saliendo..." : "Salir de la comunidad"}
+                </button>
+                {errorSalir && <p className={inicioStyles.errorEncuesta} role="alert">{errorSalir}</p>}
             </div>
         </>
     );

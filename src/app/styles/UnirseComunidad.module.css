@@ -291,6 +291,18 @@
     transform: translateY(-1px);
 }
 
+button.botonVisualizar {
+    border: none;
+    font-family: inherit;
+    cursor: pointer;
+}
+
+.botonVisualizar:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+    transform: none;
+}
+
 .errorBusqueda,
 .estadoBusqueda {
     margin-top: 18px;

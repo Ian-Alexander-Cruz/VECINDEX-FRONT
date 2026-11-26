@@ -1,15 +1,28 @@
 "use client";
 
 import { use, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import FondoCuenta from "@/app/components/FondoCuenta";
 import { solicitarAPI } from "@/app/services/api";
 import styles from "@/app/styles/ComunidadDetalle.module.css";
 
+const ESTATUS_PETICION = [
+    { id: 1, nombre: "Pendiente" },
+    { id: 2, nombre: "En revisión" },
+    { id: 3, nombre: "En proceso" },
+    { id: 4, nombre: "Atendida" }
+];
+
 export default function PeticionDetalle({ params }) {
     const { id } = use(params);
+    const router = useRouter();
     const [peticion, setPeticion] = useState(null);
     const [cargando, setCargando] = useState(true);
     const [error, setError] = useState("");
+    const [idEstatus, setIdEstatus] = useState(1);
+    const [procesando, setProcesando] = useState(false);
+    const [mensajeAccion, setMensajeAccion] = useState("");
+    const [errorAccion, setErrorAccion] = useState(false);
 
     useEffect(() => {
         let activo = true;
@@ -20,6 +33,7 @@ export default function PeticionDetalle({ params }) {
 
                 if (activo) {
                     setPeticion(datos);
+                    setIdEstatus(datos.id_estatus ?? 1);
                 }
             } catch (error) {
                 if (activo) {
@@ -47,6 +61,43 @@ export default function PeticionDetalle({ params }) {
         if (Number.isNaN(valor.getTime())) return String(fecha);
 
         return `${String(valor.getDate()).padStart(2, "0")}/${String(valor.getMonth() + 1).padStart(2, "0")}/${valor.getFullYear()}`;
+    }
+
+    async function guardarEstatus() {
+        setProcesando(true);
+        setMensajeAccion("");
+
+        try {
+            const actualizada = await solicitarAPI(`/api/peticion/${id}/estatus`, {
+                method: "PUT",
+                body: JSON.stringify({ idEstatus })
+            });
+
+            setPeticion(actualizada);
+            setMensajeAccion("El estatus de la petición se actualizó correctamente.");
+            setErrorAccion(false);
+        } catch (error) {
+            setMensajeAccion(error.message);
+            setErrorAccion(true);
+        } finally {
+            setProcesando(false);
+        }
+    }
+
+    async function eliminarPeticion() {
+        if (!window.confirm("¿Seguro que quieres eliminar esta petición? Esta acción no se puede deshacer.")) return;
+
+        setProcesando(true);
+        setMensajeAccion("");
+
+        try {
+            await solicitarAPI(`/api/peticion/${id}`, { method: "DELETE" });
+            router.push("/representante/inicio");
+        } catch (error) {
+            setMensajeAccion(error.message);
+            setErrorAccion(true);
+            setProcesando(false);
+        }
     }
 
     return (
@@ -158,6 +209,56 @@ export default function PeticionDetalle({ params }) {
                                 </p>
                             )}
                         </section>
+
+                        <section className={styles.tarjeta}>
+                            <h2>Acciones</h2>
+
+                            <div style={{ marginBottom: "20px" }}>
+                                <label htmlFor="estatus-peticion" style={{ color: "#AEB5D8", fontSize: "14px" }}>Estatus</label>
+
+                                <select
+                                    id="estatus-peticion"
+                                    value={idEstatus}
+                                    onChange={(evento) => setIdEstatus(Number(evento.target.value))}
+                                    disabled={procesando}
+                                    style={{
+                                        display: "block",
+                                        width: "100%",
+                                        marginTop: "8px",
+                                        padding: "12px",
+                                        borderRadius: "8px",
+                                        border: "1px solid rgba(51, 206, 191, 0.4)",
+                                        background: "#171943",
+                                        color: "#FFFFFF",
+                                        fontSize: "15px"
+                                    }}>
+                                    {ESTATUS_PETICION.map((estatus) => (
+                                        <option key={estatus.id} value={estatus.id}>
+                                            {estatus.nombre}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            <div className={styles.acciones}>
+                                <button className={styles.botonRechazar} onClick={eliminarPeticion} disabled={procesando}>
+                                    {procesando ? "Procesando..." : "Eliminar petición"}
+                                </button>
+
+                                <button className={styles.botonAprobar} onClick={guardarEstatus} disabled={procesando}>
+                                    {procesando ? "Procesando..." : "Guardar estatus"}
+                                </button>
+                            </div>
+                        </section>
+
+                        {mensajeAccion && (
+                            <p
+                                className={styles.mensajeAccion}
+                                role="status"
+                                style={{color: errorAccion ? "#FF8585" : "#33CEBF"}}>
+                                {mensajeAccion}
+                            </p>
+                        )}
                     </>
                 )}
             </section>

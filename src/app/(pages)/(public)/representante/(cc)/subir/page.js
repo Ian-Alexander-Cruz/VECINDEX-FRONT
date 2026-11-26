@@ -5,12 +5,16 @@ import FondoCuenta from "@/app/components/FondoCuenta";
 import styles from "@/app/styles/Subir.module.css";
 import { solicitarAPI } from "@/app/services/api";
 
+const MAXIMO_OPCIONES = 20;
+
 export default function Subir() {
     const [seleccion, setSeleccion] = useState("");
     const [tipos, setTipos] = useState([]);
     const [mensaje, setMensaje] = useState("");
     const [tipoMensaje, setTipoMensaje] = useState("");
     const [cargando, setCargando] = useState(false);
+    const [opcionesEncuesta, setOpcionesEncuesta] = useState(["", ""]);
+    const [vistaPrevia, setVistaPrevia] = useState("");
 
     const opciones = [
         {clave: "evento", nombre: "Crear evento", descripcion: "Una actividad con fecha para los habitantes de tu comunidad."},
@@ -31,10 +35,43 @@ export default function Subir() {
         cargarTipos();
     }, []);
 
+    useEffect(() => {
+        return () => {
+            if (vistaPrevia) URL.revokeObjectURL(vistaPrevia);
+        };
+    }, [vistaPrevia]);
+
     function elegir(clave) {
         setSeleccion(seleccion === clave ? "" : clave);
+        setVistaPrevia("");
         setMensaje("");
         setTipoMensaje("");
+    }
+
+    function elegirImagen(evento) {
+        const archivo = evento.target.files?.[0];
+        setVistaPrevia(archivo ? URL.createObjectURL(archivo) : "");
+    }
+
+    function actualizarOpcion(indice, valor) {
+        setOpcionesEncuesta((actuales) => {
+            const nuevas = actuales.map((opcion, posicion) => (posicion === indice ? valor : opcion));
+
+            if (indice === nuevas.length - 1 && valor.trim() && nuevas.length < MAXIMO_OPCIONES) {
+                nuevas.push("");
+            }
+            return nuevas;
+        });
+    }
+
+    function quitarOpcionVacia(indice) {
+        setOpcionesEncuesta((actuales) => {
+            if (indice < 2 || actuales[indice]?.trim()) return actuales;
+
+            const nuevas = actuales.filter((opcion, posicion) => posicion !== indice);
+
+            return nuevas[nuevas.length - 1]?.trim() ? [...nuevas, ""] : nuevas;
+        });
     }
 
     async function crearEvento(evento) {
@@ -110,6 +147,7 @@ export default function Subir() {
             setTipoMensaje("exito");
             formulario.reset();
             setSeleccion("");
+            setVistaPrevia("");
 
         } catch (error) {
             setMensaje(error.message);
@@ -128,10 +166,7 @@ export default function Subir() {
         const formulario = evento.currentTarget;
         const datosFormulario = new FormData(formulario);
 
-        const opciones = String(datosFormulario.get("opciones") || "")
-            .split("\n")
-            .map((opcion) => opcion.trim())
-            .filter(Boolean);
+        const opciones = opcionesEncuesta.map((opcion) => opcion.trim()).filter(Boolean);
 
         const fechaCierre = String(datosFormulario.get("fechaCierre") || "").trim();
 
@@ -156,6 +191,7 @@ export default function Subir() {
             setMensaje("Encuesta creada correctamente. Ya puedes verla en Inicio");
             setTipoMensaje("exito");
             formulario.reset();
+            setOpcionesEncuesta(["", ""]);
             setSeleccion("");
 
         } catch (error) {
@@ -274,7 +310,13 @@ export default function Subir() {
 
                         <div className={styles.campo}>
                             <label htmlFor="imagenPublicacion"> Imagen (opcional) </label>
-                            <input type="file" id="imagenPublicacion" name="imagen" accept=".jpg,.jpeg,.png"/>
+                            <input type="file" id="imagenPublicacion" name="imagen" accept=".jpg,.jpeg,.png" onChange={elegirImagen}/>
+
+                            {vistaPrevia && (
+                                <div className={styles.contenedorImagen}>
+                                    <img src={vistaPrevia} alt="Vista previa de la imagen seleccionada"/>
+                                </div>
+                            )}
                         </div>
 
                         <div className={styles.campo}>
@@ -299,8 +341,20 @@ export default function Subir() {
                         </div>
 
                         <div className={styles.campo}>
-                            <label htmlFor="opcionesEncuesta"> Opciones (una por línea) </label>
-                            <textarea id="opcionesEncuesta" name="opciones" rows={4} placeholder={"Sí\nNo"} required/>
+                            <span className={styles.etiquetaOpciones}>Opciones</span>
+
+                            {opcionesEncuesta.map((opcion, indice) => (
+                                <input
+                                    key={indice}
+                                    type="text"
+                                    value={opcion}
+                                    onChange={(evento) => actualizarOpcion(indice, evento.target.value)}
+                                    onBlur={() => quitarOpcionVacia(indice)}
+                                    placeholder={`Opción ${indice + 1}`}
+                                    aria-label={`Opción ${indice + 1}`}
+                                    maxLength={120}
+                                />
+                            ))}
                         </div>
 
                         <div className={styles.campo}>

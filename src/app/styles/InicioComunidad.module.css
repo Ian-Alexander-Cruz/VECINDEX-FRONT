@@ -36,6 +36,17 @@
     font-size: 16px;
 }
 
+.chipComunidad {
+    display: inline-block;
+    margin-bottom: 10px;
+    padding: 7px 14px;
+    border-radius: 20px;
+    background: rgba(51, 206, 191, 0.12);
+    color: #33CEBF;
+    font-size: 13px;
+    font-weight: 700;
+}
+
 .controles {
     display: flex;
     align-items: center;
@@ -105,6 +116,103 @@
 
 .seccionListado {
     margin-top: 10px;
+}
+
+.seccionPeticiones {
+    margin-bottom: 34px;
+}
+
+.listaPeticiones {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.peticionFila {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 18px;
+    border: 1px solid rgba(51, 206, 191, 0.22);
+    border-radius: 12px;
+    background: rgba(23, 25, 67, 0.75);
+    color: #FFFFFF;
+    text-decoration: none;
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.peticionFila:hover {
+    background: rgba(23, 25, 67, 0.92);
+    border-color: rgba(51, 206, 191, 0.5);
+}
+
+.peticionFila:focus-visible {
+    outline: 3px solid #33CEBF;
+    outline-offset: 3px;
+}
+
+.peticionPosicion {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: rgba(51, 206, 191, 0.15);
+    color: #33CEBF;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.peticionInfo {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.peticionInfo strong {
+    font-size: 15px;
+    font-weight: 700;
+    overflow-wrap: anywhere;
+}
+
+.peticionInfo span {
+    color: #AEB5D8;
+    font-size: 12px;
+    overflow-wrap: anywhere;
+}
+
+.peticionApoyos {
+    flex-shrink: 0;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: rgba(255, 178, 102, 0.16);
+    color: #FFC08A;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.botonTodas {
+    margin-top: 16px;
+    padding: 11px 18px;
+    border: 1px solid rgba(51, 206, 191, 0.4);
+    border-radius: 9px;
+    background: transparent;
+    color: #75F0DF;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.botonTodas:hover {
+    background: rgba(51, 206, 191, 0.12);
 }
 
 .encabezadoListado {
@@ -328,7 +436,9 @@
 
 @media (prefers-reduced-motion: reduce) {
     .tarjeta,
+    .peticionFila,
     .filtros button,
+    .botonTodas,
     .botonCrear {
         transition: none;
     }

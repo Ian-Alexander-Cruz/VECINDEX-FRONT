@@ -14,6 +14,7 @@ export default function Subir() {
     const [tipoMensaje, setTipoMensaje] = useState("");
     const [cargando, setCargando] = useState(false);
     const [opcionesEncuesta, setOpcionesEncuesta] = useState(["", ""]);
+    const [vistaPrevia, setVistaPrevia] = useState("");
 
     const opciones = [
         {clave: "evento", nombre: "Crear evento", descripcion: "Una actividad con fecha para los habitantes de tu comunidad."},
@@ -34,10 +35,22 @@ export default function Subir() {
         cargarTipos();
     }, []);
 
+    useEffect(() => {
+        return () => {
+            if (vistaPrevia) URL.revokeObjectURL(vistaPrevia);
+        };
+    }, [vistaPrevia]);
+
     function elegir(clave) {
         setSeleccion(seleccion === clave ? "" : clave);
+        setVistaPrevia("");
         setMensaje("");
         setTipoMensaje("");
+    }
+
+    function elegirImagen(evento) {
+        const archivo = evento.target.files?.[0];
+        setVistaPrevia(archivo ? URL.createObjectURL(archivo) : "");
     }
 
     function actualizarOpcion(indice, valor) {
@@ -134,6 +147,7 @@ export default function Subir() {
             setTipoMensaje("exito");
             formulario.reset();
             setSeleccion("");
+            setVistaPrevia("");
 
         } catch (error) {
             setMensaje(error.message);
@@ -296,7 +310,13 @@ export default function Subir() {
 
                         <div className={styles.campo}>
                             <label htmlFor="imagenPublicacion"> Imagen (opcional) </label>
-                            <input type="file" id="imagenPublicacion" name="imagen" accept=".jpg,.jpeg,.png"/>
+                            <input type="file" id="imagenPublicacion" name="imagen" accept=".jpg,.jpeg,.png" onChange={elegirImagen}/>
+
+                            {vistaPrevia && (
+                                <div className={styles.contenedorImagen}>
+                                    <img src={vistaPrevia} alt="Vista previa de la imagen seleccionada"/>
+                                </div>
+                            )}
                         </div>
 
                         <div className={styles.campo}>

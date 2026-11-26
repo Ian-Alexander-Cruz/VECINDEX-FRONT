@@ -320,15 +320,17 @@ export default function ComunidadDetalle({ params }) {
                                         </button>
                                     )}
 
-                                    {comunidad.id_estado === 4 && (
+                                    {(comunidad.id_estado === 4 || comunidad.id_estado === 5) && (
                                         <button type="button" className={styles.botonGuardar} onClick={() => cambiarEstadoComunidad("Normal")} disabled={procesando}>
                                             Reactivar
                                         </button>
                                     )}
 
-                                    <button type="button" className={styles.botonEliminar} onClick={eliminarComunidad} disabled={procesando}>
-                                        {procesando ? "Procesando..." : "Eliminar comunidad"}
-                                    </button>
+                                    {comunidad.id_estado !== 5 && (
+                                        <button type="button" className={styles.botonEliminar} onClick={eliminarComunidad} disabled={procesando}>
+                                            {procesando ? "Procesando..." : "Eliminar comunidad"}
+                                        </button>
+                                    )}
                                 </div>
 
                                 {mensajeAccion && (

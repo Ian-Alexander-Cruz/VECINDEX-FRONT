@@ -121,3 +121,27 @@
     border: 1px solid rgba(51, 206, 191, 0.25);
     box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
 }
+
+.mapa {
+    width: 100%;
+    height: 100%;
+}
+
+.formulario {
+    margin-top: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.campo {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+}
+
+.campo label {
+    color: #FFFFFF;
+    font-size: 14px;
+    font-weight: 650;
+}

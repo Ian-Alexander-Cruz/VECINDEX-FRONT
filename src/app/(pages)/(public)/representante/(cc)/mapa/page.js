@@ -7,7 +7,9 @@ import styles from "@/app/styles/SolicitudMapa.module.css";
 import mapaStyles from "@/app/styles/MapaCC.module.css";
 import { solicitarAPI } from "@/app/services/api";
 
-const ESTILO_MAPA = "https://tiles.openfreemap.org/styles/fiord";
+const ESTILO_MAPA = "https://tiles.openfreemap.org/styles/liberty";
+const SATELITE = "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}";
+const DENUE = "https://www.inegi.org.mx/app/api/denue/v1/consulta/Buscar/todos";
 const PENDIENTE = 1;
 const EN_REVISION = 2;
 const EN_PROCESO = 3;
@@ -56,6 +58,12 @@ function limites(geojson) {
     return Number.isFinite(oeste) ? [[oeste, sur], [este, norte]] : null;
 }
 
+function radioMetros([[oeste, sur], [este, norte]]) {
+    const ancho = (este - oeste) * 111320 * Math.cos(((sur + norte) / 2) * Math.PI / 180);
+    const alto = (norte - sur) * 111320;
+    return Math.min(5000, Math.ceil(Math.hypot(ancho, alto) / 2));
+}
+
 function anillos(geojson) {
     const lista = [];
 
@@ -85,6 +93,7 @@ export default function SolicitudMapa() {
     const [mapaListo, setMapaListo] = useState(false);
     const [visibles, setVisibles] = useState(ESTATUS.map((estatus) => estatus.id));
     const [idSeleccionada, setIdSeleccionada] = useState(null);
+    const [vistaSatelite, setVistaSatelite] = useState(false);
     const contenedor = useRef(null);
     const mapa = useRef(null);
     const marcadores = useRef(new Map());
@@ -98,7 +107,9 @@ export default function SolicitudMapa() {
 
                 if (actual && (actual.id_estatus === EN_REVISION || actual.id_estatus === ATENDIDA)) {
                     const listaPeticiones = await solicitarAPI("/api/peticion/mias");
-                    setPeticiones(Array.isArray(listaPeticiones) ? listaPeticiones : []);
+                    setPeticiones(Array.isArray(listaPeticiones)
+                        ? [...listaPeticiones].sort((a, b) => (b.total_apoyos ?? 0) - (a.total_apoyos ?? 0))
+                        : []);
                 }
             } catch (error) {
                 setError(error.message);
@@ -115,6 +126,11 @@ export default function SolicitudMapa() {
     const puedePedir = !cargando && !error && solicitud === null;
     const seleccionada = peticiones.find((peticion) => peticion.id_peticion === idSeleccionada);
     const sinUbicacion = peticiones.filter((peticion) => !coordenadas(peticion)).length;
+
+    useEffect(() => {
+        if (!mapaListo || !mapa.current?.instancia.getLayer("satelite")) return;
+        mapa.current.instancia.setLayoutProperty("satelite", "visibility", vistaSatelite ? "visible" : "none");
+    }, [vistaSatelite, mapaListo]);
 
     useEffect(() => {
         if (!urlMapa || !contenedor.current) return;
@@ -140,6 +156,9 @@ export default function SolicitudMapa() {
             mapa.current = { instancia, maplibregl };
 
             instancia.on("load", async () => {
+                const primeraEtiqueta = instancia.getStyle().layers.find((capa) => capa.type === "symbol")?.id;
+                instancia.addSource("satelite", { type: "raster", tiles: [SATELITE], tileSize: 256, maxzoom: 19, attribution: "Imágenes © Esri, Maxar, Earthstar Geographics" });
+                instancia.addLayer({ id: "satelite", type: "raster", source: "satelite", layout: { visibility: "none" } }, primeraEtiqueta);
                 instancia.addSource("unidad", { type: "geojson", data: urlMapa });
                 instancia.addLayer({ id: "unidad-relleno", type: "fill", source: "unidad", paint: { "fill-color": "#33CEBF", "fill-opacity": 0.12 } });
                 instancia.addLayer({ id: "unidad-borde", type: "line", source: "unidad", paint: { "line-color": "#33CEBF", "line-width": 2.5 } });
@@ -159,6 +178,32 @@ export default function SolicitudMapa() {
                     if (huecos.length) {
                         instancia.addSource("fuera", { type: "geojson", data: { type: "Feature", properties: {}, geometry: { type: "Polygon", coordinates: [[[-180, -85], [180, -85], [180, 85], [-180, 85], [-180, -85]], ...huecos] } } });
                         instancia.addLayer({ id: "fuera", type: "fill", source: "fuera", paint: { "fill-color": "#171943", "fill-opacity": 1 } }, "unidad-borde");
+                    }
+
+                    if (caja && process.env.NEXT_PUBLIC_DENUE_TOKEN) {
+                        try {
+                            const [[oeste, sur], [este, norte]] = caja;
+                            const respuesta = await fetch(`${DENUE}/${(sur + norte) / 2},${(oeste + este) / 2}/${radioMetros(caja)}/${process.env.NEXT_PUBLIC_DENUE_TOKEN}`);
+                            if (!respuesta.ok) throw new Error();
+                            const locales = await respuesta.json();
+                            const puntos = (Array.isArray(locales) ? locales : [])
+                                .map((local) => ({ type: "Feature", properties: { nombre: local.Nombre, giro: local.Clase_actividad }, geometry: { type: "Point", coordinates: [Number(local.Longitud), Number(local.Latitud)] } }))
+                                .filter((punto) => punto.geometry.coordinates.every(Number.isFinite));
+                            const debajoDe = instancia.getLayer("fuera") ? "fuera" : undefined;
+
+                            instancia.addSource("locales", { type: "geojson", data: { type: "FeatureCollection", features: puntos } });
+                            instancia.addLayer({ id: "locales-punto", type: "circle", source: "locales", paint: { "circle-radius": 3.5, "circle-color": "#8A8FA3", "circle-opacity": 0.7, "circle-stroke-width": 1, "circle-stroke-color": "#FFFFFF" } }, debajoDe);
+                            instancia.addLayer({ id: "locales-nombre", type: "symbol", source: "locales", minzoom: 17, layout: { "text-field": ["get", "nombre"], "text-font": ["Noto Sans Regular"], "text-size": 10, "text-offset": [0, 0.9], "text-anchor": "top", "text-max-width": 7, "text-optional": true }, paint: { "text-color": "#7A7F92", "text-halo-color": "#FFFFFF", "text-halo-width": 1 } }, debajoDe);
+
+                            instancia.on("click", "locales-punto", (evento) => {
+                                const { nombre, giro } = evento.features[0].properties;
+                                new maplibregl.Popup({ closeButton: false }).setLngLat(evento.features[0].geometry.coordinates).setText(`${nombre} · ${giro}`).addTo(instancia);
+                            });
+                            instancia.on("mouseenter", "locales-punto", () => { instancia.getCanvas().style.cursor = "pointer"; });
+                            instancia.on("mouseleave", "locales-punto", () => { instancia.getCanvas().style.cursor = ""; });
+                        } catch {
+                            setErrorMapa("No se pudieron cargar los locales de la zona");
+                        }
                     }
                 } catch {
                     setErrorMapa("No se pudo dibujar el contenido del mapa");
@@ -369,6 +414,14 @@ export default function SolicitudMapa() {
                                     {estado.nombre} ({peticiones.filter((peticion) => peticion.id_estatus === estado.id && coordenadas(peticion)).length})
                                 </button>
                             ))}
+                            <button
+                                type="button"
+                                className={mapaStyles.filtro}
+                                aria-pressed={vistaSatelite}
+                                onClick={() => setVistaSatelite((actual) => !actual)}
+                            >
+                                {vistaSatelite ? "Ver mapa" : "Ver satélite"}
+                            </button>
                         </fieldset>
 
                         {errorMapa && <p className={styles.mensaje} data-tipo="error" role="alert">{errorMapa}</p>}

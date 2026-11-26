@@ -1,43 +1,95 @@
 .paginaInicio {
+    --fondo: #171943;
+    --superficie: #1F2257;
+    --superficieAlta: #262A66;
+    --linea: rgba(255, 255, 255, 0.09);
+    --lineaFuerte: rgba(255, 255, 255, 0.16);
+    --texto: #F4F6FF;
+    --textoSuave: #AEB5DD;
+    --textoTenue: #8D94C2;
+    --acento: #33CEBF;
+    --acentoHover: #4FDCCE;
+    --acentoTinta: rgba(51, 206, 191, 0.14);
+    --pendiente: #F5C542;
+    --rechazado: #FF8A8A;
+    --sombra: 0 1px 2px rgba(6, 7, 30, 0.35), 0 10px 24px -8px rgba(6, 7, 30, 0.55);
+    --sombraAlta: 0 2px 4px rgba(6, 7, 30, 0.35), 0 18px 36px -10px rgba(6, 7, 30, 0.7);
+
     position: relative;
     z-index: 1;
     min-height: 100vh;
     margin-left: 88px;
-    padding: 55px 45px;
+    padding: 64px 48px 80px;
     display: flex;
     justify-content: center;
+    font-family: var(--font-geist-sans), system-ui, sans-serif;
+    color: var(--texto);
+    -webkit-font-smoothing: antialiased;
+}
+
+.paginaInicio ::selection {
+    background: var(--acento);
+    color: var(--fondo);
 }
 
 .contenido {
     width: 100%;
-    max-width: 950px;
+    max-width: 960px;
     display: flex;
     flex-direction: column;
-    gap: 34px;
+    gap: 48px;
+}
+
+.saludo {
+    padding-bottom: 28px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .saludo h1 {
     margin: 0;
-    color: #fff;
-    font-size: 34px;
-    font-weight: 800;
-    line-height: 1.15;
+    color: var(--texto);
+    font-size: clamp(32px, 4.4vw, 46px);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    text-wrap: balance;
     overflow-wrap: anywhere;
 }
 
 .saludo p {
-    margin: 10px 0 0;
-    max-width: 60ch;
-    color: rgba(255, 255, 255, 0.75);
-    font-size: 15px;
+    margin: 14px 0 0;
+    max-width: 58ch;
+    color: #FFFFFF;
+    font-size: 16px;
+    font-weight: 500;
     line-height: 1.6;
+    text-wrap: pretty;
 }
 
 .seccion h2 {
-    margin: 0 0 16px;
-    color: #fff;
-    font-size: 19px;
+    margin: 0 0 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--texto);
+    font-size: 18px;
+    font-weight: 650;
+    letter-spacing: -0.01em;
+}
+
+.conteo {
+    min-width: 24px;
+    height: 24px;
+    padding: 0 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    background: var(--fondo);
+    color: var(--acento);
+    font-size: 13px;
     font-weight: 700;
+    font-variant-numeric: tabular-nums;
 }
 
 .listaComunidades {
@@ -45,37 +97,54 @@
     padding: 0;
     list-style: none;
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 18px;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 290px), 1fr));
+    gap: 16px;
 }
 
 .tarjetaComunidad {
     height: 100%;
-    padding: 22px 22px 22px 20px;
+    padding: 22px;
     display: flex;
     gap: 16px;
-    border-radius: 18px;
-    border: 1px solid rgba(51, 206, 191, 0.25);
-    background: rgba(23, 25, 67, 0.8);
-    backdrop-filter: blur(8px);
-    box-shadow: 0 12px 35px rgba(10, 12, 45, 0.18);
+    border-radius: 16px;
+    border: 1px solid var(--linea);
+    background: var(--superficie);
+    box-shadow: var(--sombra);
+    transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.tarjetaComunidad:has(.boton:hover),
+.tarjetaComunidad:has(.boton:focus-visible) {
+    border-color: rgba(51, 206, 191, 0.45);
+    box-shadow: var(--sombraAlta);
+    transform: translateY(-2px);
 }
 
 .marcador {
-    width: 42px;
-    height: 42px;
+    width: 44px;
+    height: 44px;
     flex-shrink: 0;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 12px;
-    background: rgba(51, 206, 191, 0.12);
+    background: var(--acentoTinta);
+    transition: background 0.25s ease;
 }
 
 .marcador svg {
     width: 18px;
     height: 21px;
-    fill: #33CEBF;
+    fill: var(--acento);
+    transition: fill 0.25s ease;
+}
+
+.tarjetaComunidad:has(.boton:hover) .marcador {
+    background: var(--acento);
+}
+
+.tarjetaComunidad:has(.boton:hover) .marcador svg {
+    fill: var(--fondo);
 }
 
 .datosComunidad {
@@ -87,84 +156,106 @@
 }
 
 .datosComunidad h3 {
-    margin: 0;
-    color: #fff;
-    font-size: 17px;
-    font-weight: 700;
-    line-height: 1.3;
+    margin: 2px 0 0;
+    color: var(--texto);
+    font-size: 18px;
+    font-weight: 650;
+    line-height: 1.25;
+    letter-spacing: -0.015em;
     overflow-wrap: anywhere;
 }
 
 .datosComunidad p {
-    margin: 5px 0 16px;
-    color: rgba(255, 255, 255, 0.62);
+    margin: 6px 0 20px;
+    color: var(--textoTenue);
     font-size: 13px;
+    font-variant-numeric: tabular-nums;
+}
+
+.datosComunidad .boton {
+    margin-top: auto;
 }
 
 .boton {
-    display: inline-block;
-    padding: 9px 18px;
-    border-radius: 9px;
-    background: #33CEBF;
-    color: #171943;
-    font-size: 13px;
-    font-weight: 700;
+    min-height: 40px;
+    padding: 0 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border-radius: 10px;
+    background: var(--acento);
+    color: var(--fondo);
+    font-size: 14px;
+    font-weight: 650;
     text-decoration: none;
-    transition: background 0.2s ease;
+    transition: background 0.2s ease, gap 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .boton:hover {
-    background: #28B5A8;
+    background: var(--acentoHover);
+    gap: 12px;
+}
+
+.iconoBoton {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
 }
 
 .boton:focus-visible,
 .botonMenu:focus-visible,
 .opcionMenu:focus-visible {
-    outline: 2px solid #75F0DF;
+    outline: 2px solid var(--acentoHover);
     outline-offset: 3px;
 }
 
 .vacio {
-    padding: 42px 38px;
+    padding: 40px;
     display: flex;
     align-items: center;
-    gap: 34px;
-    border-radius: 22px;
-    border: 1px solid rgba(51, 206, 191, 0.25);
-    background: rgba(23, 25, 67, 0.82);
-    backdrop-filter: blur(8px);
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+    gap: 36px;
+    border-radius: 20px;
+    border: 1px solid var(--linea);
+    background: var(--superficie);
+    box-shadow: var(--sombra);
 }
 
 .pinVacio {
     position: relative;
-    width: 96px;
-    height: 110px;
+    width: 112px;
+    height: 112px;
     flex-shrink: 0;
     display: flex;
     align-items: flex-end;
     justify-content: center;
+    border-radius: 24px;
+    background: var(--acentoTinta);
 }
 
 .pinVacio svg {
     position: relative;
     z-index: 1;
-    width: 64px;
-    height: 74px;
-    margin-bottom: 18px;
-    fill: #33CEBF;
+    width: 48px;
+    height: 56px;
+    margin-bottom: 28px;
+    fill: var(--acento);
 }
 
 .onda {
     position: absolute;
-    bottom: 6px;
+    bottom: 20px;
     left: 50%;
-    width: 70px;
-    height: 22px;
+    width: 64px;
+    height: 18px;
     border-radius: 50%;
     border: 2px solid rgba(51, 206, 191, 0.6);
     transform: translateX(-50%);
-    animation: onda 2.4s ease-out infinite;
+    animation: onda 2.4s cubic-bezier(0.16, 1, 0.3, 1) infinite;
 }
 
 @keyframes onda {
@@ -178,19 +269,32 @@
     }
 }
 
+.textoVacio {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
 .textoVacio h2 {
     margin: 0;
-    color: #fff;
-    font-size: 21px;
+    color: var(--texto);
+    font-size: 22px;
     font-weight: 700;
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
 }
 
 .textoVacio p {
-    margin: 8px 0 20px;
+    margin: 10px 0 22px;
     max-width: 52ch;
-    color: rgba(255, 255, 255, 0.72);
+    color: var(--textoSuave);
     font-size: 15px;
     line-height: 1.6;
+}
+
+.textoVacio .boton + .boton {
+    margin-top: 10px;
 }
 
 .listaSolicitudes {
@@ -198,19 +302,20 @@
     padding: 0;
     list-style: none;
     border-radius: 16px;
-    border: 1px solid rgba(51, 206, 191, 0.18);
-    background: rgba(15, 17, 52, 0.6);
+    border: 1px solid var(--linea);
+    background: var(--superficie);
+    box-shadow: var(--sombra);
 }
 
 .filaSolicitud {
-    padding: 14px 14px 14px 20px;
+    padding: 16px 14px 16px 20px;
     display: flex;
     align-items: center;
     gap: 14px;
 }
 
 .filaSolicitud + .filaSolicitud {
-    border-top: 1px solid rgba(51, 206, 191, 0.12);
+    border-top: 1px solid var(--linea);
 }
 
 .datosSolicitud {
@@ -227,7 +332,7 @@
 
 .encabezadoSolicitud h3 {
     margin: 0;
-    color: #fff;
+    color: var(--texto);
     font-size: 15px;
     font-weight: 600;
     overflow-wrap: anywhere;
@@ -235,32 +340,43 @@
 
 .datosSolicitud p {
     margin: 4px 0 0;
-    color: rgba(255, 255, 255, 0.58);
+    color: var(--textoTenue);
     font-size: 13px;
+    font-variant-numeric: tabular-nums;
 }
 
 .etiqueta {
-    display: inline-block;
-    padding: 3px 10px;
+    padding: 3px 10px 3px 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
     border-radius: 999px;
-    font-size: 11px;
-    font-weight: 700;
+    font-size: 12px;
+    font-weight: 600;
     text-transform: capitalize;
 }
 
+.etiqueta::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+}
+
 .etiquetaPendiente {
-    background: rgba(245, 197, 66, 0.18);
-    color: #F5C542;
+    background: rgba(245, 197, 66, 0.14);
+    color: var(--pendiente);
 }
 
 .etiquetaRechazado {
-    background: rgba(255, 99, 99, 0.18);
-    color: #FF7B7B;
+    background: rgba(255, 138, 138, 0.14);
+    color: var(--rechazado);
 }
 
 .etiquetaOtro {
-    background: rgba(255, 255, 255, 0.12);
-    color: rgba(255, 255, 255, 0.8);
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--textoSuave);
 }
 
 .menu {
@@ -268,50 +384,62 @@
 }
 
 .botonMenu {
-    width: 34px;
-    height: 34px;
-    border: none;
-    border-radius: 9px;
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid transparent;
+    border-radius: 10px;
     background: transparent;
-    color: #fff;
-    font-size: 20px;
-    line-height: 1;
+    color: var(--textoSuave);
     cursor: pointer;
-    transition: background 0.2s ease;
+    transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
 
-.botonMenu:hover {
-    background: rgba(255, 255, 255, 0.12);
+.botonMenu svg {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+}
+
+.botonMenu:hover,
+.botonMenu[aria-expanded="true"] {
+    border-color: var(--lineaFuerte);
+    background: var(--superficieAlta);
+    color: var(--texto);
 }
 
 .opcionesMenu {
     position: absolute;
-    top: 38px;
+    top: 44px;
     right: 0;
     z-index: 10;
-    min-width: 170px;
+    min-width: 180px;
     padding: 6px;
-    border: 1px solid rgba(51, 206, 191, 0.2);
-    border-radius: 10px;
-    background: #171943;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+    border: 1px solid var(--lineaFuerte);
+    border-radius: 12px;
+    background: var(--superficieAlta);
+    box-shadow: var(--sombraAlta);
 }
 
 .opcionMenu {
     width: 100%;
-    padding: 9px 12px;
+    min-height: 40px;
+    padding: 0 12px;
     border: none;
-    border-radius: 7px;
+    border-radius: 8px;
     background: transparent;
-    color: #FF7B7B;
-    font-size: 13px;
+    color: var(--rechazado);
+    font-family: inherit;
+    font-size: 14px;
     font-weight: 600;
     text-align: left;
     cursor: pointer;
 }
 
 .opcionMenu:hover:not(:disabled) {
-    background: rgba(255, 99, 99, 0.12);
+    background: rgba(255, 138, 138, 0.12);
 }
 
 .opcionMenu:disabled {
@@ -324,15 +452,17 @@
     margin: 0;
     padding: 16px 18px;
     border-radius: 12px;
+    border: 1px solid var(--linea);
+    background: var(--superficie);
+    color: var(--textoSuave);
     font-size: 14px;
     line-height: 1.5;
-    background: rgba(23, 25, 67, 0.82);
-    color: rgba(255, 255, 255, 0.8);
 }
 
 .mensajeError {
-    border: 1px solid rgba(255, 100, 110, 0.5);
-    color: #ffb8be;
+    border-color: rgba(255, 138, 138, 0.45);
+    background: rgba(255, 138, 138, 0.08);
+    color: #FFC2C2;
 }
 
 .errorMenu {
@@ -340,26 +470,55 @@
 }
 
 @media (max-width: 760px) {
-    .listaComunidades {
-        grid-template-columns: minmax(0, 1fr);
+    .paginaInicio {
+        padding: 44px 24px 64px;
+    }
+
+    .contenido {
+        gap: 36px;
     }
 
     .vacio {
         flex-direction: column;
         align-items: flex-start;
-        gap: 18px;
+        gap: 22px;
         padding: 28px 22px;
+    }
+
+    .pinVacio {
+        width: 88px;
+        height: 88px;
+        border-radius: 20px;
+    }
+
+    .pinVacio svg {
+        width: 38px;
+        height: 44px;
+        margin-bottom: 22px;
+    }
+
+    .onda {
+        bottom: 15px;
+        width: 52px;
     }
 }
 
 @media (max-width: 600px) {
     .paginaInicio {
         margin-left: 76px;
-        padding: 30px 16px;
+        padding: 32px 16px 56px;
     }
 
-    .saludo h1 {
-        font-size: 26px;
+    .saludo {
+        padding-bottom: 22px;
+    }
+
+    .saludo p {
+        font-size: 15px;
+    }
+
+    .tarjetaComunidad {
+        padding: 18px;
     }
 }
 
@@ -369,8 +528,16 @@
         opacity: 0.5;
     }
 
+    .tarjetaComunidad,
     .boton,
-    .botonMenu {
+    .botonMenu,
+    .marcador,
+    .marcador svg {
         transition: none;
+    }
+
+    .tarjetaComunidad:has(.boton:hover),
+    .tarjetaComunidad:has(.boton:focus-visible) {
+        transform: none;
     }
 }

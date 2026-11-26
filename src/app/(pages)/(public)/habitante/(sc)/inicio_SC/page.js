@@ -124,7 +124,10 @@ export default function InicioSC() {
                                 </section>
                             ) : (
                                 <section className={inicioStyles.seccion} aria-labelledby="tus-comunidades">
-                                    <h2 id="tus-comunidades">Tus comunidades</h2>
+                                    <h2 id="tus-comunidades">
+                                        Tus comunidades
+                                        <span className={inicioStyles.conteo}>{membresias.length}</span>
+                                    </h2>
 
                                     <ul className={inicioStyles.listaComunidades}>
                                         {membresias.map((membresia) => (
@@ -142,6 +145,9 @@ export default function InicioSC() {
 
                                                         <Link href={`/habitante/inicio_CC?comunidad=${membresia.id_comunidad}`} className={inicioStyles.boton}>
                                                             Ingresar
+                                                            <svg className={inicioStyles.iconoBoton} viewBox="0 0 24 24" aria-hidden="true">
+                                                                <path d="M5 12h14M13 6l6 6-6 6"/>
+                                                            </svg>
                                                         </Link>
                                                     </div>
                                                 </article>
@@ -153,7 +159,10 @@ export default function InicioSC() {
 
                             {solicitudes.length > 0 && (
                                 <section className={inicioStyles.seccion} aria-labelledby="tus-solicitudes">
-                                    <h2 id="tus-solicitudes">Tus solicitudes</h2>
+                                    <h2 id="tus-solicitudes">
+                                        Tus solicitudes
+                                        <span className={inicioStyles.conteo}>{solicitudes.length}</span>
+                                    </h2>
 
                                     {errorBorrar && (
                                         <p className={`${inicioStyles.mensajeError} ${inicioStyles.errorMenu}`} role="alert">{errorBorrar}</p>
@@ -179,7 +188,11 @@ export default function InicioSC() {
                                                                 aria-haspopup="menu"
                                                                 aria-expanded={menuAbierto === solicitud.id_integrante}
                                                                 onClick={() => setMenuAbierto(menuAbierto === solicitud.id_integrante ? null : solicitud.id_integrante)}>
-                                                            ⋮
+                                                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                                                <circle cx="12" cy="5" r="1.8"/>
+                                                                <circle cx="12" cy="12" r="1.8"/>
+                                                                <circle cx="12" cy="19" r="1.8"/>
+                                                            </svg>
                                                         </button>
 
                                                         {menuAbierto === solicitud.id_integrante && (

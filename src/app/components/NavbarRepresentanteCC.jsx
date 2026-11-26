@@ -12,6 +12,7 @@ export default function NavbarRepresentanteCC() {
         {nombre: "Subir", ruta: "/representante/subir", icono: "subir"},
         {nombre: "Eventos", ruta: "/representante/eventos", icono: "eventos"},
         {nombre: "Mapa", ruta: "/representante/mapa", icono: "mapa"},
+        {nombre: "Comunidad", ruta: "/representante/comunidad", icono: "comunidad"},
         {nombre: "Ayuda", ruta: "/representante/ayudacc", icono: "ayuda"},
         {nombre: "Cuenta", ruta: "/representante/cuentacc", icono: "cuenta"}
     ];
@@ -56,6 +57,15 @@ export default function NavbarRepresentanteCC() {
                     <>
                         <path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2z" />
                         <path d="M9 4v14M15 6v14" />
+                    </>
+                )}
+
+                {tipo === "comunidad" && (
+                    <>
+                        <circle cx="9" cy="8" r="3.2" />
+                        <path d="M3 20a6 6 0 0 1 12 0" />
+                        <path d="M16 5.5a3.2 3.2 0 0 1 0 6" />
+                        <path d="M17.5 14.5A6 6 0 0 1 21 20" />
                     </>
                 )}
 

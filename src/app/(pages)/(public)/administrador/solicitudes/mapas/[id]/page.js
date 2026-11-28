@@ -190,7 +190,7 @@ export default function MapaDetalle({ params }) {
                                     Selecciona el archivo GeoJSON correspondiente al mapa actualizado.
                                 </p>
 
-                                <input ref={inputMapa} type="file" accept=".geojson,.json,application/geo+json,application/json" onChange={(evento) => {
+                                <input className={styles.selectorArchivo} ref={inputMapa} type="file" accept=".geojson,.json,application/geo+json,application/json" onChange={(evento) => {
                                         setArchivoMapa(evento.target.files?.[0] || null);
                                 }}/>
 
@@ -215,6 +215,10 @@ export default function MapaDetalle({ params }) {
                                     <button type="button" className={styles.botonAprobar} onClick={() => window.open("https://geojson.io/", "_blank", "noopener,noreferrer")}>
                                         Ver mapa
                                     </button>
+
+                                    <button type="button" className={styles.botonAprobar} onClick={subirMapa} disabled={procesando}>
+                                        {procesando ? "Procesando..." : "Cargar mapa"}
+                                    </button>
                                 </section>
                             </section>
                         )}
@@ -225,6 +229,12 @@ export default function MapaDetalle({ params }) {
                                     {procesando ? "Procesando..." : "Aceptar solicitud"}
                                 </button>
                             </section>
+                        )}
+
+                        {mensajeAccion && (
+                            <p className={styles.mensajeAccion} style={{ color: errorAccion ? "#ff8080" : "#33CEBF" }}>
+                                {mensajeAccion}
+                            </p>
                         )}
                     </>
                 )}
